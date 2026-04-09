@@ -61,7 +61,7 @@ namespace RyuuseiManager
                 GetSaveDataFromDB(gen);
             }
             ComboSaveName.IsEnabled = true;
-            ButtonCreateSave.IsEnabled = GameGen == 11 || (GameGen >= 20) && GameGen != 30 && GameGen != 31; // perfect save data for SF1&3 to be added
+            ButtonCreateSave.IsEnabled = false; // Disable this feature until all save collected
             ButtonDeleteSave.IsEnabled = false;
             ButtonRenameSave.IsEnabled = false;
             ButtonLoadSaveData.IsEnabled = false;
@@ -163,7 +163,7 @@ namespace RyuuseiManager
             if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
             {
                 string loadedSaveFileName = Path.GetFileName(dlg.FileName);
-                if (!GameID.ExpectedImportSources[GameGen].Contains(loadedSaveFileName))
+                if (loadedSaveFileName != $"data0{GameGen}Slot.bin")
                 {
                     MessageBox.Show(this, (string)Application.Current.Resources["Msg_UnsuitableSave"], (string)Application.Current.Resources["Msg_Info"]);
                     return;
