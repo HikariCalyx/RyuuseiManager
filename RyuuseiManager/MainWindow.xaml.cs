@@ -59,7 +59,7 @@ namespace RyuuseiManager
                 GetSaveDataFromDB(gen);
             }
             ComboSaveName.IsEnabled = true;
-            ButtonCreateSave.IsEnabled = (GameGen >= 20) && GameGen != 30 && GameGen != 31; // perfect save data for SF1&3 to be added
+            ButtonCreateSave.IsEnabled = GameGen == 11 || (GameGen >= 20) && GameGen != 30 && GameGen != 31; // perfect save data for SF1&3 to be added
             ButtonDeleteSave.IsEnabled = false;
             ButtonRenameSave.IsEnabled = false;
             ButtonLoadSaveData.IsEnabled = false;
