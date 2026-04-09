@@ -28,13 +28,13 @@
                     HorizontalAlignment="Right" Height="30"
                     Margin="10">
 
-            <Button Content="OK"
+            <Button Content="{DynamicResource Btn_OK}"
                     Width="80" Height="26" FontSize="15"
                     IsDefault="True"
                     Click="Ok_Click"
                     Margin="2"/>
 
-            <Button Content="Cancel"
+            <Button Content="{DynamicResource Btn_Cancel}"
                     Width="80" Height="26" FontSize="15"
                     IsCancel="True"
                     Margin="2"/>

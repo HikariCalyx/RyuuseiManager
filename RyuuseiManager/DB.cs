@@ -1,4 +1,5 @@
 ﻿using System.Data.SQLite;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Reflection.Metadata;
@@ -23,12 +24,52 @@ namespace RyuuseiManager
                 "saveblob BLOB NOT NULL," +
                 "generation INTEGER NOT NULL" +
                 ");";
+            string table2SqlCmd = "CREATE TABLE IF NOT EXISTS config (" +
+                "variable TEXT NOT NULL," +
+                "value TEXT NOT NULL" +
+                ");";
             using (SQLiteConnection conn = new SQLiteConnection(connectionString))
             {
                 conn.Open();
                 SQLiteCommand cmd = new SQLiteCommand(tableSqlCmd, conn);
                 cmd.ExecuteNonQuery();
+                cmd.CommandText = table2SqlCmd;
+                cmd.ExecuteNonQuery();
             }
+        }
+
+        public static string GetCurrentLanguage()
+        {
+            InitDatabase();
+            string sqlCommand = @"SELECT value FROM config WHERE variable = 'lang' LIMIT 1;";
+            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+            {
+                conn.Open();
+                SQLiteCommand cmd = new SQLiteCommand(sqlCommand, conn);
+                return (string)cmd.ExecuteScalar();
+            }
+        }
+
+        public static void SetLanguage(string langCode)
+        {
+            InitDatabase();
+            string sqlCommand = "";
+            if (string.IsNullOrEmpty(GetCurrentLanguage()))
+            {
+                sqlCommand = @"INSERT INTO config (variable, value) VALUES ('lang', @name);";
+            }
+            else
+            {
+                sqlCommand = @"UPDATE config SET value = @name WHERE variable = 'lang';";
+            }
+            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+            {
+                conn.Open();
+                SQLiteCommand cmd = new SQLiteCommand(sqlCommand, conn);
+                cmd.Parameters.AddWithValue("@name", langCode);
+                cmd.ExecuteNonQuery();
+            }
+            App.SetLanguage(langCode);
         }
 
         public static void SaveDataBlob(byte[] blob, string name, int generation, bool compression, out ulong saveId)
@@ -147,5 +188,28 @@ namespace RyuuseiManager
             return output.ToArray();
         }
 
+        public static string ChooseSuitableLangCode()
+        {
+            string code = CultureInfo.CurrentUICulture.Name;
+            if (Lang.LangName.LangList.ContainsKey(code))
+            {
+                return code;
+            }
+            else
+            {
+                switch (code)
+                {
+                    case "zh-SG":
+                    case "zh-Hans":
+                        return "zh-CN";
+                    case "zh-HK":
+                    case "zh-MO":
+                    case "zh-Hant":
+                        return "zh-TW";
+                    default:
+                        return "en";
+                }
+            }
+        }
     }
 }

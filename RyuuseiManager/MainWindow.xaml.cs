@@ -14,8 +14,10 @@ namespace RyuuseiManager
         public MainWindow()
         {
             InitializeComponent();
+            LoadLanguage();
             DB.InitDatabase();
             CheckSteamAccount();
+
         }
 
         public int GameGen
@@ -73,37 +75,37 @@ namespace RyuuseiManager
             {
                 var coverTab = new TabItem
                 {
-                    Header = "Cover",
+                    Header = (string)Application.Current.Resources["Tab_Cover"],
                     Content = new TextBlock
                     {
-                        Text = $"This tab is intentionally left blank.",
+                        Text = (string)Application.Current.Resources["Msg_IntentBlank"],
                         Margin = new Thickness(10)
                     }
                 };
                 var battleCardTab = new TabItem
                 {
-                    Header = "Battle Card",
+                    Header = (string)Application.Current.Resources["Tab_BattleCard"],
                     Content = new TextBlock
                     {
-                        Text = $"To be added",
+                        Text = (string)Application.Current.Resources["Msg_TBA"],
                         Margin = new Thickness(10)
                     }
                 };
                 var brotherTab = new TabItem
                 {
-                    Header = "Brother",
+                    Header = (string)Application.Current.Resources["Tab_Brother"],
                     Content = new TextBlock
                     {
-                        Text = $"To be added",
+                        Text = (string)Application.Current.Resources["Msg_TBA"],
                         Margin = new Thickness(10)
                     }
                 };
                 var noiseModGearTab = new TabItem
                 {
-                    Header = "Noise Mod Gear",
+                    Header = (string)Application.Current.Resources["Tab_NoiseModGear"],
                     Content = new TextBlock
                     {
-                        Text = $"To be added",
+                        Text = (string)Application.Current.Resources["Msg_TBA"],
                         Margin = new Thickness(10)
                     }
                 };
@@ -156,20 +158,20 @@ namespace RyuuseiManager
             var dlg = new CommonOpenFileDialog
             {
                 IsFolderPicker = false,
-                Title = "Please select save data file."
+                Title = (string)Application.Current.Resources["Msg_ImportSave"]
             };
             if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
             {
                 string loadedSaveFileName = Path.GetFileName(dlg.FileName);
                 if (!GameID.ExpectedImportSources[GameGen].Contains(loadedSaveFileName))
                 {
-                    MessageBox.Show(this, "Selected save data is not meant for this game.", "Info");
+                    MessageBox.Show(this, (string)Application.Current.Resources["Msg_UnsuitableSave"], (string)Application.Current.Resources["Msg_Info"]);
                     return;
                 }
                 else
                 {
                     byte[] saveBlob = File.ReadAllBytes(dlg.FileName);
-                    var namedlg = new NameDialog(title: "Import Save Data", prompt: "Please specify a name.");
+                    var namedlg = new NameDialog(title: (string)Application.Current.Resources["Dlg_ImportSaveData"], prompt: (string)Application.Current.Resources["Msg_SpecifyName"]);
                     namedlg.Owner = this;
                     if (namedlg.ShowDialog() == true)
                     {
@@ -186,7 +188,7 @@ namespace RyuuseiManager
         {
             if (ComboSaveName.SelectedItem is ComboItem nameItem)
             {
-                var dlg = new NameDialog(title: "Duplicate", prompt: "Please specify a new name.");
+                var dlg = new NameDialog(title: (string)Application.Current.Resources["Dlg_Duplicate"], prompt: (string)Application.Current.Resources["Msg_SpecifyNewName"]);
                 dlg.Owner = this;
                 dlg.ResultText = nameItem.Text;
                 ulong resultSaveId;
@@ -214,7 +216,7 @@ namespace RyuuseiManager
 
         private void ButtonCreateSave_Click(object sender, RoutedEventArgs e)
         {
-            var dlg = new NameDialog(title: "New Save Data", prompt: "Please specify a name.");
+            var dlg = new NameDialog(title: (string)Application.Current.Resources["Dlg_CreateSave"], prompt: (string)Application.Current.Resources["Msg_SpecifyName"]);
             dlg.Owner = this;
             if (dlg.ShowDialog() == true)
             {
@@ -229,11 +231,18 @@ namespace RyuuseiManager
             }
         }
 
+        private void ButtonSettings_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = new SettingsWindow();
+            dlg.Owner = this;
+            dlg.ShowDialog();
+        }
+
         private void ButtonRenameSave_Click(object sender, RoutedEventArgs e)
         {
             if (ComboSaveName.SelectedItem is ComboItem nameItem)
             {
-                var dlg = new NameDialog(title: "Rename", prompt: "Please specify a new name.");
+                var dlg = new NameDialog(title: (string)Application.Current.Resources["Dlg_Rename"], prompt: (string)Application.Current.Resources["Msg_SpecifyNewName"]);
                 dlg.Owner = this;
                 dlg.ResultText = nameItem.Text;
                 if (dlg.ShowDialog() == true)
@@ -260,7 +269,7 @@ namespace RyuuseiManager
 
         private void ButtonDeleteSave_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult result = MessageBox.Show(this, "Would you like to delete this save?\r\nThis cannot be undone.", "Confirm", MessageBoxButton.YesNo);
+            MessageBoxResult result = MessageBox.Show(this, (string)Application.Current.Resources["Msg_DeleteConfirm"], (string)Application.Current.Resources["Msg_Confirm"], MessageBoxButton.YesNo);
             if (result == MessageBoxResult.Yes)
             {
                 DB.DeleteSaveById(SaveID);
@@ -285,7 +294,7 @@ namespace RyuuseiManager
                 var dlg = new CommonOpenFileDialog
                 {
                     IsFolderPicker = true,
-                    Title = "Please select a destination directory to place exported save data."
+                    Title = (string)Application.Current.Resources["Msg_ExportSave"]
                 };
                 if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
                 {
@@ -319,12 +328,12 @@ namespace RyuuseiManager
                 {
                     byte[] signedSave = key.EncryptBlob(rawSaveData, API.SteamInterop.GetSteamID64(SteamID));
                     File.WriteAllBytes(Path.Combine(savePath, $"data0{GameGen}Slot.bin"), signedSave);
-                    if (prompts) MessageBox.Show(this, "Save data import complete.", "Info");
+                    if (prompts) MessageBox.Show(this, (string)Application.Current.Resources["Msg_ImportComplete"], (string)Application.Current.Resources["Msg_Info"]);
                     return true;
                 }
                 else
                 {
-                    MessageBox.Show(this, "Please run Ryuusei Manager with Administrator previleges.", "Info");
+                    MessageBox.Show(this, (string)Application.Current.Resources["Msg_RunElevate"], (string)Application.Current.Resources["Msg_Info"]);
                     return false;
                 }
             }
@@ -353,7 +362,7 @@ namespace RyuuseiManager
             }
             else
             {
-                MessageBox.Show("No valid Steam Account information has been found.\r\nPlease check if you have Steam installed, and you have the game played.");
+                MessageBox.Show((string)Application.Current.Resources["Msg_NoSteamAccount"]);
             }
         }
 
@@ -369,55 +378,67 @@ namespace RyuuseiManager
                     switch (fileName)
                     {
                         case "data010Slot.bin":
-                            ComboGameTitle.Items.Add(new ComboItem { Text = "Pegasus", Value = 10 });
+                            ComboGameTitle.Items.Add(new ComboItem { Text = (string)Application.Current.Resources["Pegasus"], Value = 10 });
                             break;
                         case "data011Slot.bin":
-                            ComboGameTitle.Items.Add(new ComboItem { Text = "Leo", Value = 11 });
+                            ComboGameTitle.Items.Add(new ComboItem { Text = (string)Application.Current.Resources["Leo"], Value = 11 });
                             break;
                         case "data012Slot.bin":
-                            ComboGameTitle.Items.Add(new ComboItem { Text = "Dragon", Value = 12 });
+                            ComboGameTitle.Items.Add(new ComboItem { Text = (string)Application.Current.Resources["Dragon"], Value = 12 });
                             break;
                         case "data020Slot.bin":
-                            ComboGameTitle.Items.Add(new ComboItem { Text = "Ninja", Value = 20 });
+                            ComboGameTitle.Items.Add(new ComboItem { Text = (string)Application.Current.Resources["Ninja"], Value = 20 });
                             break;
                         case "data021Slot.bin":
-                            ComboGameTitle.Items.Add(new ComboItem { Text = "Saurian", Value = 21 });
+                            ComboGameTitle.Items.Add(new ComboItem { Text = (string)Application.Current.Resources["Saurian"], Value = 21 });
                             break;
                         case "data022Slot.bin":
-                            ComboGameTitle.Items.Add(new ComboItem { Text = "Zerker (Ninja)", Value = 22 });
+                            ComboGameTitle.Items.Add(new ComboItem { Text = (string)Application.Current.Resources["ZerkerN"], Value = 22 });
                             break;
                         case "data023Slot.bin":
-                            ComboGameTitle.Items.Add(new ComboItem { Text = "Zerker (Saurian)", Value = 23 });
+                            ComboGameTitle.Items.Add(new ComboItem { Text = (string)Application.Current.Resources["ZerkerS"], Value = 23 });
                             break;
                         case "data030Slot.bin":
-                            ComboGameTitle.Items.Add(new ComboItem { Text = "Black Ace (Data 01)", Value = 30 });
+                            ComboGameTitle.Items.Add(new ComboItem { Text = (string)Application.Current.Resources["BlackAceSlot1"], Value = 30 });
                             break;
                         case "data031Slot.bin":
-                            ComboGameTitle.Items.Add(new ComboItem { Text = "Black Ace (Data 02)", Value = 31 });
+                            ComboGameTitle.Items.Add(new ComboItem { Text = (string)Application.Current.Resources["BlackAceSlot2"], Value = 31 });
                             break;
                         case "data032Slot.bin":
-                            ComboGameTitle.Items.Add(new ComboItem { Text = "Red Joker (Data 01)", Value = 32 });
+                            ComboGameTitle.Items.Add(new ComboItem { Text = (string)Application.Current.Resources["RedJokerSlot1"], Value = 32 });
                             break;
                         case "data033Slot.bin":
-                            ComboGameTitle.Items.Add(new ComboItem { Text = "Red Joker (Data 02)", Value = 33 });
+                            ComboGameTitle.Items.Add(new ComboItem { Text = (string)Application.Current.Resources["RedJokerSlot2"], Value = 33 });
                             break;
                     }
                 }
             }
             else
             {
-                MessageBox.Show("We didn't find any save data.\r\nPlease play at least one game and try again.");
+                MessageBox.Show((string)Application.Current.Resources["Msg_NoSaveDataFound"]);
             }
         }
 
         private void GetSaveDataFromDB(int generation)
         {
             ComboSaveName.Items.Clear();
-            ComboSaveName.Items.Add(new ComboItem { Text = "(Current Steam Save)", Value = 0 });
+            ComboSaveName.Items.Add(new ComboItem { Text = (string)Application.Current.Resources["Cmb_CurrentSteamSave"], Value = 0 });
             var saveDataDict = DB.GetCurrentGenerationSaves(generation);
             foreach (var i in saveDataDict.Keys)
             {
                 ComboSaveName.Items.Add(new ComboItem { Text = saveDataDict[i], Value = (ulong)i });
+            }
+        }
+
+        private void LoadLanguage()
+        {
+            if (string.IsNullOrEmpty(DB.GetCurrentLanguage()))
+            {
+                DB.SetLanguage(DB.ChooseSuitableLangCode());
+            }
+            else
+            {
+                DB.SetLanguage(DB.GetCurrentLanguage());
             }
         }
 

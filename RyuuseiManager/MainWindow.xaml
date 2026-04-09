@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RyuuseiManager"
         mc:Ignorable="d"
-        Title="Ryuusei Manager (Alpha)" Height="450" Width="800">
+        Title="{DynamicResource Title_RyuuseiManager}" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
@@ -36,12 +36,12 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 Height="30">
-            <Button x:Name="ButtonCreateSave" Content="➕ Create..." Height="26" FontSize="15" Margin="2" Click="ButtonCreateSave_Click" IsEnabled="False"/>
-            <Button x:Name="ButtonDuplicate" Content="🗐 Duplicate" Height="26" FontSize="15" Margin="2" Click="ButtonDuplicate_Click" IsEnabled="False"/>
-            <Button x:Name="ButtonRenameSave" Content="✏️ Rename" Height="26" FontSize="15" Margin="2" Click="ButtonRenameSave_Click" IsEnabled="False"/>
-            <Button x:Name="ButtonImportSave" Content="📥 Import" Height="26" FontSize="15" Margin="2"  Click="ButtonImportSave_Click" IsEnabled="False"/>
-            <Button x:Name="ButtonExportSave" Content="📤 Export" Height="26" FontSize="15" Margin="2" Click="ButtonExportSave_Click" IsEnabled="False"/>
-            <Button x:Name="ButtonDeleteSave" Content="🗑️ Delete" Height="26" FontSize="15" Margin="2" Click="ButtonDeleteSave_Click" IsEnabled="False"/>
+            <Button x:Name="ButtonCreateSave" Content="{DynamicResource Btn_CreateSave}" Height="26" FontSize="15" Margin="2" Click="ButtonCreateSave_Click" IsEnabled="False"/>
+            <Button x:Name="ButtonDuplicate" Content="{DynamicResource Btn_Duplicate}" Height="26" FontSize="15" Margin="2" Click="ButtonDuplicate_Click" IsEnabled="False"/>
+            <Button x:Name="ButtonRenameSave" Content="{DynamicResource Btn_RenameSave}" Height="26" FontSize="15" Margin="2" Click="ButtonRenameSave_Click" IsEnabled="False"/>
+            <Button x:Name="ButtonImportSave" Content="{DynamicResource Btn_ImportSave}" Height="26" FontSize="15" Margin="2"  Click="ButtonImportSave_Click" IsEnabled="False"/>
+            <Button x:Name="ButtonExportSave" Content="{DynamicResource Btn_ExportSave}" Height="26" FontSize="15" Margin="2" Click="ButtonExportSave_Click" IsEnabled="False"/>
+            <Button x:Name="ButtonDeleteSave" Content="{DynamicResource Btn_DeleteSave}" Height="26" FontSize="15" Margin="2" Click="ButtonDeleteSave_Click" IsEnabled="False"/>
         </StackPanel>
         <TabControl x:Name="MainTabs"
                 Grid.Row="3"
@@ -58,16 +58,16 @@
                 Orientation="Horizontal"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center">
-            <Button x:Name="ButtonSettings" Content="⚙️ Settings" Height="26" FontSize="15" Margin="2" IsEnabled="false"/>
+            <Button x:Name="ButtonSettings" Content="{DynamicResource Btn_Settings}" Height="26" FontSize="15" Margin="2" Click="ButtonSettings_Click"/>
         </StackPanel>
         <StackPanel Grid.Row="4"
                 Grid.Column="1"
                 Orientation="Horizontal"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center">
-            <Button x:Name="ButtonLoadSaveData" Content="➡️ Load Save Data" Height="26" FontSize="15" Margin="2" Click="ButtonLoadSaveData_Click" IsEnabled="False"/>
-            <Button x:Name="ButtonRunGame" Content="▶️ Run Game" Height="26" FontSize="15" Click="ButtonRunGame_Click" Margin="2"/>
-            <Button x:Name="ButtonLoadAndRun" Content="🎮 Load and Play" Height="26" FontSize="15" Margin="2" Click="ButtonLoadAndRun_Click" IsEnabled="False"/>
+            <Button x:Name="ButtonLoadSaveData" Content="{DynamicResource Btn_LoadSaveData}" Height="26" FontSize="15" Margin="2" Click="ButtonLoadSaveData_Click" IsEnabled="False"/>
+            <Button x:Name="ButtonRunGame" Content="{DynamicResource Btn_RunGame}" Height="26" FontSize="15" Click="ButtonRunGame_Click" Margin="2"/>
+            <Button x:Name="ButtonLoadAndRun" Content="{DynamicResource Btn_LoadAndRun}" Height="26" FontSize="15" Margin="2" Click="ButtonLoadAndRun_Click" IsEnabled="False"/>
         </StackPanel>
     </Grid>
 </Window>
