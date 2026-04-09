@@ -260,9 +260,10 @@ namespace RyuuseiManager
                     }
                     else
                     {
-                        DB.RenameSaveBlob(saveName, SaveID);
+                        ulong currentSaveId = SaveID;
+                        DB.RenameSaveBlob(saveName, currentSaveId);
                         GetSaveDataFromDB(GameGen);
-                        ComboSaveName.SelectedValue = SaveID;
+                        ComboSaveName.SelectedValue = currentSaveId;
                     }
                 }
             }
