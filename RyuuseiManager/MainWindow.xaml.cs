@@ -62,6 +62,7 @@ namespace RyuuseiManager
             }
             ComboSaveName.IsEnabled = true;
             ButtonCreateSave.IsEnabled = false; // Disable this feature until all save collected
+            ButtonDuplicate.IsEnabled = false;
             ButtonDeleteSave.IsEnabled = false;
             ButtonRenameSave.IsEnabled = false;
             ButtonLoadSaveData.IsEnabled = false;
