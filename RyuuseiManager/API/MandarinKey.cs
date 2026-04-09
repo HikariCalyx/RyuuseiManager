@@ -41,15 +41,6 @@ namespace RyuuseiManager.API
             return encblob;
         }
 
-        public bool IsEncryptedBlob(byte[] blob, ulong steamId64)
-        {
-            LoadGameProfile();
-            // Set User ID
-            gamingPlatform.UserIdInput = steamId64.ToString();
-            // Encrypt Files
-            return core.IsEncrypted(blob, gamingPlatform);
-        }
-
         private void LoadGameProfile()
         {
             var gameProfileManager = new GameProfileManager<MandarinGameProfile>();

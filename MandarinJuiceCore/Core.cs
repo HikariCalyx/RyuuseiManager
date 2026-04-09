@@ -256,7 +256,7 @@ public class Core(SimpleLogger logger, ProgressReporter progressReporter)
         var mandarinFile = new MandarinFile(Deencryptor, MandarinFileFlavor);
         try
         {
-            mandarinFile.SetFileData(blob);
+            mandarinFile.SetFileData(blob, true);
             if (!mandarinFile.IsEncrypted)
             {
                 return blob;
@@ -275,10 +275,10 @@ public class Core(SimpleLogger logger, ProgressReporter progressReporter)
         {
             return blob;
         }
-        // Try to save the encrypted file data
+        // Try to save the decrypted file data
         try
         {
-            return mandarinFile.GetFileData();
+            return mandarinFile.Data;
         }
         catch (Exception ex)
         {

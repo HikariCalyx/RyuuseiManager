@@ -189,6 +189,7 @@ namespace RyuuseiManager
                 var dlg = new NameDialog(title: "Duplicate", prompt: "Please specify a new name.");
                 dlg.Owner = this;
                 dlg.ResultText = nameItem.Text;
+                ulong resultSaveId;
                 if (dlg.ShowDialog() == true)
                 {
                     string saveName = dlg.ResultText;
@@ -197,15 +198,16 @@ namespace RyuuseiManager
                     {
                         byte[] encSave = File.ReadAllBytes(Path.Combine(API.SteamInterop.GetSaveDataPath(SteamID), $"data0{GameGen}Slot.bin"));
                         byte[] decSave = key.DecryptBlob(encSave, API.SteamInterop.GetSteamID64(SteamID));
-                        DB.SaveDataBlob(decSave, saveName, GameGen, true, out _);
+                        DB.SaveDataBlob(decSave, saveName, GameGen, true, out resultSaveId);
+                        GetSaveDataFromDB(GameGen);
                     }
                     else
                     {
                         byte[] currentSave = DB.LoadDataBlob(SaveID);
-                        DB.SaveDataBlob(currentSave, saveName, GameGen, true, out _);
+                        DB.SaveDataBlob(currentSave, saveName, GameGen, true, out resultSaveId);
                     }
                     GetSaveDataFromDB(GameGen);
-                    ComboSaveName.SelectedValue = SaveID;
+                    ComboSaveName.SelectedValue = resultSaveId;
                 }
             }
         }
