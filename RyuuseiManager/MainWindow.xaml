@@ -1,0 +1,73 @@
+﻿<Window x:Class="RyuuseiManager.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RyuuseiManager"
+        mc:Ignorable="d"
+        Title="Ryuusei Manager (Alpha)" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="45"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <ComboBox x:Name="ComboSteamUser" FontSize="15" Grid.Column="0" Margin="2" VerticalContentAlignment="Center" DisplayMemberPath="Text"
+          SelectedValuePath="Value" SelectionChanged="ComboSteamUser_SelectionChanged"/>
+            <ComboBox x:Name="ComboGameTitle" FontSize="15" Grid.Column="1" Margin="2" VerticalContentAlignment="Center" DisplayMemberPath="Text"
+          SelectedValuePath="Value" SelectionChanged="ComboGameTitle_SelectionChanged" IsEnabled="False"/>
+        </Grid>
+        
+        <Grid Grid.Row="1">
+            <ComboBox x:Name="ComboSaveName" FontSize="15" Grid.Column="0" Margin="2" DisplayMemberPath="Text"
+          SelectedValuePath="Value" SelectionChanged="ComboSaveName_SelectionChanged" IsEnabled="False"/>
+        </Grid>
+        
+        <StackPanel Grid.Row="2"
+                Orientation="Horizontal"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Height="30">
+            <Button x:Name="ButtonCreateSave" Content="➕ Create..." Height="26" FontSize="15" Margin="2" Click="ButtonCreateSave_Click" IsEnabled="False"/>
+            <Button x:Name="ButtonDuplicate" Content="🗐 Duplicate" Height="26" FontSize="15" Margin="2" Click="ButtonDuplicate_Click" IsEnabled="False"/>
+            <Button x:Name="ButtonRenameSave" Content="✏️ Rename" Height="26" FontSize="15" Margin="2" Click="ButtonRenameSave_Click" IsEnabled="False"/>
+            <Button x:Name="ButtonImportSave" Content="📥 Import" Height="26" FontSize="15" Margin="2"  Click="ButtonImportSave_Click" IsEnabled="False"/>
+            <Button x:Name="ButtonExportSave" Content="📤 Export" Height="26" FontSize="15" Margin="2" Click="ButtonExportSave_Click" IsEnabled="False"/>
+            <Button x:Name="ButtonDeleteSave" Content="🗑️ Delete" Height="26" FontSize="15" Margin="2" Click="ButtonDeleteSave_Click" IsEnabled="False"/>
+        </StackPanel>
+        <TabControl x:Name="MainTabs"
+                Grid.Row="3"
+                Margin="0"
+                FontSize="15"/>
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+        </Grid>
+        <StackPanel Grid.Row="4"
+                Grid.Column="0"
+                Orientation="Horizontal"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center">
+            <Button x:Name="ButtonSettings" Content="⚙️ Settings" Height="26" FontSize="15" Margin="2" IsEnabled="false"/>
+        </StackPanel>
+        <StackPanel Grid.Row="4"
+                Grid.Column="1"
+                Orientation="Horizontal"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center">
+            <Button x:Name="ButtonLoadSaveData" Content="➡️ Load Save Data" Height="26" FontSize="15" Margin="2" Click="ButtonLoadSaveData_Click" IsEnabled="False"/>
+            <Button x:Name="ButtonRunGame" Content="▶️ Run Game" Height="26" FontSize="15" Click="ButtonRunGame_Click" Margin="2"/>
+            <Button x:Name="ButtonLoadAndRun" Content="🎮 Load and Play" Height="26" FontSize="15" Margin="2" Click="ButtonLoadAndRun_Click" IsEnabled="False"/>
+        </StackPanel>
+    </Grid>
+</Window>

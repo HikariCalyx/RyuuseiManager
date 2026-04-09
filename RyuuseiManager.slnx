@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="MandarinJuiceCore/MandarinJuiceCore.csproj" />
+  <Project Path="RyuuseiManager/RyuuseiManager.csproj" />
+</Solution>
