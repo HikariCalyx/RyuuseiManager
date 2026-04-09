@@ -13,7 +13,7 @@ namespace RyuuseiManager.Lang
             // { "fr", "French | Français" },
             { "ja-JP", "Japanese | 日本語" },
             // { "ko-KR", "Korean | 한국인" },
-            // { "pt-BR", "Portuguese (Brazil) | Português brasileiro" },
+            { "pt-BR", "Portuguese (Brazil) | Português brasileiro" },
             { "zh-CN", "Chinese Simplified | 简体中文" },
             { "zh-TW", "Chinese Traditional | 繁体中文" }
         };
