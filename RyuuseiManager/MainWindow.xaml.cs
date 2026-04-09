@@ -244,14 +244,16 @@ namespace RyuuseiManager
                     {
                         byte[] encSave = File.ReadAllBytes(Path.Combine(API.SteamInterop.GetSaveDataPath(SteamID), $"data0{GameGen}Slot.bin"));
                         byte[] decSave = key.DecryptBlob(encSave, API.SteamInterop.GetSteamID64(SteamID));
-                        DB.SaveDataBlob(decSave, saveName, GameGen, true, out _);
+                        DB.SaveDataBlob(decSave, saveName, GameGen, true, out ulong newSaveId);
+                        GetSaveDataFromDB(GameGen);
+                        ComboSaveName.SelectedValue = newSaveId;
                     }
                     else
                     {
                         DB.RenameSaveBlob(saveName, SaveID);
+                        GetSaveDataFromDB(GameGen);
+                        ComboSaveName.SelectedValue = SaveID;
                     }
-                    GetSaveDataFromDB(GameGen);
-                    ComboSaveName.SelectedValue = SaveID;
                 }
             }
         }
