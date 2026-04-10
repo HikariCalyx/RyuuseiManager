@@ -11,7 +11,9 @@ You must have purchased and you're playing this game on Steam. This program will
 
 ## Roadmap
 - [ ] Battle Card, Brother, Ability Wave, Noise Mod Gear read feature
-- [ ] Save Data Conversion between Steam and Switch
+- Save Data Conversion between Steam and Switch
+   - [x] Import from Switch Save
+   - [ ] Export to Switch Save
 - Import Save Data from Original Nintendo DS Release
    - [ ] Ryuusei no Rockman 1 (Japan)
    - [ ] Ryuusei no Rockman 2 (Japan)
