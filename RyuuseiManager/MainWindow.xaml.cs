@@ -428,7 +428,7 @@ namespace RyuuseiManager
             var saveDataDict = DB.GetCurrentGenerationSaves(generation);
             foreach (var i in saveDataDict.Keys)
             {
-                ComboSaveName.Items.Add(new ComboItem { Text = saveDataDict[i], Value = (ulong)i });
+                ComboSaveName.Items.Add(new ComboItem { Text = saveDataDict[i] + $" ({generation}-{i})", Value = (ulong)i });
             }
         }
 
