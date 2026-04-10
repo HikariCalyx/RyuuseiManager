@@ -46,7 +46,8 @@
     <system:String x:Key="Dlg_ImportSaveData">Import Save Data</system:String>
     <system:String x:Key="Msg_ImportSave">Please select save data file.</system:String>
     <system:String x:Key="Msg_ExportSave">Please select a destination directory to place exported save data.</system:String>
-    <system:String x:Key="Msg_UnsuitableSave">Selected save data is not meant for this game.</system:String>
+    <system:String x:Key="Msg_UnsuitableSave">Selected save data file is not meant for this game.</system:String>
+    <system:String x:Key="Msg_InvalidSave">Save data file is invalid.</system:String>
     <system:String x:Key="Msg_Confirm">Confirm</system:String>
     <system:String x:Key="Msg_DeleteConfirm">Would you like to delete this save? This cannot be undone.</system:String>
     <system:String x:Key="Msg_ImportComplete">Save data import complete.</system:String>

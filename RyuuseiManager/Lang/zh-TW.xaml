@@ -46,7 +46,8 @@
     <system:String x:Key="Dlg_ImportSaveData">匯入存檔</system:String>
     <system:String x:Key="Msg_ImportSave">請選擇存檔檔案。</system:String>
     <system:String x:Key="Msg_ExportSave">請選擇放置匯出存檔檔案的路徑。</system:String>
-    <system:String x:Key="Msg_UnsuitableSave">这不是本游戏的存檔。</system:String>
+    <system:String x:Key="Msg_UnsuitableSave">這不是本遊戲的存檔。</system:String>
+    <system:String x:Key="Msg_InvalidSave">存檔檔案無效。</system:String>
     <system:String x:Key="Msg_Confirm">確認</system:String>
     <system:String x:Key="Msg_DeleteConfirm">是否要刪除本存檔？此操作無法撤銷。</system:String>
     <system:String x:Key="Msg_ImportComplete">存檔匯入完成。</system:String>

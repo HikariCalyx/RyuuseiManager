@@ -47,6 +47,7 @@
     <system:String x:Key="Msg_ImportSave">请选择存档文件。</system:String>
     <system:String x:Key="Msg_ExportSave">请选择放置导出存档文件的路径。</system:String>
     <system:String x:Key="Msg_UnsuitableSave">这不是本游戏的存档。</system:String>
+    <system:String x:Key="Msg_InvalidSave">存档文件无效。</system:String>
     <system:String x:Key="Msg_Confirm">确认</system:String>
     <system:String x:Key="Msg_DeleteConfirm">是否要删除本存档？此操作无法撤销。</system:String>
     <system:String x:Key="Msg_ImportComplete">存档导入完成。</system:String>

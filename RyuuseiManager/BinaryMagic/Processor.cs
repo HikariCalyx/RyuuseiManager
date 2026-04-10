@@ -1,0 +1,75 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace RyuuseiManager.BinaryMagic
+{
+    public class Processor
+    {
+        public static bool TryGetNextByte(ReadOnlySpan<byte> source, ReadOnlySpan<byte> header, out byte nextByte)
+        {
+            nextByte = default;
+            if (!source.StartsWith(header))
+                return false;
+            if (source.Length <= header.Length)
+                return false;
+            nextByte = source[header.Length];
+            return true;
+        }
+
+        public static byte[] StripSwitchSave(ReadOnlySpan<byte> blob, int gameID)
+        {
+            if (blob.StartsWith(HeaderMagic.Switch)) blob = blob.Slice(HeaderMagic.Switch.Length).ToArray();
+            int footerLength = FooterMagic.Eof.Length;
+
+            for (int i = 0; i <= blob.Length - footerLength; i++)
+            {
+                var slice = blob.Slice(i, footerLength);
+                bool match = true;
+                for (int j = 0; j < footerLength; j++)
+                {
+                    if (j == 12) continue;
+                    if (slice[j] != FooterMagic.Eof[j])
+                    {
+                        match = false;
+                        break;
+                    }
+                }
+                if (match)
+                {
+                    blob = blob.Slice(0, i + footerLength).ToArray();
+                }
+            }
+
+            byte[] pattern;
+            switch (gameID)
+            {
+                case 1:
+                    pattern = PlatformMagic.SF1; break;
+                case 3:
+                    pattern = PlatformMagic.SF3; break;
+                default:
+                    return blob.ToArray();
+            }
+            byte[] source = blob.ToArray();
+            for (int i = 0; i <= blob.Length - pattern.Length; i++)
+            {
+                if (blob.Slice(i, pattern.Length).SequenceEqual(pattern) && i >= 8)
+                {
+                    if (blob[i - 8] == 0x08 &&
+                        blob[i - 7] == 0x00 &&
+                        blob[i - 6] == 0x00 &&
+                        blob[i - 5] == 0x00)
+                    {
+                        // Remove those 8 bytes
+                        var result = new byte[source.Length - 8];
+                        Buffer.BlockCopy(source, 0, result, 0, i - 8);
+                        Buffer.BlockCopy(source, i, result, i - 8, source.Length - i);
+                        return result;
+                    }
+                }
+            }
+            return source;
+        }
+    }
+}

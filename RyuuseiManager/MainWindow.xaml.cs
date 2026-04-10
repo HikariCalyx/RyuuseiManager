@@ -49,6 +49,7 @@ namespace RyuuseiManager
                 ComboSaveName.IsEnabled = false;
                 ButtonImportSave.IsEnabled = false;
                 ButtonCreateSave.IsEnabled = false;
+                ButtonExportSave.IsEnabled = false;
                 GetAvailableSteamSaveData(item.Value);
             }
         }
@@ -68,6 +69,7 @@ namespace RyuuseiManager
             ButtonLoadSaveData.IsEnabled = false;
             ButtonLoadAndRun.IsEnabled = false;
             ButtonImportSave.IsEnabled = true;
+            ButtonExportSave.IsEnabled = false;
         }
 
         private void ComboSaveName_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -164,7 +166,7 @@ namespace RyuuseiManager
             if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
             {
                 string loadedSaveFileName = Path.GetFileName(dlg.FileName);
-                if (loadedSaveFileName != $"data0{GameGen}Slot.bin")
+                if (!GameID.ExpectedImportSources[GameGen].Contains(loadedSaveFileName))
                 {
                     MessageBox.Show(this, (string)Application.Current.Resources["Msg_UnsuitableSave"], (string)Application.Current.Resources["Msg_Info"]);
                     return;
@@ -172,6 +174,25 @@ namespace RyuuseiManager
                 else
                 {
                     byte[] saveBlob = File.ReadAllBytes(dlg.FileName);
+                    if (saveBlob.AsSpan().StartsWith(BinaryMagic.HeaderMagic.Switch))
+                    {
+                        int gameID = (int)(GameGen / 10);
+                        if (gameID != 3)
+                        {
+                            MessageBox.Show(this, (string)Application.Current.Resources["Msg_UnsuitableSave"], (string)Application.Current.Resources["Msg_Info"]);
+                        }
+                        saveBlob = BinaryMagic.Processor.StripSwitchSave(saveBlob, gameID);
+                    }
+                    if (!saveBlob.AsSpan().StartsWith(BinaryMagic.HeaderMagic.Raw))
+                    {
+                        MessageBox.Show(this, (string)Application.Current.Resources["Msg_InvalidSave"], (string)Application.Current.Resources["Msg_Info"]);
+                        return;
+                    }
+                    else if (!CheckSave(saveBlob))
+                    {
+                        MessageBox.Show(this, (string)Application.Current.Resources["Msg_UnsuitableSave"], (string)Application.Current.Resources["Msg_Info"]);
+                        return;
+                    }
                     var namedlg = new NameDialog(title: (string)Application.Current.Resources["Dlg_ImportSaveData"], prompt: (string)Application.Current.Resources["Msg_SpecifyName"]);
                     namedlg.Owner = this;
                     if (namedlg.ShowDialog() == true)
@@ -341,6 +362,39 @@ namespace RyuuseiManager
             }
             return false;
         }
+
+        private bool CheckSave(byte[] blob)
+        {
+            byte expectedNextByte;
+            switch (GameGen)
+            {
+                case 10:
+                case 11:
+                case 12:
+                    expectedNextByte = 0x43; break;
+                case 20:
+                case 21:
+                case 22:
+                case 23:
+                    expectedNextByte = 0x45; break;
+                case 30:
+                case 31:
+                case 32:
+                case 33:
+                    expectedNextByte = 0x53; break;
+                default:
+                    return false;
+            }
+            if (BinaryMagic.Processor.TryGetNextByte(blob, BinaryMagic.HeaderMagic.Raw, out byte nextByte))
+            {
+                return (expectedNextByte == nextByte);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
 
         private void RunGame()
         {
