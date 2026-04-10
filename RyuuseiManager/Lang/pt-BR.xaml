@@ -48,6 +48,7 @@
     <system:String x:Key="Msg_ExportSave">Selecione um diretório para salvar os dados exportados.</system:String>
     <system:String x:Key="Msg_UnsuitableSave">Os dados do Save selecionado não é adequado para este jogo.</system:String>
     <system:String x:Key="Msg_InvalidSave">O arquivo de dados salvo é inválido.</system:String>
+    <system:String x:Key="Msg_UnableToExport">Não foi possível exportar o arquivo. Verifique se ele está sendo usado por outro programa.</system:String>
     <system:String x:Key="Msg_Confirm">Confirmar</system:String>
     <system:String x:Key="Msg_DeleteConfirm">Você irá apagar esse Save? Essa ação não poderá ser desfeita!</system:String>
     <system:String x:Key="Msg_ImportComplete">Importação de dados do Save concluída.</system:String>

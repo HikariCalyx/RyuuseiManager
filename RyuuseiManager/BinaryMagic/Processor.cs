@@ -46,6 +46,8 @@ namespace RyuuseiManager.BinaryMagic
             {
                 case 1:
                     pattern = PlatformMagic.SF1; break;
+                case 2:
+                    pattern = PlatformMagic.SF2; break;
                 case 3:
                     pattern = PlatformMagic.SF3; break;
                 default:
@@ -62,9 +64,9 @@ namespace RyuuseiManager.BinaryMagic
                         blob[i - 5] == 0x00)
                     {
                         // Remove those 8 bytes
-                        var result = new byte[source.Length - 8];
-                        Buffer.BlockCopy(source, 0, result, 0, i - 8);
-                        Buffer.BlockCopy(source, i, result, i - 8, source.Length - i);
+                        var result = new byte[source.Length - 4];
+                        Buffer.BlockCopy(source, 0, result, 0, i - 4);
+                        Buffer.BlockCopy(source, i, result, i - 4, source.Length - i);
                         return result;
                     }
                 }

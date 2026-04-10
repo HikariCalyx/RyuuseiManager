@@ -173,13 +173,14 @@ namespace RyuuseiManager
                 }
                 else
                 {
-                    byte[] saveBlob = File.ReadAllBytes(dlg.FileName);
+                    byte[] saveBlob = ReadFile(dlg.FileName);
                     if (saveBlob.AsSpan().StartsWith(BinaryMagic.HeaderMagic.Switch))
                     {
                         int gameID = (int)(GameGen / 10);
-                        if (gameID != 3)
+                        if (false)
                         {
-                            MessageBox.Show(this, (string)Application.Current.Resources["Msg_UnsuitableSave"], (string)Application.Current.Resources["Msg_Info"]);
+                            MessageBox.Show(this, (string)Application.Current.Resources["Msg_UnsupportedSwitchSave"], (string)Application.Current.Resources["Msg_Info"]);
+                            return;
                         }
                         saveBlob = BinaryMagic.Processor.StripSwitchSave(saveBlob, gameID);
                     }
@@ -220,7 +221,7 @@ namespace RyuuseiManager
                     if (saveName == nameItem.Text) return;
                     if (SaveID == 0)
                     {
-                        byte[] encSave = File.ReadAllBytes(Path.Combine(API.SteamInterop.GetSaveDataPath(SteamID), $"data0{GameGen}Slot.bin"));
+                        byte[] encSave = ReadFile(Path.Combine(API.SteamInterop.GetSaveDataPath(SteamID), $"data0{GameGen}Slot.bin"));
                         byte[] decSave = key.DecryptBlob(encSave, API.SteamInterop.GetSteamID64(SteamID));
                         DB.SaveDataBlob(decSave, saveName, GameGen, true, out resultSaveId);
                         GetSaveDataFromDB(GameGen);
@@ -273,7 +274,7 @@ namespace RyuuseiManager
                     if (saveName == nameItem.Text) return;
                     if (SaveID == 0)
                     {
-                        byte[] encSave = File.ReadAllBytes(Path.Combine(API.SteamInterop.GetSaveDataPath(SteamID), $"data0{GameGen}Slot.bin"));
+                        byte[] encSave = ReadFile(Path.Combine(API.SteamInterop.GetSaveDataPath(SteamID), $"data0{GameGen}Slot.bin"));
                         byte[] decSave = key.DecryptBlob(encSave, API.SteamInterop.GetSteamID64(SteamID));
                         DB.SaveDataBlob(decSave, saveName, GameGen, true, out ulong newSaveId);
                         GetSaveDataFromDB(GameGen);
@@ -305,7 +306,7 @@ namespace RyuuseiManager
             byte[]? rawSaveData;
             if (SaveID == 0)
             {
-                byte[] encSave = File.ReadAllBytes(Path.Combine(API.SteamInterop.GetSaveDataPath(SteamID), $"data0{GameGen}Slot.bin"));
+                byte[] encSave = ReadFile(Path.Combine(API.SteamInterop.GetSaveDataPath(SteamID), $"data0{GameGen}Slot.bin"));
                 rawSaveData = key.DecryptBlob(encSave, API.SteamInterop.GetSteamID64(SteamID));
             }
             else
@@ -321,7 +322,10 @@ namespace RyuuseiManager
                 };
                 if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
                 {
-                    File.WriteAllBytes(Path.Combine(dlg.FileName, $"data0{GameGen}Slot.bin"), rawSaveData);
+                    if (!TrySaveFile(Path.Combine(dlg.FileName, $"data0{GameGen}Slot.bin"), rawSaveData))
+                    {
+                        MessageBox.Show(this, (string)Application.Current.Resources["Msg_UnableToSave"], (string)Application.Current.Resources["Msg_Info"]);
+                    }
                 }
             }
         }
@@ -350,7 +354,11 @@ namespace RyuuseiManager
                 if (CanWriteToPath(savePath))
                 {
                     byte[] signedSave = key.EncryptBlob(rawSaveData, API.SteamInterop.GetSteamID64(SteamID));
-                    File.WriteAllBytes(Path.Combine(savePath, $"data0{GameGen}Slot.bin"), signedSave);
+                    if (!TrySaveFile(Path.Combine(savePath, $"data0{GameGen}Slot.bin"), signedSave))
+                    {
+                        MessageBox.Show(this, (string)Application.Current.Resources["Msg_UnableToSave"], (string)Application.Current.Resources["Msg_Info"]);
+                        return false;
+                    }
                     if (prompts) MessageBox.Show(this, (string)Application.Current.Resources["Msg_ImportComplete"], (string)Application.Current.Resources["Msg_Info"]);
                     return true;
                 }
@@ -506,6 +514,31 @@ namespace RyuuseiManager
                 using (FileStream fs = File.Create(testFile, 1, FileOptions.DeleteOnClose))
                 {
                 }
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private byte[] ReadFile(string path)
+        {
+            using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                using (var ms = new MemoryStream())
+                {
+                    stream.CopyTo(ms);
+                    return ms.ToArray();
+                }
+            }
+        }
+
+        private bool TrySaveFile(string path, byte[] blob)
+        {
+            try
+            {
+                File.WriteAllBytes(path, blob);
                 return true;
             }
             catch

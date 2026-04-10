@@ -48,6 +48,7 @@
     <system:String x:Key="Msg_ExportSave">請選擇放置匯出存檔檔案的路徑。</system:String>
     <system:String x:Key="Msg_UnsuitableSave">這不是本遊戲的存檔。</system:String>
     <system:String x:Key="Msg_InvalidSave">存檔檔案無效。</system:String>
+    <system:String x:Key="Msg_UnableToExport">無法匯出檔案。請檢查該文件是否被其他程式佔用。</system:String>
     <system:String x:Key="Msg_Confirm">確認</system:String>
     <system:String x:Key="Msg_DeleteConfirm">是否要刪除本存檔？此操作無法撤銷。</system:String>
     <system:String x:Key="Msg_ImportComplete">存檔匯入完成。</system:String>
