@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,7 +22,10 @@ namespace RyuuseiManager
         {
             InitializeComponent();
             ListLanguage();
+            SetVersionString();
         }
+
+        private Version? version = Assembly.GetExecutingAssembly().GetName().Version;
 
         private void ListLanguage()
         {
@@ -41,7 +45,13 @@ namespace RyuuseiManager
             {
                 string selectedLangCode = ((ComboItem)ComboLanguageList.SelectedItem).Value;
                 DB.SetLanguage(selectedLangCode);
+                SetVersionString();
             }
+        }
+
+        private void SetVersionString()
+        {
+            VersionText.Text = $"{Application.Current.Resources["Title_RyuuseiManager"]} | {Application.Current.Resources["Msg_Version"]} {version}";
         }
 
         public class ComboItem

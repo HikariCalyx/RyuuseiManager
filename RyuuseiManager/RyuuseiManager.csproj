@@ -8,6 +8,16 @@
     <UseWPF>true</UseWPF>
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyTitle>Ryuusei Manager</AssemblyTitle>
+    <Company>Hikari Calyx Tech</Company>
+    <Product>RyuuseiManager</Product>
+
+    <Version>1.0.0.3</Version>
+    <AssemblyVersion>1.0.0.3</AssemblyVersion>
+    <FileVersion>1.0.0.3</FileVersion>
+  </PropertyGroup>
+
 
   <ItemGroup>
     <Folder Include="PrebuiltBaseSaveData\" />

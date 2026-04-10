@@ -52,4 +52,5 @@
     <system:String x:Key="Msg_ImportComplete">存檔匯入完成。</system:String>
     <system:String x:Key="Dlg_Settings">設定</system:String>
     <system:String x:Key="Msg_Language">語言</system:String>
+    <system:String x:Key="Msg_Version">版本</system:String>
 </ResourceDictionary>

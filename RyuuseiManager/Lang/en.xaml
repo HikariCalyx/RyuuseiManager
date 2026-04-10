@@ -52,4 +52,5 @@
     <system:String x:Key="Msg_ImportComplete">Save data import complete.</system:String>
     <system:String x:Key="Dlg_Settings">Settings</system:String>
     <system:String x:Key="Msg_Language">Language</system:String>
+    <system:String x:Key="Msg_Version">Version</system:String>
 </ResourceDictionary>

@@ -52,4 +52,5 @@
     <system:String x:Key="Msg_ImportComplete">Importação de dados do Save concluída.</system:String>
     <system:String x:Key="Dlg_Settings">Ajustes</system:String>
     <system:String x:Key="Msg_Language">Idioma</system:String>
+    <system:String x:Key="Msg_Version">Versão</system:String>
 </ResourceDictionary>

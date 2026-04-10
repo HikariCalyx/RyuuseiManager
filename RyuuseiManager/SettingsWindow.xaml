@@ -42,7 +42,12 @@
                 CornerRadius="4"
                 BorderBrush="#FFCCCCCC"
                 BorderThickness="1">
-            <!-- Additional settings to be added -->
+            <TextBlock x:Name="VersionText"
+                       Text="Version"
+                       FontSize="14"
+                       VerticalAlignment="Bottom"
+                       HorizontalAlignment="Center"
+                       Margin="8"/>
         </Border>
 
     </Grid>
