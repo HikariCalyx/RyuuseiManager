@@ -38,6 +38,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MandarinJuiceCore\MandarinJuiceCore.csproj" />
+    <ProjectReference Include="..\GameResource\GameResource.csproj" />
   </ItemGroup>
 
 </Project>

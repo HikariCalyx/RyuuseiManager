@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 
 namespace RyuuseiManager
 {
@@ -79,11 +80,7 @@ namespace RyuuseiManager
                 var coverTab = new TabItem
                 {
                     Header = (string)Application.Current.Resources["Tab_Cover"],
-                    Content = new TextBlock
-                    {
-                        Text = (string)Application.Current.Resources["Msg_IntentBlank"],
-                        Margin = new Thickness(10)
-                    }
+                    Content = GetMugshot(GetCurrentSave())
                 };
                 var battleCardTab = new TabItem
                 {
@@ -371,6 +368,20 @@ namespace RyuuseiManager
             return false;
         }
 
+        private byte[] GetCurrentSave()
+        {
+            if (SaveID == 0)
+            {
+                string? savePath = API.SteamInterop.GetSaveDataPath(SteamID);
+                byte[] steamRawSave = ReadFile(Path.Combine(savePath, $"data0{GameGen}Slot.bin"));
+                return key.DecryptBlob(steamRawSave, API.SteamInterop.GetSteamID64(SteamID));
+            }
+            else
+            {
+                return DB.LoadDataBlob(SaveID);
+            }
+        }
+
         private bool CheckSave(byte[] blob)
         {
             byte expectedNextByte;
@@ -492,6 +503,19 @@ namespace RyuuseiManager
             {
                 ComboSaveName.Items.Add(new ComboItem { Text = saveDataDict[i] + $" ({generation}-{i})", Value = (ulong)i });
             }
+        }
+
+        private Image GetMugshot(byte[] saveBlob)
+        {
+            int gameID = (int)(GameGen / 10);
+            int mugshotID = BinaryMagic.Processor.GetMugshotID(saveBlob, gameID);
+            BitmapImage image = GameResourceRetriver.GetMugshot(mugshotID);
+            return new Image
+            {
+                Source = image,
+                Margin = new Thickness(10),
+                Stretch = System.Windows.Media.Stretch.None
+            };
         }
 
         private void LoadLanguage()

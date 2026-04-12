@@ -63,7 +63,7 @@ namespace RyuuseiManager.BinaryMagic
                         blob[i - 6] == 0x00 &&
                         blob[i - 5] == 0x00)
                     {
-                        // Remove those 8 bytes
+                        // Remove those 4 bytes
                         var result = new byte[source.Length - 4];
                         Buffer.BlockCopy(source, 0, result, 0, i - 4);
                         Buffer.BlockCopy(source, i, result, i - 4, source.Length - i);
@@ -72,6 +72,22 @@ namespace RyuuseiManager.BinaryMagic
                 }
             }
             return source;
+        }
+
+        public static int GetMugshotID(ReadOnlySpan<byte> blob, int gameID)
+        {
+            int mugshotOffset = 0;
+            switch (gameID)
+            {
+                case 1:
+                    mugshotOffset = Offset.SF1.Mugshot; break;
+                case 2:
+                    mugshotOffset = Offset.SF2.Mugshot; break;
+                case 3:
+                    return 278;
+                    // mugshotOffset = Offset.SF3.Mugshot; break;
+            }
+            return (int)BitConverter.ToUInt16(blob.ToArray(), mugshotOffset);
         }
     }
 }
