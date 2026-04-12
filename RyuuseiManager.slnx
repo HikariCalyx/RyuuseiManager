@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="GameResource/GameResource.csproj" Id="da4ed1b1-62bd-4827-8574-9b397f8bd0f5" />
   <Project Path="MandarinJuiceCore/MandarinJuiceCore.csproj" />
   <Project Path="RyuuseiManager/RyuuseiManager.csproj" />
 </Solution>

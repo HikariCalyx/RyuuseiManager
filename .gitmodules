@@ -1,0 +1,3 @@
+[submodule "GameResource"]
+	path = GameResource
+	url = https://github.com/HikariCalyx/RyuuseiManagerResource
