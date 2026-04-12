@@ -417,11 +417,18 @@ namespace RyuuseiManager
 
         private void RunGame()
         {
-            Process.Start(new ProcessStartInfo
+            if (API.WineCheck.IsRunningUnderWine())
             {
-                UseShellExecute = true,
-                FileName = "steam://rungameid/3500390",
-            });
+                MessageBox.Show((string)Application.Current.Resources["Msg_WineCheck"], (string)Application.Current.Resources["Msg_Info"]);
+            }
+            else
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    UseShellExecute = true,
+                    FileName = "steam://rungameid/3500390",
+                });
+            }
         }
 
         private void CheckSteamAccount()
@@ -437,7 +444,7 @@ namespace RyuuseiManager
             }
             else
             {
-                MessageBox.Show((string)Application.Current.Resources["Msg_NoSteamAccount"]);
+                MessageBox.Show((string)Application.Current.Resources["Msg_NoSteamAccount"], (string)Application.Current.Resources["Msg_Info"]);
             }
         }
 

@@ -55,4 +55,6 @@
     <system:String x:Key="Dlg_Settings">Settings</system:String>
     <system:String x:Key="Msg_Language">Language</system:String>
     <system:String x:Key="Msg_Version">Version</system:String>
+    <system:String x:Key="Msg_WineCheck">Cannot run game from Wine, please run game from Steam manually instead.</system:String>
+    <system:String x:Key="SteamPath">Steam Path</system:String>
 </ResourceDictionary>

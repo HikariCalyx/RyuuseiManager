@@ -55,4 +55,6 @@
     <system:String x:Key="Dlg_Settings">設定</system:String>
     <system:String x:Key="Msg_Language">語言</system:String>
     <system:String x:Key="Msg_Version">版本</system:String>
+    <system:String x:Key="Msg_WineCheck">無法透過 Wine 運行遊戲，請手動透過 Steam 運行遊戲。</system:String>
+    <system:String x:Key="SteamPath">Steam 路徑</system:String>
 </ResourceDictionary>

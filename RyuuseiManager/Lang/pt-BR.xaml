@@ -55,4 +55,6 @@
     <system:String x:Key="Dlg_Settings">Ajustes</system:String>
     <system:String x:Key="Msg_Language">Idioma</system:String>
     <system:String x:Key="Msg_Version">Versão</system:String>
+    <system:String x:Key="Msg_WineCheck">Não foi possível executar o jogo a partir do Wine. Por favor, execute-o manualmente a partir do Steam.</system:String>
+    <system:String x:Key="SteamPath">Caminho do Steam</system:String>
 </ResourceDictionary>

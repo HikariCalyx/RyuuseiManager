@@ -24,12 +24,37 @@ namespace RyuuseiManager.API
 
         public static string? GetSteamPath()
         {
-            string? regPath = Registry.GetValue(
-            @"HKEY_CURRENT_USER\Software\Valve\Steam",
-            "SteamPath",
-            null
-            ) as string;
-            return regPath;
+            if (WineCheck.IsRunningUnderWine())
+            {
+                string userName = Environment.UserName;
+                string steamPath = $"Z:\\home\\{userName}\\.steam\\steam\\"; // Default case
+                if (!Directory.Exists(steamPath))
+                {
+                    steamPath = $"Z:\\home\\{userName}\\.local\\share\\Steam\\"; // rare case
+                }
+                if (!Directory.Exists(steamPath))
+                {
+                    steamPath = $"Z:\\home\\{userName}\\.local\\share\\SteamBeta\\"; // Beta client
+                }
+                if (!Directory.Exists(steamPath))
+                {
+                    steamPath = $"Z:\\home\\{userName}\\.var\\app\\com.valvesoftware.Steam\\data\\Steam\\"; // Flatpak
+                }
+                if (!Directory.Exists(steamPath))
+                {
+                    steamPath = $"Z:\\home\\{userName}\\snap\\steam\\common\\.local\\share\\Steam\\"; // Snap
+                }
+                return steamPath;
+            }
+            else
+            {
+                string? regPath = Registry.GetValue(
+                @"HKEY_CURRENT_USER\Software\Valve\Steam",
+                "SteamPath",
+                null
+                ) as string;
+                return regPath;
+            }
         }
 
         public static string? GetLocalNickname(ulong steamID3, string? steamDir = null)
@@ -49,7 +74,7 @@ namespace RyuuseiManager.API
             string text = File.ReadAllText(localUserNameDir);
 
             // Regex to find the nickname for this SteamID64
-            string pattern = $"\"{steamID3}\"[\\s\\S]*?\"name\"\\s*\"([^\"]+)\"";
+            string pattern = $"\"{steamID3}\"[\\s\\S]*?\"PersonaName\"\\s*\"([^\"]+)\"";
             var match = Regex.Match(text, pattern);
 
             if (!match.Success)

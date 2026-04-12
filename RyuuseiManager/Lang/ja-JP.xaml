@@ -55,4 +55,6 @@
     <system:String x:Key="Dlg_Settings">設定</system:String>
     <system:String x:Key="Msg_Language">言語</system:String>
     <system:String x:Key="Msg_Version">バージョン</system:String>
+    <system:String x:Key="Msg_WineCheck">Wineからゲームを実行できません。代わりにSteamから手動でゲームを実行してください。</system:String>
+    <system:String x:Key="SteamPath">Steamパス</system:String>
 </ResourceDictionary>
