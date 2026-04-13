@@ -2,8 +2,6 @@
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
-using System.Reflection.Metadata;
-using System.Xml.Linq;
 
 namespace RyuuseiManager
 {
@@ -70,6 +68,82 @@ namespace RyuuseiManager
                 cmd.ExecuteNonQuery();
             }
             App.SetLanguage(langCode);
+        }
+
+        public static string GetCustomSteamPath()
+        {
+            InitDatabase();
+            string sqlCommand = @"SELECT value FROM config WHERE variable = 'steampath' LIMIT 1;";
+            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+            {
+                conn.Open();
+                SQLiteCommand cmd = new SQLiteCommand(sqlCommand, conn);
+                return (string)cmd.ExecuteScalar();
+            }
+        }
+
+        public static void SetSteamPath(string steampath)
+        {
+            InitDatabase();
+            string sqlCommand = "";
+            if (string.IsNullOrEmpty(GetCustomSteamPath()))
+            {
+                sqlCommand = @"INSERT INTO config (variable, value) VALUES ('steampath', @name);";
+            }
+            else
+            {
+                sqlCommand = @"UPDATE config SET value = @name WHERE variable = 'steampath';";
+            }
+            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+            {
+                conn.Open();
+                SQLiteCommand cmd = new SQLiteCommand(sqlCommand, conn);
+                cmd.Parameters.AddWithValue("@name", steampath);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public static string GetSteamPathToggle()
+        {
+            InitDatabase();
+            string sqlCommand = @"SELECT value FROM config WHERE variable = 'usecustompath' LIMIT 1;";
+            string result = "unset";
+            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+            {
+                conn.Open();
+                SQLiteCommand cmd = new SQLiteCommand(sqlCommand, conn);
+                result = (string)cmd.ExecuteScalar();
+            }
+            if (string.IsNullOrEmpty(result))
+            {
+                return "unset";
+            }
+            else
+            {
+                return result;
+            }
+        }
+
+        public static void ToggleCustomSteamPath(bool isEnabled)
+        {
+            InitDatabase();
+            string sqlCommand = "";
+            switch (GetSteamPathToggle())
+            {
+                case "unset":
+                    sqlCommand = @"INSERT INTO config (variable, value) VALUES ('usecustompath', @name);";
+                    break;
+                default:
+                    sqlCommand = @"UPDATE config SET value = @name WHERE variable = 'usecustompath';";
+                    break;
+            }
+            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+            {
+                conn.Open();
+                SQLiteCommand cmd = new SQLiteCommand(sqlCommand, conn);
+                cmd.Parameters.AddWithValue("@name", isEnabled ? "1" : "0");
+                cmd.ExecuteNonQuery();
+            }
         }
 
         public static void SaveDataBlob(byte[] blob, string name, int generation, bool compression, out ulong saveId)

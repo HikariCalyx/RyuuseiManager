@@ -57,4 +57,8 @@
     <system:String x:Key="Msg_Version">バージョン</system:String>
     <system:String x:Key="Msg_WineCheck">Wineからゲームを実行できません。代わりにSteamから手動でゲームを実行してください。</system:String>
     <system:String x:Key="SteamPath">Steamパス</system:String>
+    <system:String x:Key="Autodetect">自動検出</system:String>
+    <system:String x:Key="Manual">手動で指定...</system:String>
+    <system:String x:Key="LocateSteamPath">「userdata」ディレクトリを含むSteamパスを特定してください。</system:String>
+    <system:String x:Key="Msg_InvalidSteamPath">これは有効なSteamパスではないようです。</system:String>
 </ResourceDictionary>

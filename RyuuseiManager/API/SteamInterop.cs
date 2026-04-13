@@ -1,8 +1,5 @@
 ﻿using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace RyuuseiManager.API
@@ -24,36 +21,43 @@ namespace RyuuseiManager.API
 
         public static string? GetSteamPath()
         {
-            if (WineCheck.IsRunningUnderWine())
+            switch (DB.GetSteamPathToggle())
             {
-                string userName = Environment.UserName;
-                string steamPath = $"Z:\\home\\{userName}\\.steam\\steam\\"; // Default case
-                if (!Directory.Exists(steamPath))
-                {
-                    steamPath = $"Z:\\home\\{userName}\\.local\\share\\Steam\\"; // rare case
-                }
-                if (!Directory.Exists(steamPath))
-                {
-                    steamPath = $"Z:\\home\\{userName}\\.local\\share\\SteamBeta\\"; // Beta client
-                }
-                if (!Directory.Exists(steamPath))
-                {
-                    steamPath = $"Z:\\home\\{userName}\\.var\\app\\com.valvesoftware.Steam\\data\\Steam\\"; // Flatpak
-                }
-                if (!Directory.Exists(steamPath))
-                {
-                    steamPath = $"Z:\\home\\{userName}\\snap\\steam\\common\\.local\\share\\Steam\\"; // Snap
-                }
-                return steamPath;
-            }
-            else
-            {
-                string? regPath = Registry.GetValue(
-                @"HKEY_CURRENT_USER\Software\Valve\Steam",
-                "SteamPath",
-                null
-                ) as string;
-                return regPath;
+                default:
+                case "0":
+                    if (WineCheck.IsRunningUnderWine())
+                    {
+                        string userName = Environment.UserName;
+                        string steamPath = $"Z:\\home\\{userName}\\.steam\\steam\\"; // Default case
+                        if (!Directory.Exists(steamPath))
+                        {
+                            steamPath = $"Z:\\home\\{userName}\\.local\\share\\Steam\\"; // rare case
+                        }
+                        if (!Directory.Exists(steamPath))
+                        {
+                            steamPath = $"Z:\\home\\{userName}\\.local\\share\\SteamBeta\\"; // Beta client
+                        }
+                        if (!Directory.Exists(steamPath))
+                        {
+                            steamPath = $"Z:\\home\\{userName}\\.var\\app\\com.valvesoftware.Steam\\data\\Steam\\"; // Flatpak
+                        }
+                        if (!Directory.Exists(steamPath))
+                        {
+                            steamPath = $"Z:\\home\\{userName}\\snap\\steam\\common\\.local\\share\\Steam\\"; // Snap
+                        }
+                        return steamPath;
+                    }
+                    else
+                    {
+                        string? regPath = Registry.GetValue(
+                        @"HKEY_CURRENT_USER\Software\Valve\Steam",
+                        "SteamPath",
+                        null
+                        ) as string;
+                        return regPath;
+                    }
+                case "1":
+                    return DB.GetCustomSteamPath();
             }
         }
 
@@ -102,6 +106,7 @@ namespace RyuuseiManager.API
             if (Directory.Exists(steamDir))
             {
                 string localUserDir = Path.Combine(steamDir, "userdata");
+                if (!Directory.Exists(localUserDir)) Directory.CreateDirectory(localUserDir);
                 var userids = Directory.GetDirectories(localUserDir);
                 foreach (var i in userids)
                 {

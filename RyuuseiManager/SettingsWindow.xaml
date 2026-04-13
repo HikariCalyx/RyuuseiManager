@@ -9,6 +9,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
             <!-- Header row: Label + ComboBox -->
             <RowDefinition Height="*"/>
             <!-- Rest of the settings area -->
@@ -32,11 +33,29 @@
                       SelectedValuePath="Value"
                       Margin="4"
                       FontSize="14"
-                      Width="280"
                       SelectionChanged="ComboLanguageList_SelectionChanged"/>
         </Grid>
+        <Grid Grid.Row="1" Margin="8,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-        <Border Grid.Row="1"
+            <Label Content="{DynamicResource SteamPath}"
+                   VerticalAlignment="Center"
+                   FontSize="16"
+                   Margin="0,0,8,0"/>
+
+            <ComboBox x:Name="ComboSteamPath" Grid.Column="1"
+                      VerticalContentAlignment="Center"
+                      DisplayMemberPath="Text"
+                      SelectedValuePath="Value"
+                      Margin="4"
+                      FontSize="14"
+                      SelectionChanged="ComboSteamPath_SelectionChanged"/>
+        </Grid>
+
+        <Border Grid.Row="2"
                 Margin="8"
                 Background="#FFF5F5F5"
                 CornerRadius="4"

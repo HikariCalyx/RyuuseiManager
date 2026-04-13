@@ -255,6 +255,7 @@ namespace RyuuseiManager
         {
             var dlg = new SettingsWindow();
             dlg.Owner = this;
+            dlg._mainWindow = this;
             dlg.ShowDialog();
         }
 
@@ -431,8 +432,9 @@ namespace RyuuseiManager
             }
         }
 
-        private void CheckSteamAccount()
+        public void CheckSteamAccount()
         {
+            ComboSteamUser.Items.Clear();
             List<ulong> steamIDs = API.SteamInterop.GetAvailableSteamUsers();
             if (steamIDs.Count > 0)
             {

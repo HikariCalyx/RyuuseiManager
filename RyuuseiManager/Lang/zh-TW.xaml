@@ -57,4 +57,8 @@
     <system:String x:Key="Msg_Version">版本</system:String>
     <system:String x:Key="Msg_WineCheck">無法透過 Wine 運行遊戲，請手動透過 Steam 運行遊戲。</system:String>
     <system:String x:Key="SteamPath">Steam 路徑</system:String>
+    <system:String x:Key="Autodetect">自動偵測</system:String>
+    <system:String x:Key="Manual">手動指定...</system:String>
+    <system:String x:Key="LocateSteamPath">請尋找包含「userdata」目錄的 Steam 路徑。</system:String>
+    <system:String x:Key="Msg_InvalidSteamPath">這似乎不是有效的 Steam 路徑。</system:String>
 </ResourceDictionary>

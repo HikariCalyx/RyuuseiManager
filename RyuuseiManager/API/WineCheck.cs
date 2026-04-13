@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace RyuuseiManager.API
+﻿namespace RyuuseiManager.API
 {
     public class WineCheck
     {

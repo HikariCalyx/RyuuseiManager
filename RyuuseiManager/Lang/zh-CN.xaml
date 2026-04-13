@@ -57,4 +57,8 @@
     <system:String x:Key="Msg_Version">版本</system:String>
     <system:String x:Key="Msg_WineCheck">不支持从 Wine 启动游戏，请从 Steam 手动启动游戏。</system:String>
     <system:String x:Key="SteamPath">Steam 路径</system:String>
+    <system:String x:Key="Autodetect">自动检测</system:String>
+    <system:String x:Key="Manual">手动指定...</system:String>
+    <system:String x:Key="LocateSteamPath">请找到包含“userdata”目录的 Steam 路径。</system:String>
+    <system:String x:Key="Msg_InvalidSteamPath">这似乎不是有效的 Steam 路径。</system:String>
 </ResourceDictionary>

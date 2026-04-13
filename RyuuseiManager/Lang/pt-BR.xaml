@@ -57,4 +57,8 @@
     <system:String x:Key="Msg_Version">Versão</system:String>
     <system:String x:Key="Msg_WineCheck">Não foi possível executar o jogo a partir do Wine. Por favor, execute-o manualmente a partir do Steam.</system:String>
     <system:String x:Key="SteamPath">Caminho do Steam</system:String>
+    <system:String x:Key="Autodetect">Detecção automática</system:String>
+    <system:String x:Key="Manual">Especificar manualmente...</system:String>
+    <system:String x:Key="LocateSteamPath">Localize o caminho do Steam que contém o diretório "userdata".</system:String>
+    <system:String x:Key="Msg_InvalidSteamPath">Este não parece ser um caminho válido para o Steam.</system:String>
 </ResourceDictionary>

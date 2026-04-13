@@ -1,15 +1,8 @@
 ﻿using MandarinJuiceCore;
 using MandarinJuiceCore.GameProfile;
 using MandarinJuiceCore.GamingPlatforms;
-using MandarinJuiceCore.Helpers;
 using MandarinJuiceCore.Infrastructure;
 using Mi5hmasH.GameProfile;
-using Mi5hmasH.Logger;
-using Mi5hmasH.Logger.Models;
-using Mi5hmasH.Logger.Providers;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace RyuuseiManager.API
 {

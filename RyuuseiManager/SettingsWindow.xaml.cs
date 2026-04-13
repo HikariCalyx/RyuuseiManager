@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.WindowsAPICodePack.Dialogs;
+using System.IO;
 using System.Reflection;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace RyuuseiManager
 {
@@ -22,10 +15,12 @@ namespace RyuuseiManager
         {
             InitializeComponent();
             ListLanguage();
+            ListSteamPath();
             SetVersionString();
         }
 
         private Version? version = Assembly.GetExecutingAssembly().GetName().Version;
+        public MainWindow _mainWindow { get; set; } = new MainWindow();
 
         private void ListLanguage()
         {
@@ -39,6 +34,28 @@ namespace RyuuseiManager
             ComboLanguageList.SelectedValue = DB.GetCurrentLanguage();
         }
 
+        private void ListSteamPath()
+        {
+            ComboSteamPath.Items.Clear();
+            ComboSteamPath.Items.Add(new ComboItem { Text = (string)Application.Current.Resources["Autodetect"], Value = "auto" });
+            string customPath = DB.GetCustomSteamPath();
+            if (!string.IsNullOrEmpty(customPath))
+            {
+                ComboSteamPath.Items.Add(new ComboItem { Text = customPath, Value = "manualpath" });
+            }
+            ComboSteamPath.Items.Add(new ComboItem { Text = (string)Application.Current.Resources["Manual"], Value = "manual" });
+            switch (DB.GetSteamPathToggle())
+            {
+                case "unset":
+                case "0":
+                    ComboSteamPath.SelectedValue = "auto";
+                    break;
+                case "1":
+                    ComboSteamPath.SelectedValue = "manualpath";
+                    break;
+            }
+        }
+
         private void ComboLanguageList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (ComboLanguageList.SelectedItem != null)
@@ -46,6 +63,43 @@ namespace RyuuseiManager
                 string selectedLangCode = ((ComboItem)ComboLanguageList.SelectedItem).Value;
                 DB.SetLanguage(selectedLangCode);
                 SetVersionString();
+            }
+        }
+
+        private void ComboSteamPath_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ComboSteamPath.SelectedItem != null)
+            {
+                switch (((ComboItem)ComboSteamPath.SelectedItem).Value)
+                {
+                    case "auto":
+                        DB.ToggleCustomSteamPath(false);
+                        break;
+                    case "manualpath":
+                        DB.ToggleCustomSteamPath(true);
+                        break;
+                    case "manual":
+                        var dlg = new CommonOpenFileDialog
+                        {
+                            IsFolderPicker = true,
+                            Title = (string)Application.Current.Resources["LocateSteamPath"]
+                        };
+                        if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
+                        {
+                            if (Directory.Exists(Path.Combine(dlg.FileName, "userdata")))
+                            {
+                                DB.SetSteamPath(dlg.FileName);
+                                DB.ToggleCustomSteamPath(true);
+                            }
+                            else
+                            {
+                                MessageBox.Show(this, (string)Application.Current.Resources["Msg_InvalidSteamPath"], (string)Application.Current.Resources["Msg_Info"]);
+                            }
+                        }
+                        ListSteamPath();
+                        _mainWindow.CheckSteamAccount();
+                        break;
+                }
             }
         }
 
