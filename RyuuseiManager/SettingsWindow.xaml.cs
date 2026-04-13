@@ -21,6 +21,7 @@ namespace RyuuseiManager
 
         private Version? version = Assembly.GetExecutingAssembly().GetName().Version;
         public MainWindow _mainWindow { get; set; } = new MainWindow();
+        private bool _internal;
 
         private void ListLanguage()
         {
@@ -29,7 +30,9 @@ namespace RyuuseiManager
             {
                 string langName = Lang.LangName.LangList[i];
                 ComboItem langItem = new ComboItem { Text = langName, Value = i };
+                _internal = true;
                 ComboLanguageList.Items.Add(langItem);
+                _internal = false;
             }
             ComboLanguageList.SelectedValue = DB.GetCurrentLanguage();
         }
@@ -44,6 +47,7 @@ namespace RyuuseiManager
                 ComboSteamPath.Items.Add(new ComboItem { Text = customPath, Value = "manualpath" });
             }
             ComboSteamPath.Items.Add(new ComboItem { Text = (string)Application.Current.Resources["Manual"], Value = "manual" });
+            _internal = true;
             switch (DB.GetSteamPathToggle())
             {
                 case "unset":
@@ -54,6 +58,7 @@ namespace RyuuseiManager
                     ComboSteamPath.SelectedValue = "manualpath";
                     break;
             }
+            _internal = false;
         }
 
         private void ComboLanguageList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -68,6 +73,7 @@ namespace RyuuseiManager
 
         private void ComboSteamPath_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (_internal) return;
             if (ComboSteamPath.SelectedItem != null)
             {
                 switch (((ComboItem)ComboSteamPath.SelectedItem).Value)
@@ -96,10 +102,10 @@ namespace RyuuseiManager
                                 MessageBox.Show(this, (string)Application.Current.Resources["Msg_InvalidSteamPath"], (string)Application.Current.Resources["Msg_Info"]);
                             }
                         }
-                        ListSteamPath();
-                        _mainWindow.CheckSteamAccount();
                         break;
                 }
+                ListSteamPath();
+                _mainWindow.CheckSteamAccount();
             }
         }
 
