@@ -45,6 +45,10 @@ namespace RyuuseiManager.API
                         {
                             steamPath = $"Z:\\home\\{userName}\\snap\\steam\\common\\.local\\share\\Steam\\"; // Snap
                         }
+                        if (!Directory.Exists(steamPath))
+                        {
+                            steamPath = $"Z:\\Users\\{userName}\\Library\\Application Support\\Steam\\"; // macOS, though not supported yet
+                        }
                         return steamPath;
                     }
                     else
