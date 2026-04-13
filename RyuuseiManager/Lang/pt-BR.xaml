@@ -30,7 +30,7 @@
     <system:String x:Key="Btn_LoadAndRun">🎮 Carregar e Jogar</system:String>
     <system:String x:Key="Msg_IntentBlank">Esta aba está vazia propositalmente.</system:String>
     <system:String x:Key="Msg_TBA">A ser adicionado.</system:String>
-    <system:String x:Key="Msg_NoSteamAccount">Não foi possível encontrar informações validas da sua conta da Steam! Verifique se você tem o Steam instalado e ter jogado o jogo.</system:String>
+    <system:String x:Key="Msg_NoSteamAccount">Não foi possível encontrar informações validas da sua conta da Steam! Verifique se você tem o Steam instalado e ter jogado o jogo. Para especificar o caminho do Steam manualmente, consulte a página de Configurações.</system:String>
     <system:String x:Key="Msg_RunElevate">Execute Ryuusei Manager como administrador.</system:String>
     <system:String x:Key="Msg_Info">Info</system:String>
     <system:String x:Key="Tab_Cover">Capa</system:String>

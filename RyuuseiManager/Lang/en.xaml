@@ -30,7 +30,7 @@
     <system:String x:Key="Btn_LoadAndRun">🎮 Load and Play</system:String>
     <system:String x:Key="Msg_IntentBlank">This tab is intentionally left blank.</system:String>
     <system:String x:Key="Msg_TBA">To be added</system:String>
-    <system:String x:Key="Msg_NoSteamAccount">No valid Steam Account information has been found. Please check if you have Steam installed, and you have the game played.</system:String>
+    <system:String x:Key="Msg_NoSteamAccount">No valid Steam Account information has been found. Please check if you have Steam installed, and you have the game played. To specify Steam path manually, check Settings page.</system:String>
     <system:String x:Key="Msg_RunElevate">Please run Ryuusei Manager with Administrator previleges.</system:String>
     <system:String x:Key="Msg_Info">Info</system:String>
     <system:String x:Key="Tab_Cover">Cover</system:String>

@@ -20,7 +20,7 @@ namespace RyuuseiManager
         }
 
         private Version? version = Assembly.GetExecutingAssembly().GetName().Version;
-        public MainWindow _mainWindow { get; set; } = new MainWindow();
+        public MainWindow _mainWindow { get; set; }
         private bool _internal;
 
         private void ListLanguage()

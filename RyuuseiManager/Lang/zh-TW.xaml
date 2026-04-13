@@ -30,7 +30,7 @@
     <system:String x:Key="Btn_LoadAndRun">🎮 載入存檔並啟動遊戲</system:String>
     <system:String x:Key="Msg_IntentBlank">此標籤頁有意留為空白</system:String>
     <system:String x:Key="Msg_TBA">待添加</system:String>
-    <system:String x:Key="Msg_NoSteamAccount">沒有找到有效的Steam帳戶。請檢查您是否有安裝Steam且有遊玩本遊戲。</system:String>
+    <system:String x:Key="Msg_NoSteamAccount">沒有找到有效的Steam帳戶。請檢查您是否有安裝Steam且有遊玩本遊戲。若要手動指定 Steam 路徑，請查看設定頁面。</system:String>
     <system:String x:Key="Msg_RunElevate">請使用管理員權限執行流星管理器。</system:String>
     <system:String x:Key="Msg_Info">資訊</system:String>
     <system:String x:Key="Tab_Cover">封面</system:String>

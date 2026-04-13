@@ -30,7 +30,7 @@
     <system:String x:Key="Btn_LoadAndRun">🎮 ゲームをロードして起動</system:String>
     <system:String x:Key="Msg_IntentBlank">このタブは意図的に空白のままになっています。</system:String>
     <system:String x:Key="Msg_TBA">追加予定</system:String>
-    <system:String x:Key="Msg_NoSteamAccount">有効なSteamアカウント情報が見つかりませんでした。Steamがインストールされているか、また該当のゲームがプレイ可能かどうかをご確認ください。</system:String>
+    <system:String x:Key="Msg_NoSteamAccount">有効なSteamアカウント情報が見つかりませんでした。Steamがインストールされているか、また該当のゲームがプレイ可能かどうかをご確認ください。Steamのパスを手動で指定するには、設定ページを確認してください。</system:String>
     <system:String x:Key="Msg_RunElevate">「流星マネジャー」は管理者権限で実行してください。</system:String>
     <system:String x:Key="Msg_Info">情報</system:String>
     <system:String x:Key="Tab_Cover">カバー</system:String>
