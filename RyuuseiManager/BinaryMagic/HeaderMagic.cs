@@ -11,5 +11,6 @@
         // 0x45: SF2
         // 0x53: SF3
         public static readonly byte[] Raw = new byte[] { 0x99, 0xF1, 0xE3, 0xDB };
+
     }
 }

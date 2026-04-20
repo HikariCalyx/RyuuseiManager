@@ -48,6 +48,7 @@
     <system:String x:Key="Msg_ExportSave">Selecione um diretório para salvar os dados exportados.</system:String>
     <system:String x:Key="Msg_UnsuitableSave">Os dados do Save selecionado não é adequado para este jogo.</system:String>
     <system:String x:Key="Msg_InvalidSave">O arquivo de dados salvo é inválido.</system:String>
+    <system:String x:Key="Msg_EncryptedSave">Este é um arquivo de salvamento criptografado do Steam. Solicite ao fornecedor deste arquivo de salvamento que o exporte usando o Ryuusei Manager.</system:String>
     <system:String x:Key="Msg_UnableToExport">Não foi possível exportar o arquivo. Verifique se ele está sendo usado por outro programa.</system:String>
     <system:String x:Key="Msg_Confirm">Confirmar</system:String>
     <system:String x:Key="Msg_DeleteConfirm">Você irá apagar esse Save? Essa ação não poderá ser desfeita!</system:String>
@@ -61,4 +62,6 @@
     <system:String x:Key="Manual">Especificar manualmente...</system:String>
     <system:String x:Key="LocateSteamPath">Localize o caminho do Steam que contém o diretório "userdata".</system:String>
     <system:String x:Key="Msg_InvalidSteamPath">Este não parece ser um caminho válido para o Steam.</system:String>
+    <system:String x:Key="Chk_SubAccountFamilyShare">Subconta familiar do Steam</system:String>
+    <system:String x:Key="Tips_SubAccountFamilyShare">Se esta conta estiver jogando este jogo através do Compartilhamento Familiar, marque esta opção; caso contrário, os dados salvos importados não poderão ser lidos pelo jogo.</system:String>
 </ResourceDictionary>

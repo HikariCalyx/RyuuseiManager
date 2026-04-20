@@ -8,7 +8,38 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="CoverTabPage">
 
-    <Grid>
-        
+    <Grid Margin="12">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="214"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Column="0"
+                Orientation="Vertical">
+
+            <Image x:Name="Mugshot"
+               Width="214"
+               Height="259"
+               Stretch="UniformToFill"
+               Source="{Binding ImageSource, RelativeSource={RelativeSource AncestorType=Page}}"
+               Margin="0,0,0,6"/>
+
+            <TextBox x:Name="Message"
+                 Width="214"
+                 Height="24"
+                 Margin="0,0,0,6"
+                 IsReadOnly="True"/>
+
+            <TextBox x:Name="Secret"
+                 Width="214"
+                 Height="24"
+                 Margin="0,0,0,6"
+                 IsReadOnly="True"/>
+        </StackPanel>
+
+        <Grid Grid.Column="1">
+        </Grid>
     </Grid>
+
+
 </Page>

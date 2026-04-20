@@ -16,23 +16,32 @@ namespace RyuuseiManager
             {
                 SQLiteConnection.CreateFile(dbFilePath);
             }
-            string tableSqlCmd = "CREATE TABLE IF NOT EXISTS saves (" +
+            List<string> tableSqlCmds = new List<string>() {
+                "CREATE TABLE IF NOT EXISTS saves (" +
                 "save_id INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "savename TEXT NOT NULL," +
                 "saveblob BLOB NOT NULL," +
                 "generation INTEGER NOT NULL" +
-                ");";
-            string table2SqlCmd = "CREATE TABLE IF NOT EXISTS config (" +
+                ");",
+
+                "CREATE TABLE IF NOT EXISTS config (" +
                 "variable TEXT NOT NULL," +
                 "value TEXT NOT NULL" +
-                ");";
+                ");",
+
+                "CREATE TABLE IF NOT EXISTS steamfamilyflag (" +
+                "steamid3 INTEGER NOT NULL," +
+                "value INTEGER NOT NULL" +
+                ");"
+            };
             using (SQLiteConnection conn = new SQLiteConnection(connectionString))
             {
                 conn.Open();
-                SQLiteCommand cmd = new SQLiteCommand(tableSqlCmd, conn);
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = table2SqlCmd;
-                cmd.ExecuteNonQuery();
+                foreach (var i in tableSqlCmds)
+                {
+                    SQLiteCommand cmd = new SQLiteCommand(i, conn);
+                    cmd.ExecuteNonQuery();
+                }
             }
         }
 

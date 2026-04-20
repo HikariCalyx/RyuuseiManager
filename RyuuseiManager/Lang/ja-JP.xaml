@@ -48,6 +48,7 @@
     <system:String x:Key="Msg_ExportSave">エクスポートしたセーブデータの保存先ディレクトリを選択してください。</system:String>
     <system:String x:Key="Msg_UnsuitableSave">選択したセーブデータはこのゲームでは使用できません。</system:String>
     <system:String x:Key="Msg_InvalidSave">保存データファイルが無効です。</system:String>
+    <system:String x:Key="Msg_EncryptedSave">これは暗号化されたSteamセーブファイルです。このセーブファイルの提供者に、流星マネジャーを使用してエクスポートするように依頼してください。</system:String>
     <system:String x:Key="Msg_UnableToExport">ファイルをエクスポートできません。他のプログラムによって使用されていないか確認してください。</system:String>
     <system:String x:Key="Msg_Confirm">確認</system:String>
     <system:String x:Key="Msg_DeleteConfirm">このセーブデータをデリートしますか？この操作は元に戻せません。</system:String>
@@ -61,4 +62,6 @@
     <system:String x:Key="Manual">手動で指定...</system:String>
     <system:String x:Key="LocateSteamPath">「userdata」ディレクトリを含むSteamパスを特定してください。</system:String>
     <system:String x:Key="Msg_InvalidSteamPath">これは有効なSteamパスではないようです。</system:String>
+    <system:String x:Key="Chk_SubAccountFamilyShare">Steamファミリーのサブアカウント</system:String>
+    <system:String x:Key="Tips_SubAccountFamilyShare">このアカウントがSteamファミリー経由でこのゲームをプレイしている場合は、このオプションをオンにしてください。そうしないと、インポートされたファイルがゲームで読み取れません。</system:String>
 </ResourceDictionary>

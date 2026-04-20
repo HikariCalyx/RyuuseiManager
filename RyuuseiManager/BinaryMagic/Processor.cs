@@ -1,4 +1,6 @@
-﻿namespace RyuuseiManager.BinaryMagic
+﻿using System.Text;
+
+namespace RyuuseiManager.BinaryMagic
 {
     public class Processor
     {
@@ -76,14 +78,62 @@
             switch (gameID)
             {
                 case 1:
-                    mugshotOffset = Offset.SF1.Mugshot; break;
+                    mugshotOffset = Offset.Absolute.SF1.Mugshot; break;
                 case 2:
-                    mugshotOffset = Offset.SF2.Mugshot; break;
+                    mugshotOffset = Offset.Absolute.SF2.Mugshot; break;
                 case 3:
                     return 278;
-                    // mugshotOffset = Offset.SF3.Mugshot; break;
+                    // mugshotOffset = Offset.Absolute.SF3.Mugshot; break;
             }
             return (int)BitConverter.ToUInt16(blob.ToArray(), mugshotOffset);
+        }
+
+        public static string GetMessage(ReadOnlySpan<byte> blob, int gameID)
+        {
+            int endIndex = -1;
+            byte[] tripleZero = new byte[] { 0x00, 0x00, 0x00 };
+            switch (gameID)
+            {
+                case 1:
+                    endIndex = blob.IndexOf(FooterMagic.SF1.MessageFooterMagic);
+                    break;
+            }
+            if (endIndex < 0) return "";
+
+            var beforeEnd = blob.Slice(0, endIndex);
+            int startIndex = 0;
+            switch (gameID)
+            {
+                case 1:
+                    startIndex = beforeEnd.LastIndexOf(tripleZero) + tripleZero.Length;
+                    break;
+            }
+            var contentBytes = blob.Slice(startIndex, endIndex - startIndex).ToArray();
+            return Encoding.Unicode.GetString(contentBytes);
+        }
+
+        public static string GetSecret(ReadOnlySpan<byte> blob, int gameID)
+        {
+            int endIndex = -1;
+            byte[] tripleZero = new byte[] { 0x00, 0x00, 0x00 };
+            switch (gameID)
+            {
+                case 1:
+                    endIndex = blob.IndexOf(FooterMagic.SF1.SecretFooterMagic);
+                    break;
+            }
+            if (endIndex < 0) return "";
+
+            var beforeEnd = blob.Slice(0, endIndex);
+            int startIndex = 0;
+            switch (gameID)
+            {
+                case 1:
+                    startIndex = beforeEnd.LastIndexOf(tripleZero) + tripleZero.Length;
+                    break;
+            }
+            var contentBytes = blob.Slice(startIndex, endIndex - startIndex).ToArray();
+            return Encoding.Unicode.GetString(contentBytes);
         }
     }
 }

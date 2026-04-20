@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RyuuseiManager"
         mc:Ignorable="d"
-        Title="{DynamicResource Title_RyuuseiManager}" Height="450" Width="800">
+        Title="{DynamicResource Title_RyuuseiManager}" Height="550" Width="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
@@ -59,6 +59,7 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center">
             <Button x:Name="ButtonSettings" Content="{DynamicResource Btn_Settings}" Height="26" FontSize="15" Margin="2" Click="ButtonSettings_Click"/>
+            <CheckBox x:Name="CheckSteamFamilySubAccount" Content="{DynamicResource Chk_SubAccountFamilyShare}" Margin="2" VerticalAlignment="Center" ToolTip="{DynamicResource Tips_SubAccountFamilyShare}" IsEnabled="False" />
         </StackPanel>
         <StackPanel Grid.Row="4"
                 Grid.Column="1"

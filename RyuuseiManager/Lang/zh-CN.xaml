@@ -48,6 +48,7 @@
     <system:String x:Key="Msg_ExportSave">请选择放置导出存档文件的路径。</system:String>
     <system:String x:Key="Msg_UnsuitableSave">这不是本游戏的存档。</system:String>
     <system:String x:Key="Msg_InvalidSave">存档文件无效。</system:String>
+    <system:String x:Key="Msg_EncryptedSave">此为加密的Steam存档。请要求该存档的提供者使用流星管理器导出存档。</system:String>
     <system:String x:Key="Msg_UnableToExport">无法导出文件。请检查该文件是否被其他程序占用。</system:String>
     <system:String x:Key="Msg_Confirm">确认</system:String>
     <system:String x:Key="Msg_DeleteConfirm">是否要删除本存档？此操作无法撤销。</system:String>
@@ -61,4 +62,6 @@
     <system:String x:Key="Manual">手动指定...</system:String>
     <system:String x:Key="LocateSteamPath">请找到包含“userdata”目录的 Steam 路径。</system:String>
     <system:String x:Key="Msg_InvalidSteamPath">这似乎不是有效的 Steam 路径。</system:String>
+    <system:String x:Key="Chk_SubAccountFamilyShare">Steam家庭的子账号</system:String>
+    <system:String x:Key="Tips_SubAccountFamilyShare">如果此账号通过家庭共享游玩此游戏，请勾选本项，否则导入的存档无法被游戏读取。</system:String>
 </ResourceDictionary>

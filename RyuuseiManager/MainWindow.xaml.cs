@@ -77,10 +77,20 @@ namespace RyuuseiManager
         {
             if (ComboSaveName.SelectedItem is ComboItem itemSave)
             {
+                var coverTabFrame = new Frame
+                {
+                    NavigationUIVisibility = System.Windows.Navigation.NavigationUIVisibility.Hidden
+                };
+                var coverTabPage = new CoverTabPage();
+                var saveBlob = GetCurrentSave();
+                coverTabPage.ImageSource = GetMugshot(saveBlob);
+                coverTabPage.SetMessage(GetMessage(saveBlob));
+                coverTabPage.SetSecret(GetSecret(saveBlob));
+                coverTabFrame.Navigate(coverTabPage);
                 var coverTab = new TabItem
                 {
                     Header = (string)Application.Current.Resources["Tab_Cover"],
-                    Content = GetMugshot(GetCurrentSave())
+                    Content = coverTabFrame
                 };
                 var battleCardTab = new TabItem
                 {
@@ -174,11 +184,6 @@ namespace RyuuseiManager
                     if (saveBlob.AsSpan().StartsWith(BinaryMagic.HeaderMagic.Switch))
                     {
                         int gameID = (int)(GameGen / 10);
-                        if (false)
-                        {
-                            MessageBox.Show(this, (string)Application.Current.Resources["Msg_UnsupportedSwitchSave"], (string)Application.Current.Resources["Msg_Info"]);
-                            return;
-                        }
                         saveBlob = BinaryMagic.Processor.StripSwitchSave(saveBlob, gameID);
                     }
                     if (!saveBlob.AsSpan().StartsWith(BinaryMagic.HeaderMagic.Raw))
@@ -435,6 +440,11 @@ namespace RyuuseiManager
         public void CheckSteamAccount()
         {
             ComboSteamUser.Items.Clear();
+            ComboGameTitle.Items.Clear();
+            ComboSaveName.Items.Clear();
+            MainTabs.Items.Clear();
+            ComboGameTitle.IsEnabled = false;
+            ComboSaveName.IsEnabled = false;
             List<ulong> steamIDs = API.SteamInterop.GetAvailableSteamUsers();
             if (steamIDs.Count > 0)
             {
@@ -514,17 +524,24 @@ namespace RyuuseiManager
             }
         }
 
-        private Image GetMugshot(byte[] saveBlob)
+        private BitmapImage GetMugshot(byte[] saveBlob)
         {
             int gameID = (int)(GameGen / 10);
             int mugshotID = BinaryMagic.Processor.GetMugshotID(saveBlob, gameID);
             BitmapImage image = GameResourceRetriver.GetMugshot(mugshotID);
-            return new Image
-            {
-                Source = image,
-                Margin = new Thickness(10),
-                Stretch = System.Windows.Media.Stretch.None
-            };
+            return image;
+        }
+
+        private string GetMessage(byte[] saveBlob)
+        {
+            int gameID = (int)(GameGen / 10);
+            return BinaryMagic.Processor.GetMessage(saveBlob, gameID);
+        }
+
+        private string GetSecret(byte[] saveBlob)
+        {
+            int gameID = (int)(GameGen / 10);
+            return BinaryMagic.Processor.GetSecret(saveBlob, gameID);
         }
 
         private void LoadLanguage()
