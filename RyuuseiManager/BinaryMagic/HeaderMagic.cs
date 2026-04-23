@@ -12,5 +12,20 @@
         // 0x53: SF3
         public static readonly byte[] Raw = new byte[] { 0x99, 0xF1, 0xE3, 0xDB };
 
+        public class SF1
+        {
+            public static readonly byte[] HeaderMagic = new byte[] { 0x0F, 0x00, 0x00, 0x00 };
+        }
+
+        public class SF2
+        {
+            public static readonly byte[] HeaderMagic = new byte[] { 0x0F, 0x00, 0x00, 0x00 };
+        }
+
+        public class SF3
+        {
+            public static readonly byte[] HeaderMagic = new byte[] { 0x0F, 0x00, 0x00, 0x00 };
+        }
+
     }
 }

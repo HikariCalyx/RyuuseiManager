@@ -59,7 +59,7 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center">
             <Button x:Name="ButtonSettings" Content="{DynamicResource Btn_Settings}" Height="26" FontSize="15" Margin="2" Click="ButtonSettings_Click"/>
-            <CheckBox x:Name="CheckSteamFamilySubAccount" Content="{DynamicResource Chk_SubAccountFamilyShare}" Margin="2" VerticalAlignment="Center" ToolTip="{DynamicResource Tips_SubAccountFamilyShare}" IsEnabled="False" />
+            <!--<CheckBox x:Name="CheckSteamFamilySubAccount" Content="{DynamicResource Chk_SubAccountFamilyShare}" Margin="2" VerticalAlignment="Center" ToolTip="{DynamicResource Tips_SubAccountFamilyShare}" IsEnabled="False" />-->
         </StackPanel>
         <StackPanel Grid.Row="4"
                 Grid.Column="1"

@@ -10,11 +10,11 @@
             }
             internal class SF2
             {
-                public const int Mugshot = 0x98;
+                public const int Mugshot = 0x8C;
             }
             internal class SF3
             {
-                public const int Mugshot = 0x8C;
+                public const int NoiseForm = 0x88;
             }
         }
 

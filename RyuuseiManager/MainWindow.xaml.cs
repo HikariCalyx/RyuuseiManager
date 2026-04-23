@@ -46,6 +46,7 @@ namespace RyuuseiManager
             if (ComboSteamUser.SelectedItem is ComboItem item)
             {
                 ComboGameTitle.IsEnabled = true;
+                ComboGameTitle.Items.Clear();
                 ComboSaveName.Items.Clear();
                 ComboSaveName.IsEnabled = false;
                 ButtonImportSave.IsEnabled = false;

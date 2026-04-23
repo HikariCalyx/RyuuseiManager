@@ -83,7 +83,37 @@ namespace RyuuseiManager.BinaryMagic
                     mugshotOffset = Offset.Absolute.SF2.Mugshot; break;
                 case 3:
                     return 278;
-                    // mugshotOffset = Offset.Absolute.SF3.Mugshot; break;
+                    mugshotOffset = Offset.Absolute.SF3.NoiseForm;
+                    int noiseForm = (int)BitConverter.ToUInt16(blob.ToArray(), mugshotOffset);
+                    switch (noiseForm)
+                    {
+                        default:
+                            return 278;
+                        case 0: // cygnus
+                            return 335;
+                        case 1: // ophiuca
+                            return 333;
+                        case 2: // burai
+                            return 345;
+                        case 3: // wolf
+                            return 343;
+                        case 4: // cancer
+                            return 329;
+                        case 5: // gemini
+                            return 331;
+                        case 6: // libra
+                            return 325;
+                        case 7: // no form
+                            return 278;
+                        case 8: // corvus
+                            return 327;
+                        case 9: // virgo
+                            return 339;
+                        case 10: // crown
+                            return 341;
+                        case 11: // ox
+                            return 337;
+                    }
             }
             return (int)BitConverter.ToUInt16(blob.ToArray(), mugshotOffset);
         }
@@ -91,11 +121,16 @@ namespace RyuuseiManager.BinaryMagic
         public static string GetMessage(ReadOnlySpan<byte> blob, int gameID)
         {
             int endIndex = -1;
-            byte[] tripleZero = new byte[] { 0x00, 0x00, 0x00 };
             switch (gameID)
             {
                 case 1:
                     endIndex = blob.IndexOf(FooterMagic.SF1.MessageFooterMagic);
+                    break;
+                case 2:
+                    endIndex = blob.IndexOf(FooterMagic.SF2.MessageFooterMagic);
+                    break;
+                case 3:
+                    endIndex = blob.IndexOf(FooterMagic.SF3.MessageFooterMagic);
                     break;
             }
             if (endIndex < 0) return "";
@@ -105,21 +140,37 @@ namespace RyuuseiManager.BinaryMagic
             switch (gameID)
             {
                 case 1:
-                    startIndex = beforeEnd.LastIndexOf(tripleZero) + tripleZero.Length;
+                    startIndex = beforeEnd.LastIndexOf(HeaderMagic.SF1.HeaderMagic) + HeaderMagic.SF1.HeaderMagic.Length + 4;
                     break;
+                case 2:
+                    startIndex = beforeEnd.LastIndexOf(HeaderMagic.SF2.HeaderMagic) + HeaderMagic.SF2.HeaderMagic.Length + 4;
+                    break;
+                case 3:
+                    startIndex = beforeEnd.LastIndexOf(HeaderMagic.SF3.HeaderMagic) + HeaderMagic.SF3.HeaderMagic.Length + 4;
+                    break;
+
             }
             var contentBytes = blob.Slice(startIndex, endIndex - startIndex).ToArray();
+            if (contentBytes.Length > 0 && contentBytes[0] < 0x80)
+            {
+                contentBytes = new byte[] { 0xFF, 0xFE }.Concat(contentBytes).ToArray();
+            }
             return Encoding.Unicode.GetString(contentBytes);
         }
 
         public static string GetSecret(ReadOnlySpan<byte> blob, int gameID)
         {
             int endIndex = -1;
-            byte[] tripleZero = new byte[] { 0x00, 0x00, 0x00 };
             switch (gameID)
             {
                 case 1:
                     endIndex = blob.IndexOf(FooterMagic.SF1.SecretFooterMagic);
+                    break;
+                case 2:
+                    endIndex = blob.IndexOf(FooterMagic.SF2.SecretFooterMagic);
+                    break;
+                case 3:
+                    endIndex = blob.IndexOf(FooterMagic.SF3.TeamNameFooterMagic);
                     break;
             }
             if (endIndex < 0) return "";
@@ -129,10 +180,20 @@ namespace RyuuseiManager.BinaryMagic
             switch (gameID)
             {
                 case 1:
-                    startIndex = beforeEnd.LastIndexOf(tripleZero) + tripleZero.Length;
+                    startIndex = beforeEnd.LastIndexOf(HeaderMagic.SF1.HeaderMagic) + HeaderMagic.SF1.HeaderMagic.Length + 4;
+                    break;
+                case 2:
+                    startIndex = beforeEnd.LastIndexOf(HeaderMagic.SF2.HeaderMagic) + HeaderMagic.SF2.HeaderMagic.Length + 4;
+                    break;
+                case 3:
+                    startIndex = beforeEnd.LastIndexOf(HeaderMagic.SF3.HeaderMagic) + HeaderMagic.SF3.HeaderMagic.Length + 4;
                     break;
             }
             var contentBytes = blob.Slice(startIndex, endIndex - startIndex).ToArray();
+            if (contentBytes.Length > 0 && contentBytes[0] < 0x80)
+            {
+                contentBytes = new byte[] { 0xFF, 0xFE }.Concat(contentBytes).ToArray();
+            }
             return Encoding.Unicode.GetString(contentBytes);
         }
     }
