@@ -67,4 +67,7 @@
     <system:String x:Key="Msg_InvalidSteamPath">这似乎不是有效的 Steam 路径。</system:String>
     <system:String x:Key="Chk_SubAccountFamilyShare">Steam家庭的子账号</system:String>
     <system:String x:Key="Tips_SubAccountFamilyShare">如果此账号通过家庭共享游玩此游戏，请勾选本项，否则导入的存档无法被游戏读取。</system:String>
+    <system:String x:Key="JPVersion">日版</system:String>
+    <system:String x:Key="USVersion">美版</system:String>
+    <system:String x:Key="EUVersion">欧版</system:String>
 </ResourceDictionary>

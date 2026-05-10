@@ -67,4 +67,7 @@
     <system:String x:Key="Msg_InvalidSteamPath">これは有効なSteamパスではないようです。</system:String>
     <system:String x:Key="Chk_SubAccountFamilyShare">Steamファミリーのサブアカウント</system:String>
     <system:String x:Key="Tips_SubAccountFamilyShare">このアカウントがSteamファミリー経由でこのゲームをプレイしている場合は、このオプションをオンにしてください。そうしないと、インポートされたファイルがゲームで読み取れません。</system:String>
+    <system:String x:Key="JPVersion">日本版</system:String>
+    <system:String x:Key="USVersion">米国版</system:String>
+    <system:String x:Key="EUVersion">ヨーロッパ版</system:String>
 </ResourceDictionary>
