@@ -2,18 +2,21 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
     <system:String x:Key="Title_RyuuseiManager">Ryuusei Manager</system:String>
-    <system:String x:Key="MMSF">Mega Man Star Force</system:String>
+    <system:String x:Key="MMSF" xml:space="preserve">Mega Man Star Force </system:String>
     <system:String x:Key="Pegasus">Pegasus</system:String>
     <system:String x:Key="Leo">Leo</system:String>
     <system:String x:Key="Dragon">Dragon</system:String>
     <system:String x:Key="ZerkerN">Zerker (Ninja)</system:String>
     <system:String x:Key="ZerkerS">Zerker (Saurian)</system:String>
+    <system:String x:Key="Zerker">Zerker</system:String>
     <system:String x:Key="Ninja">Ninja</system:String>
     <system:String x:Key="Saurian">Saurian</system:String>
     <system:String x:Key="BlackAceSlot1">Black Ace (Data 01)</system:String>
     <system:String x:Key="RedJokerSlot1">Red Joker (Data 01)</system:String>
     <system:String x:Key="BlackAceSlot2">Black Ace (Data 02)</system:String>
     <system:String x:Key="RedJokerSlot2">Red Joker (Data 02)</system:String>
+    <system:String x:Key="BlackAce">Black Ace</system:String>
+    <system:String x:Key="RedJoker">Red Joker</system:String>
     <system:String x:Key="Msg_NoPlayRecord">Você ainda não iniciou esse jogo! Por favor, inicie o jogo e salve pelo menos uma vez antes de gerenciar os dados salvos.</system:String>
     <system:String x:Key="Msg_NoSaveDataFound">Nenhum save foi encontrado! Por favor, jogue pelo menos um jogo e tente novamente.</system:String>
     <system:String x:Key="Btn_OK">OK</system:String>
@@ -39,7 +42,7 @@
     <system:String x:Key="Tab_NoiseModGear">Equipamento de Mod. de Noise</system:String>
     <system:String x:Key="Cmb_CurrentSteamSave">(Save do Steam Atual)</system:String>
     <system:String x:Key="Dlg_CreateSave">Novo Save</system:String>
-    <system:String x:Key="Msg_SpecifyName">Por favor, especifique um nome.</system:String>
+    <system:String x:Key="Msg_SpecifyName">Estes são os dados salvos para {0}.\nPor favor, especifique um nome.</system:String>
     <system:String x:Key="Dlg_Rename">Renomear</system:String>
     <system:String x:Key="Msg_SpecifyNewName">Por favor, especifique um novo nome.</system:String>
     <system:String x:Key="Dlg_Duplicate">Duplicar</system:String>

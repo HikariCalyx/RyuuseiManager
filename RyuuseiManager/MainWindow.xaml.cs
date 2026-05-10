@@ -1,6 +1,7 @@
 ﻿using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
@@ -171,41 +172,34 @@ namespace RyuuseiManager
                 IsFolderPicker = false,
                 Title = (string)Application.Current.Resources["Msg_ImportSave"]
             };
+            dlg.Filters.Add(new CommonFileDialogFilter("", "*.bin"));
             if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
             {
+                int gameGen = 0;
                 string loadedSaveFileName = Path.GetFileName(dlg.FileName);
-                if (!GameID.ExpectedImportSources[GameGen].Contains(loadedSaveFileName))
+                byte[] saveBlob = ReadFile(dlg.FileName);
+                if (saveBlob.AsSpan().StartsWith(BinaryMagic.HeaderMagic.Switch))
                 {
-                    MessageBox.Show(this, (string)Application.Current.Resources["Msg_UnsuitableSave"], (string)Application.Current.Resources["Msg_Info"]);
+                    saveBlob = BinaryMagic.Processor.StripSwitchSave(saveBlob);
+                }
+                if (!saveBlob.AsSpan().StartsWith(BinaryMagic.HeaderMagic.Raw))
+                {
+                    MessageBox.Show(this, (string)Application.Current.Resources["Msg_InvalidSave"], (string)Application.Current.Resources["Msg_Info"]);
                     return;
                 }
-                else
+                else if (!CheckSave(saveBlob, out gameGen))
                 {
-                    byte[] saveBlob = ReadFile(dlg.FileName);
-                    if (saveBlob.AsSpan().StartsWith(BinaryMagic.HeaderMagic.Switch))
-                    {
-                        int gameID = (int)(GameGen / 10);
-                        saveBlob = BinaryMagic.Processor.StripSwitchSave(saveBlob, gameID);
-                    }
-                    if (!saveBlob.AsSpan().StartsWith(BinaryMagic.HeaderMagic.Raw))
-                    {
-                        MessageBox.Show(this, (string)Application.Current.Resources["Msg_InvalidSave"], (string)Application.Current.Resources["Msg_Info"]);
-                        return;
-                    }
-                    else if (!CheckSave(saveBlob))
-                    {
-                        MessageBox.Show(this, (string)Application.Current.Resources["Msg_UnsuitableSave"], (string)Application.Current.Resources["Msg_Info"]);
-                        return;
-                    }
-                    var namedlg = new NameDialog(title: (string)Application.Current.Resources["Dlg_ImportSaveData"], prompt: (string)Application.Current.Resources["Msg_SpecifyName"]);
-                    namedlg.Owner = this;
-                    if (namedlg.ShowDialog() == true)
-                    {
-                        string saveName = namedlg.ResultText;
-                        DB.SaveDataBlob(saveBlob, saveName, GameGen, true, out ulong saveId);
-                        GetSaveDataFromDB(GameGen);
-                        ComboSaveName.SelectedValue = saveId;
-                    }
+                    MessageBox.Show(this, (string)Application.Current.Resources["Msg_InvalidSave"], (string)Application.Current.Resources["Msg_Info"]);
+                    return;
+                }
+                var namedlg = new NameDialog(title: (string)Application.Current.Resources["Dlg_ImportSaveData"], prompt: string.Format((string)Application.Current.Resources["Msg_SpecifyName"], AssembleGameName(gameGen)).Replace("\\n", Environment.NewLine + Environment.NewLine));
+                namedlg.Owner = this;
+                if (namedlg.ShowDialog() == true)
+                {
+                    string saveName = namedlg.ResultText;
+                    DB.SaveDataBlob(saveBlob, saveName, gameGen, true, out ulong saveId);
+                    GetSaveDataFromDB(GameGen);
+                    ComboSaveName.SelectedValue = saveId;
                 }
             }
         }
@@ -271,7 +265,7 @@ namespace RyuuseiManager
             {
                 var dlg = new NameDialog(title: (string)Application.Current.Resources["Dlg_Rename"], prompt: (string)Application.Current.Resources["Msg_SpecifyNewName"]);
                 dlg.Owner = this;
-                dlg.ResultText = nameItem.Text;
+                dlg.ResultText = DB.GetSaveName(GameGen, (ulong)nameItem.Value);
                 if (dlg.ShowDialog() == true)
                 {
                     string saveName = dlg.ResultText;
@@ -319,14 +313,17 @@ namespace RyuuseiManager
             }
             if (rawSaveData != null)
             {
-                var dlg = new CommonOpenFileDialog
+                var dlg = new CommonSaveFileDialog
                 {
-                    IsFolderPicker = true,
-                    Title = (string)Application.Current.Resources["Msg_ExportSave"]
+                    Title = (string)Application.Current.Resources["Msg_ExportSave"],
+                    DefaultExtension = "bin",
+                    EnsureValidNames = true,
+                    EnsurePathExists = true
                 };
+                dlg.Filters.Add(new CommonFileDialogFilter("", "*.bin"));
                 if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
                 {
-                    if (!TrySaveFile(Path.Combine(dlg.FileName, $"data0{GameGen}Slot.bin"), BinaryMagic.Processor.PopulateToSwitchSave(rawSaveData, GameGen / 10)))
+                    if (!TrySaveFile(Path.Combine(dlg.FileName), BinaryMagic.Processor.PopulateToSwitchSave(rawSaveData, GameGen / 10)))
                     {
                         MessageBox.Show(this, (string)Application.Current.Resources["Msg_UnableToSave"], (string)Application.Current.Resources["Msg_Info"]);
                     }
@@ -357,6 +354,7 @@ namespace RyuuseiManager
                 string? savePath = API.SteamInterop.GetSaveDataPath(SteamID);
                 if (CanWriteToPath(savePath))
                 {
+                    rawSaveData = BinaryMagic.Processor.RepopulateFooter(rawSaveData, GameGen);
                     byte[] signedSave = key.EncryptBlob(rawSaveData, API.SteamInterop.GetSteamID64(SteamID));
                     if (!TrySaveFile(Path.Combine(savePath, $"data0{GameGen}Slot.bin"), signedSave))
                     {
@@ -389,10 +387,11 @@ namespace RyuuseiManager
             }
         }
 
-        private bool CheckSave(byte[] blob)
+        private bool CheckSave(byte[] blob, out int gameGen)
         {
+            gameGen = BinaryMagic.Processor.GetGameGen(blob);
             byte expectedNextByte;
-            switch (GameGen)
+            switch (gameGen)
             {
                 case 10:
                 case 11:
@@ -519,9 +518,24 @@ namespace RyuuseiManager
             ComboSaveName.Items.Clear();
             ComboSaveName.Items.Add(new ComboItem { Text = (string)Application.Current.Resources["Cmb_CurrentSteamSave"], Value = 0 });
             var saveDataDict = DB.GetCurrentGenerationSaves(generation);
+            int extraGeneration = 0;
+            switch (generation)
+            {
+                case 22: extraGeneration = 23; break;
+                case 23: extraGeneration = 22; break;
+                case 30: extraGeneration = 31; break;
+                case 31: extraGeneration = 30; break;
+                case 32: extraGeneration = 33; break;
+                case 33: extraGeneration = 32; break;
+            }
+            var extraSaveDataDict = DB.GetCurrentGenerationSaves(extraGeneration);
             foreach (var i in saveDataDict.Keys)
             {
                 ComboSaveName.Items.Add(new ComboItem { Text = saveDataDict[i] + $" ({generation}-{i})", Value = (ulong)i });
+            }
+            foreach (var i in extraSaveDataDict.Keys)
+            {
+                ComboSaveName.Items.Add(new ComboItem { Text = extraSaveDataDict[i] + $" ({extraGeneration}-{i})", Value = (ulong)i });
             }
         }
 
@@ -596,6 +610,43 @@ namespace RyuuseiManager
             {
                 return false;
             }
+        }
+
+        private string AssembleGameName(int gameGen)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append((string)Application.Current.Resources["MMSF"] + (gameGen / 10) + " ");
+            switch (gameGen)
+            {
+                case 10:
+                    sb.Append((string)Application.Current.Resources["Pegasus"]);
+                    break;
+                case 11:
+                    sb.Append((string)Application.Current.Resources["Leo"]);
+                    break;
+                case 12:
+                    sb.Append((string)Application.Current.Resources["Dragon"]);
+                    break;
+                case 20:
+                    sb.Append((string)Application.Current.Resources["Ninja"]);
+                    break;
+                case 21:
+                    sb.Append((string)Application.Current.Resources["Saurian"]);
+                    break;
+                case 22:
+                case 23:
+                    sb.Append((string)Application.Current.Resources["Zerker"]);
+                    break;
+                case 30:
+                case 31:
+                    sb.Append((string)Application.Current.Resources["BlackAce"]);
+                    break;
+                case 32:
+                case 33:
+                    sb.Append((string)Application.Current.Resources["RedJoker"]);
+                    break;
+            }
+            return sb.ToString();
         }
 
 

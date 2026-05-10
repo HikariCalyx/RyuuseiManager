@@ -8,12 +8,15 @@
     <system:String x:Key="Dragon">天龙</system:String>
     <system:String x:Key="ZerkerN">战狂 (忍者)</system:String>
     <system:String x:Key="ZerkerS">战狂 (恐龙)</system:String>
+    <system:String x:Key="Zerker">战狂</system:String>
     <system:String x:Key="Ninja">忍者</system:String>
     <system:String x:Key="Saurian">恐龙</system:String>
     <system:String x:Key="BlackAceSlot1">黑色王牌 (存档 01)</system:String>
     <system:String x:Key="RedJokerSlot1">红色鬼牌 (存档 01)</system:String>
     <system:String x:Key="BlackAceSlot2">黑色王牌 (存档 02)</system:String>
     <system:String x:Key="RedJokerSlot2">红色鬼牌 (存档 02)</system:String>
+    <system:String x:Key="BlackAce">黑色王牌</system:String>
+    <system:String x:Key="RedJoker">红色鬼牌</system:String>
     <system:String x:Key="Msg_NoPlayRecord">您还未开始本游戏。请至少运行一款游戏并存档一次</system:String>
     <system:String x:Key="Msg_NoSaveDataFound">没有找到任何存档。请至少运行一款游戏并存档一次，然后重新运行本程序。</system:String>
     <system:String x:Key="Btn_OK">确定</system:String>
@@ -39,7 +42,7 @@
     <system:String x:Key="Tab_NoiseModGear">噪音改造齿轮</system:String>
     <system:String x:Key="Cmb_CurrentSteamSave">(当前的 Steam 存档)</system:String>
     <system:String x:Key="Dlg_CreateSave">新存档</system:String>
-    <system:String x:Key="Msg_SpecifyName">请为新存档命名。</system:String>
+    <system:String x:Key="Msg_SpecifyName">这是《{0}》的存档数据。\n请为新存档命名。</system:String>
     <system:String x:Key="Dlg_Rename">重命名</system:String>
     <system:String x:Key="Msg_SpecifyNewName">请指定新名称。</system:String>
     <system:String x:Key="Dlg_Duplicate">复制</system:String>

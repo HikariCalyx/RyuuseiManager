@@ -2,18 +2,21 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
     <system:String x:Key="Title_RyuuseiManager">Ryuusei Manager</system:String>
-    <system:String x:Key="MMSF">Mega Man Star Force</system:String>
+    <system:String x:Key="MMSF" xml:space="preserve">Mega Man Star Force </system:String>
     <system:String x:Key="Pegasus">Pegasus</system:String>
     <system:String x:Key="Leo">Leo</system:String>
     <system:String x:Key="Dragon">Dragon</system:String>
     <system:String x:Key="ZerkerN">Zerker (Ninja)</system:String>
     <system:String x:Key="ZerkerS">Zerker (Saurian)</system:String>
+    <system:String x:Key="Zerker">Zerker</system:String>
     <system:String x:Key="Ninja">Ninja</system:String>
     <system:String x:Key="Saurian">Saurian</system:String>
     <system:String x:Key="BlackAceSlot1">Black Ace (Data 01)</system:String>
     <system:String x:Key="RedJokerSlot1">Red Joker (Data 01)</system:String>
     <system:String x:Key="BlackAceSlot2">Black Ace (Data 02)</system:String>
     <system:String x:Key="RedJokerSlot2">Red Joker (Data 02)</system:String>
+    <system:String x:Key="BlackAce">Black Ace</system:String>
+    <system:String x:Key="RedJoker">Red Joker</system:String>
     <system:String x:Key="Msg_NoPlayRecord">You didn't start this game. Please start this game and save at least once before managing save data.</system:String>
     <system:String x:Key="Msg_NoSaveDataFound">We didn't find any save data. Please play at least one game and try again.</system:String>
     <system:String x:Key="Btn_OK">OK</system:String>
@@ -39,7 +42,7 @@
     <system:String x:Key="Tab_NoiseModGear">Noise Mod Gear</system:String>
     <system:String x:Key="Cmb_CurrentSteamSave">(Current Steam Save)</system:String>
     <system:String x:Key="Dlg_CreateSave">New Save Data</system:String>
-    <system:String x:Key="Msg_SpecifyName">Please specify a name.</system:String>
+    <system:String x:Key="Msg_SpecifyName">This is the save data for {0}.\nPlease specify a name.</system:String>
     <system:String x:Key="Dlg_Rename">Rename</system:String>
     <system:String x:Key="Msg_SpecifyNewName">Please specify a new name.</system:String>
     <system:String x:Key="Dlg_Duplicate">Duplicate</system:String>

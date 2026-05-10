@@ -251,6 +251,35 @@ namespace RyuuseiManager
             return result;
         }
 
+        public static string GetSaveName(int generation, ulong save_id)
+        {
+            InitDatabase();
+            string result = "";
+            using (var conn = new SQLiteConnection(connectionString))
+            {
+                conn.Open();
+
+                string sql = @"SELECT savename 
+                       FROM saves 
+                       WHERE generation = @gen AND save_id = @id;";
+
+                using (var cmd = new SQLiteCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@gen", generation);
+                    cmd.Parameters.AddWithValue("@id", save_id);
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            result = reader.GetString(0);
+                        }
+                    }
+                }
+            }
+            return result;
+        }
+
         private static byte[] CompressZlib(byte[] data)
         {
             using var output = new MemoryStream();

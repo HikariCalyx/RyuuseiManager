@@ -17,7 +17,41 @@ namespace RyuuseiManager.BinaryMagic
             return true;
         }
 
-        public static byte[] StripSwitchSave(ReadOnlySpan<byte> blob, int gameID)
+        public static byte[] RepopulateFooter(ReadOnlySpan<byte> blob, int targetGameID)
+        {
+            int footerOffset = blob.IndexOf(FooterMagic.SaveFooterMagic) + FooterMagic.SaveFooterMagic.Length;
+            byte[] result = blob.Slice(0, footerOffset).ToArray();
+            switch (targetGameID)
+            {
+                case 10:
+                    result = result.Concat(FooterMagic.SF1.Pegasus.zh_CN).ToArray(); break;
+                case 11:
+                    result = result.Concat(FooterMagic.SF1.Leo.zh_CN).ToArray(); break;
+                case 12:
+                    result = result.Concat(FooterMagic.SF1.Dragon.zh_CN).ToArray(); break;
+                case 20:
+                    result = result.Concat(FooterMagic.SF2.Ninja.zh_CN).ToArray(); break;
+                case 21:
+                    result = result.Concat(FooterMagic.SF2.Saurian.zh_CN).ToArray(); break;
+                case 22:
+                    result = result.Concat(FooterMagic.SF2.ZerkerNinja.zh_CN).ToArray(); break;
+                case 23:
+                    result = result.Concat(FooterMagic.SF2.ZerkerSaurian.zh_CN).ToArray(); break;
+                case 30:
+                    result = result.Concat(FooterMagic.SF3.BlackAce1.zh_CN).ToArray(); break;
+                case 31:
+                    result = result.Concat(FooterMagic.SF3.BlackAce2.zh_CN).ToArray(); break;
+                case 32:
+                    result = result.Concat(FooterMagic.SF3.RedJoker1.zh_CN).ToArray(); break;
+                case 33:
+                    result = result.Concat(FooterMagic.SF3.RedJoker2.zh_CN).ToArray(); break;
+                default:
+                    result = blob.ToArray(); break;
+            }
+            return result;
+        }
+
+        public static byte[] StripSwitchSave(ReadOnlySpan<byte> blob)
         {
             if (blob.StartsWith(HeaderMagic.Switch)) blob = blob.Slice(HeaderMagic.Switch.Length).ToArray();
             int footerLength = FooterMagic.Eof.Length;
@@ -40,6 +74,7 @@ namespace RyuuseiManager.BinaryMagic
                     blob = blob.Slice(0, i + footerLength).ToArray();
                 }
             }
+            int gameID = blob[^4] / 10;
 
             byte[] pattern;
             switch (gameID)
@@ -72,6 +107,11 @@ namespace RyuuseiManager.BinaryMagic
                 }
             }
             return source;
+        }
+
+        public static int GetGameGen(ReadOnlySpan<byte> blob)
+        {
+            return blob[^4];
         }
 
         public static byte[] PopulateToSwitchSave(ReadOnlySpan<byte> blob, int gameID)
