@@ -70,4 +70,5 @@
     <system:String x:Key="JPVersion">日版</system:String>
     <system:String x:Key="USVersion">美版</system:String>
     <system:String x:Key="EUVersion">欧版</system:String>
+    <system:String x:Key="GalaxyAdvance">银河进阶</system:String>
 </ResourceDictionary>

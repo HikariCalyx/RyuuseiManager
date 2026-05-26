@@ -1,0 +1,52 @@
+﻿<Page x:Class="RyuuseiManager.BattleCardPageSF3"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:RyuuseiManager"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="BattleCardPageSF3">
+
+    <Grid Margin="6">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0" HorizontalAlignment="Left">
+                <ComboBox x:Name="CardFolders"
+                      Width="150"
+                      Height="24"
+                      DisplayMemberPath="Text"
+                      SelectedValuePath="Value"
+                      SelectionChanged="CardFolders_SelectionChanged"/>
+            </Grid>
+
+            <Grid Grid.Column="1" HorizontalAlignment="Left">
+                <Label Content="{DynamicResource GalaxyAdvance}" FontSize="15"/>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0">
+                <ListBox x:Name="BattleCardList">
+                </ListBox>
+            </Grid>
+
+            <Grid Grid.Column="1">
+                <ListBox x:Name="GalaxyAdvanceList">
+                </ListBox>
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>

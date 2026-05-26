@@ -70,4 +70,5 @@
     <system:String x:Key="JPVersion">日本版</system:String>
     <system:String x:Key="USVersion">美國版</system:String>
     <system:String x:Key="EUVersion">歐洲版</system:String>
+    <system:String x:Key="GalaxyAdvance">銀河進階</system:String>
 </ResourceDictionary>

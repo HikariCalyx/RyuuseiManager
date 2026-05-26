@@ -54,7 +54,51 @@ namespace RyuuseiManager.Library.SF3
             { BattleCard.FlyingImpactGA, new List<BattleCard> { BattleCard.DashAttack3, BattleCard.DashAttack3, BattleCard.IllegalJungleStorm } },
             { BattleCard.BuraiBreakGA, new List<BattleCard> { BattleCard.IllegalDeathScythe2, BattleCard.IllegalDeathScythe2, BattleCard.IllegalDeathScythe2 } },
             { BattleCard.LightOfSaintGA, new List<BattleCard> { BattleCard.IllegalKesalanPatharan3, BattleCard.IllegalKesalanPatharan3, BattleCard.TornadoDance } },
-            { BattleCard.DarknessHoleGA, new List<BattleCard> { BattleCard.IllegalDabaFlame3, BattleCard.IllegalDabaFlame3, BattleCard.IllegalDabaFlame3 } },
+            { BattleCard.PainHellFlameGA, new List<BattleCard> { BattleCard.IllegalDabaFlame3, BattleCard.IllegalDabaFlame3, BattleCard.IllegalDabaFlame3 } },
         };
+
+        public static Dictionary<BattleCard, int> GetPossibleCombos(Dictionary<BattleCard, int> inventory)
+        {
+            var result = new Dictionary<BattleCard, int>();
+
+            foreach (var kvp in gaCombos)
+            {
+                BattleCard gaCard = kvp.Key;
+                List<BattleCard> required = kvp.Value;
+
+                // Count how many of each required card is needed
+                var requiredCounts = required
+                    .GroupBy(c => c)
+                    .ToDictionary(g => g.Key, g => g.Count());
+
+                // For each required card, compute how many sets we can make
+                int maxSets = int.MaxValue;
+
+                foreach (var req in requiredCounts)
+                {
+                    BattleCard card = req.Key;
+                    int needed = req.Value;
+
+                    // If inventory doesn't contain the card → cannot form combo
+                    if (!inventory.TryGetValue(card, out int have))
+                    {
+                        maxSets = 0;
+                        break;
+                    }
+
+                    // How many sets can be made from this card
+                    int setsFromThisCard = have / needed;
+
+                    if (setsFromThisCard < maxSets)
+                        maxSets = setsFromThisCard;
+                }
+
+                if (maxSets > 0)
+                    result[gaCard] = maxSets;
+            }
+
+            return result;
+        }
+
     }
 }

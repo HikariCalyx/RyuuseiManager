@@ -8,6 +8,11 @@ namespace RyuuseiManager.Library.SF3
     {
         private static readonly Dictionary<BattleCard, string> en = new()
         {
+            { BattleCard.Cannon, "Cannon" },
+            { BattleCard.PlusCannon, "Plus Cannon" },
+            { BattleCard.HeavyCannon, "Heavy Cannon" },
+            { BattleCard.PlasmaGun, "Plasma Gun" },
+            { BattleCard.AirSpread1, "Air Spread 1" },
             { BattleCard.EdoBlade1, "Bushido 1" },
             { BattleCard.EdoBlade2, "Bushido 2" },
             { BattleCard.EdoBlade3, "Bushido 3" },

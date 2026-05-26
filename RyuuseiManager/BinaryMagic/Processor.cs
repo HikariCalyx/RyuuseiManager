@@ -1,6 +1,6 @@
 ﻿using System.Text;
 using System.Windows;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using RyuuseiManager.Classes;
 
 namespace RyuuseiManager.BinaryMagic
 {
@@ -282,5 +282,63 @@ namespace RyuuseiManager.BinaryMagic
             }
             return Encoding.Unicode.GetString(contentBytes);
         }
+
+        public static List<Folder> GetFolders(ReadOnlySpan<byte> blob, int gameID)
+        {
+            List<Folder> resultFldr = new List<Folder>();
+            switch (gameID)
+            {
+                case 3:
+                    List<byte[]> fldrBlobs = GetSF3FolderBlob(blob, HeaderMagic.SF3.FolderHeaderMagic);
+                    foreach (var subBlob in fldrBlobs)
+                    {
+                        int fldrNameLength = subBlob[0];
+                        if (fldrNameLength < 0x01 || fldrNameLength > 0x08) continue;
+                        Folder sf3Fldr = new Folder();
+                        sf3Fldr.FolderName = Encoding.Unicode.GetString(subBlob.AsSpan(4, fldrNameLength * 2));
+                        int cardDataFooterIndex = subBlob.IndexOf(FooterMagic.SF3.CardListFooterMagic);
+                        if (cardDataFooterIndex > 60)
+                        {
+                            byte[] CardData = subBlob.AsSpan(cardDataFooterIndex - 60, 60).ToArray();
+                            for (int i = 0; i < CardData.Length; i += 2)
+                            {
+                                sf3Fldr.Cards.Add(BitConverter.ToUInt16(CardData, i));
+                            }
+                        }
+                        resultFldr.Add(sf3Fldr);
+                    }
+                    break;
+            }
+            return resultFldr;
+        }
+
+        private static List<byte[]> GetSF3FolderBlob(ReadOnlySpan<byte> source, ReadOnlySpan<byte> pattern)
+        {
+            var results = new List<byte[]>();
+
+            if (pattern.Length == 0 || source.Length < pattern.Length)
+                return results;
+
+            int offset = 0;
+
+            while (true)
+            {
+                int index = source.Slice(offset).IndexOf(pattern);
+                if (index < 0)
+                    break;
+
+                int foundAt = offset + index;
+
+                int start = foundAt + pattern.Length;
+                int length = Math.Min(172, source.Length - start);
+
+                results.Add(source.Slice(start, length).ToArray());
+
+                offset = foundAt + pattern.Length;
+            }
+            return results;
+        }
+
+
     }
 }

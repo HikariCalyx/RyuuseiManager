@@ -1,4 +1,6 @@
 ﻿using Microsoft.WindowsAPICodePack.Dialogs;
+using RyuuseiManager.BinaryMagic;
+using RyuuseiManager.Classes;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
@@ -84,17 +86,37 @@ namespace RyuuseiManager
                     NavigationUIVisibility = System.Windows.Navigation.NavigationUIVisibility.Hidden
                 };
                 var coverTabPage = new CoverTabPage();
+                var battleCardFrame = new Frame
+                {
+                    NavigationUIVisibility = System.Windows.Navigation.NavigationUIVisibility.Hidden
+                };
                 var saveBlob = GetCurrentSave();
                 coverTabPage.ImageSource = GetMugshot(saveBlob);
                 coverTabPage.SetMessage(GetMessage(saveBlob));
                 coverTabPage.SetSecret(GetSecret(saveBlob));
                 coverTabFrame.Navigate(coverTabPage);
+                List<Folder> folders = GetFolder(saveBlob);
+                if (ComboGameTitle.SelectedItem is ComboItem item)
+                {
+                    switch (item.Value)
+                    {
+                        case 30:
+                        case 31:
+                        case 32:
+                        case 33:
+                            var battleCardPageSF3 = new BattleCardPageSF3();
+                            if (folders.Count > 0) battleCardPageSF3.Folders = folders;
+                            battleCardPageSF3.SetFolderNames();
+                            battleCardFrame.Navigate(battleCardPageSF3);
+                            break;
+                    }
+                }
                 var coverTab = new TabItem
                 {
                     Header = (string)Application.Current.Resources["Tab_Cover"],
                     Content = coverTabFrame
                 };
-                var battleCardTab = new TabItem
+                var defaultBattleCardTab = new TabItem
                 {
                     Header = (string)Application.Current.Resources["Tab_BattleCard"],
                     Content = new TextBlock
@@ -102,6 +124,11 @@ namespace RyuuseiManager
                         Text = (string)Application.Current.Resources["Msg_TBA"],
                         Margin = new Thickness(10)
                     }
+                };
+                var battleCardTab = new TabItem
+                {
+                    Header = (string)Application.Current.Resources["Tab_BattleCard"],
+                    Content = battleCardFrame
                 };
                 var brotherTab = new TabItem
                 {
@@ -130,14 +157,14 @@ namespace RyuuseiManager
                         case 10:
                         case 11:
                         case 12:
-                            MainTabs.Items.Add(battleCardTab);
+                            MainTabs.Items.Add(defaultBattleCardTab);
                             MainTabs.Items.Add(brotherTab);
                             break;
                         case 20:
                         case 21:
                         case 22:
                         case 23:
-                            MainTabs.Items.Add(battleCardTab);
+                            MainTabs.Items.Add(defaultBattleCardTab);
                             MainTabs.Items.Add(brotherTab);
                             break;
                         case 30:
@@ -559,6 +586,12 @@ namespace RyuuseiManager
         {
             int gameID = (int)(GameGen / 10);
             return BinaryMagic.Processor.GetSecret(saveBlob, gameID);
+        }
+
+        private List<Folder> GetFolder(byte[] saveBlob)
+        {
+            int gameID = (int)(GameGen / 10);
+            return BinaryMagic.Processor.GetFolders(saveBlob, gameID);
         }
 
         private void LoadLanguage()
