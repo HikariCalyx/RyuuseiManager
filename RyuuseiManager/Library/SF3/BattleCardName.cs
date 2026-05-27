@@ -1376,5 +1376,25 @@ namespace RyuuseiManager.Library.SF3
             { BattleCard.MlbFirst, "隕石抨擊" },
             { BattleCard.AbFirst, "原子炎融" },
         };
+
+        public static string GetBattleCardName(BattleCard card, int language)
+        {
+            Dictionary<BattleCard, string> targetLanguage = new Dictionary<BattleCard, string>();
+            switch (language)
+            {
+                case 0: targetLanguage = en; break;
+                case 1: targetLanguage = ja; break;
+                case 2: targetLanguage = zh_cn; break;
+                case 3: targetLanguage = zh_tw; break;
+            }
+            if (targetLanguage.TryGetValue(card, out string? value))
+            {
+                return value;
+            }
+            else
+            {
+                return "(null)";
+            }
+        }
     }
 }

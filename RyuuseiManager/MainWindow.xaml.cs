@@ -105,6 +105,7 @@ namespace RyuuseiManager
                         case 32:
                         case 33:
                             var battleCardPageSF3 = new BattleCardPageSF3();
+                            battleCardPageSF3.ProfileLanguage = GetLanguageID();
                             if (folders.Count > 0) battleCardPageSF3.Folders = folders;
                             battleCardPageSF3.SetFolderNames();
                             battleCardFrame.Navigate(battleCardPageSF3);
@@ -603,6 +604,17 @@ namespace RyuuseiManager
             else
             {
                 DB.SetLanguage(DB.GetCurrentLanguage());
+            }
+        }
+
+        private int GetLanguageID()
+        {
+            switch (DB.GetCurrentLanguage())
+            {
+                default: return 0;
+                case "ja-JP": return 1;
+                case "zh-CN": return 2;
+                case "zh-TW": return 3;
             }
         }
 

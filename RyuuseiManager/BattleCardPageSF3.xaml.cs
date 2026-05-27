@@ -13,10 +13,11 @@ namespace RyuuseiManager
         {
             InitializeComponent();
             Folders = new List<Folder>();
+            ProfileLanguage = 0;
         }
 
         public List<Folder> Folders { get; set; }
-
+        public int ProfileLanguage { get; set; }
         public void SetFolderNames()
         {
             CardFolders.Items.Clear();
@@ -52,12 +53,12 @@ namespace RyuuseiManager
             }
             foreach (var i in battleCards)
             {
-                BattleCardList.Items.Add($"{i.Key} *{i.Value}");
+                BattleCardList.Items.Add($"{BattleCardName.GetBattleCardName(i.Key, ProfileLanguage)} *{i.Value}");
             }
             Dictionary<BattleCard, int> galaxyAdvances = GaCombo.GetPossibleCombos(battleCards);
             foreach (var i in galaxyAdvances)
             {
-                GalaxyAdvanceList.Items.Add($"{i.Key} *{i.Value}");
+                GalaxyAdvanceList.Items.Add($"{BattleCardName.GetBattleCardName(i.Key, ProfileLanguage)} *{i.Value}");
             }
         }
 

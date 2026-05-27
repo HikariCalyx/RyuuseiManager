@@ -15,8 +15,8 @@
     <system:String x:Key="RedJokerSlot1">紅色鬼牌 (存檔 01)</system:String>
     <system:String x:Key="BlackAceSlot2">黑色王牌 (存檔 02)</system:String>
     <system:String x:Key="RedJokerSlot2">紅色鬼牌 (存檔 02)</system:String>
-    <system:String x:Key="BlackAceSlot1">黑色王牌</system:String>
-    <system:String x:Key="RedJokerSlot1">紅色鬼牌</system:String>
+    <system:String x:Key="BlackAce">黑色王牌</system:String>
+    <system:String x:Key="RedJoker">紅色鬼牌</system:String>
     <system:String x:Key="Msg_NoPlayRecord">您還未開始本遊戲。請至少運行一款遊戲並存檔一次。</system:String>
     <system:String x:Key="Msg_NoSaveDataFound">沒有找到任何存檔。請至少運行一款遊戲並存檔一次，然後重新運行本程式。</system:String>
     <system:String x:Key="Btn_OK">確定</system:String>
