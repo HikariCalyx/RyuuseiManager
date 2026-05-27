@@ -6,7 +6,8 @@
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
         MinWidth="500"
-        Padding="15">
+        Padding="15"
+        FocusManager.FocusedElement="{Binding ElementName=InputBox}">
 
     <Grid RowDefinitions="Auto,Auto,Auto" Margin="0">
 

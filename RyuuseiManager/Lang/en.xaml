@@ -43,6 +43,7 @@
     <system:String x:Key="Cmb_CurrentSteamSave">(Current Steam Save)</system:String>
     <system:String x:Key="Dlg_CreateSave">New Save Data</system:String>
     <system:String x:Key="Msg_SpecifyName">This is the save data for {0}.\nPlease specify a name.</system:String>
+    <system:String x:Key="Msg_SpecifyNameCreate">Please specify a name.</system:String>
     <system:String x:Key="Dlg_Rename">Rename</system:String>
     <system:String x:Key="Msg_SpecifyNewName">Please specify a new name.</system:String>
     <system:String x:Key="Dlg_Duplicate">Duplicate</system:String>

@@ -43,6 +43,7 @@
     <system:String x:Key="Cmb_CurrentSteamSave">(當前的 Steam 存檔)</system:String>
     <system:String x:Key="Dlg_CreateSave">新存檔</system:String>
     <system:String x:Key="Msg_SpecifyName">這是《{0}》的存檔資料。\n請為新存檔命名。</system:String>
+    <system:String x:Key="Msg_SpecifyNameCreate">請為新存檔命名。</system:String>
     <system:String x:Key="Dlg_Rename">重新命名</system:String>
     <system:String x:Key="Msg_SpecifyNewName">請指定新名稱。</system:String>
     <system:String x:Key="Dlg_Duplicate">複製</system:String>

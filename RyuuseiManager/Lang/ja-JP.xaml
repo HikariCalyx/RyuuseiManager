@@ -43,6 +43,7 @@
     <system:String x:Key="Cmb_CurrentSteamSave">(現在のSteamセーブデータ)</system:String>
     <system:String x:Key="Dlg_CreateSave">新規セーブ</system:String>
     <system:String x:Key="Msg_SpecifyName">これは「{0}」のセーブデータです。\n名前を指定してください。</system:String>
+    <system:String x:Key="Msg_SpecifyNameCreate">名前を指定してください。</system:String>
     <system:String x:Key="Dlg_Rename">名前を変更</system:String>
     <system:String x:Key="Msg_SpecifyNewName">新しい名前を指定してください。</system:String>
     <system:String x:Key="Dlg_Duplicate">コピー</system:String>

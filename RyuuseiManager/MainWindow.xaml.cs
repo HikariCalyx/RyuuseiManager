@@ -52,7 +52,6 @@ namespace RyuuseiManager
                 ComboGameTitle.Items.Clear();
                 ComboSaveName.Items.Clear();
                 ComboSaveName.IsEnabled = false;
-                ButtonImportSave.IsEnabled = false;
                 ButtonCreateSave.IsEnabled = false;
                 ButtonExportSave.IsEnabled = false;
                 GetAvailableSteamSaveData(item.Value);
@@ -67,13 +66,12 @@ namespace RyuuseiManager
                 GetSaveDataFromDB(gen);
             }
             ComboSaveName.IsEnabled = true;
-            ButtonCreateSave.IsEnabled = false; // Disable this feature until all save collected
+            ButtonCreateSave.IsEnabled = true;
             ButtonDuplicate.IsEnabled = false;
             ButtonDeleteSave.IsEnabled = false;
             ButtonRenameSave.IsEnabled = false;
             ButtonLoadSaveData.IsEnabled = false;
             ButtonLoadAndRun.IsEnabled = false;
-            ButtonImportSave.IsEnabled = true;
             ButtonExportSave.IsEnabled = false;
         }
 
@@ -226,7 +224,7 @@ namespace RyuuseiManager
                 {
                     string saveName = namedlg.ResultText;
                     DB.SaveDataBlob(saveBlob, saveName, gameGen, true, out ulong saveId);
-                    GetSaveDataFromDB(GameGen);
+                    if (ComboGameTitle.SelectedItem != null) GetSaveDataFromDB(GameGen);
                     ComboSaveName.SelectedValue = saveId;
                 }
             }
@@ -264,7 +262,7 @@ namespace RyuuseiManager
 
         private void ButtonCreateSave_Click(object sender, RoutedEventArgs e)
         {
-            var dlg = new NameDialog(title: (string)Application.Current.Resources["Dlg_CreateSave"], prompt: (string)Application.Current.Resources["Msg_SpecifyName"]);
+            var dlg = new NameDialog(title: (string)Application.Current.Resources["Dlg_CreateSave"], prompt: (string)Application.Current.Resources["Msg_SpecifyNameCreate"]);
             dlg.Owner = this;
             if (dlg.ShowDialog() == true)
             {

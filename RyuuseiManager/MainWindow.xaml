@@ -39,7 +39,7 @@
             <Button x:Name="ButtonCreateSave" Content="{DynamicResource Btn_CreateSave}" Height="26" FontSize="15" Margin="2" Click="ButtonCreateSave_Click" IsEnabled="False"/>
             <Button x:Name="ButtonDuplicate" Content="{DynamicResource Btn_Duplicate}" Height="26" FontSize="15" Margin="2" Click="ButtonDuplicate_Click" IsEnabled="False"/>
             <Button x:Name="ButtonRenameSave" Content="{DynamicResource Btn_RenameSave}" Height="26" FontSize="15" Margin="2" Click="ButtonRenameSave_Click" IsEnabled="False"/>
-            <Button x:Name="ButtonImportSave" Content="{DynamicResource Btn_ImportSave}" Height="26" FontSize="15" Margin="2"  Click="ButtonImportSave_Click" IsEnabled="False"/>
+            <Button x:Name="ButtonImportSave" Content="{DynamicResource Btn_ImportSave}" Height="26" FontSize="15" Margin="2"  Click="ButtonImportSave_Click"/>
             <Button x:Name="ButtonExportSave" Content="{DynamicResource Btn_ExportSave}" Height="26" FontSize="15" Margin="2" Click="ButtonExportSave_Click" IsEnabled="False"/>
             <Button x:Name="ButtonDeleteSave" Content="{DynamicResource Btn_DeleteSave}" Height="26" FontSize="15" Margin="2" Click="ButtonDeleteSave_Click" IsEnabled="False"/>
         </StackPanel>
