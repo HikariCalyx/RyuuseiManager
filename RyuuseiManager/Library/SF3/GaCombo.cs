@@ -41,7 +41,7 @@ namespace RyuuseiManager.Library.SF3
             { BattleCard.SiriusGA, new List<BattleCard> { BattleCard.WhiteMeteor, BattleCard.SilverMeteor, BattleCard.IllegalBreakSabre } },
             { BattleCard.AxisJetGA, new List<BattleCard> { BattleCard.DrillArm1, BattleCard.DrillArm1, BattleCard.DrillArm1 } },
             { BattleCard.BIcehammerGA, new List<BattleCard> { BattleCard.IllegalSnowStorm, BattleCard.IllegalSnowStorm, BattleCard.HammerWeapon3 } },
-            { BattleCard.StrongSwingGA, new List<BattleCard> { BattleCard.RollingNutes2, BattleCard.RollingNutes2, BattleCard.IllegalWoodSlash } },
+            { BattleCard.StrongSwingGA, new List<BattleCard> { BattleCard.RollingNuts2, BattleCard.RollingNuts2, BattleCard.IllegalWoodSlash } },
             // Giga
             { BattleCard.DarknessHoleGA, new List<BattleCard> { BattleCard.BlackHole1, BattleCard.BlackHole1, BattleCard.BlackInk } },
             { BattleCard.DestroyMissileGA, new List<BattleCard> { BattleCard.DashAttack2, BattleCard.DashAttack2, BattleCard.BombRizer } },
