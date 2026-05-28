@@ -70,12 +70,18 @@ namespace RyuuseiManager
             ButtonDuplicate.IsEnabled = false;
             ButtonDeleteSave.IsEnabled = false;
             ButtonRenameSave.IsEnabled = false;
+            ButtonReplaceSave.IsEnabled = false;
             ButtonLoadSaveData.IsEnabled = false;
             ButtonLoadAndRun.IsEnabled = false;
             ButtonExportSave.IsEnabled = false;
         }
 
         private void ComboSaveName_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            RefreshSaveInfo();
+        }
+
+        private void RefreshSaveInfo()
         {
             if (ComboSaveName.SelectedItem is ComboItem itemSave)
             {
@@ -182,6 +188,7 @@ namespace RyuuseiManager
                 ButtonRenameSave.IsEnabled = true;
                 ButtonDeleteSave.IsEnabled = SaveID > 0;
                 ButtonExportSave.IsEnabled = true;
+                ButtonReplaceSave.IsEnabled = SaveID > 0;
                 ButtonLoadSaveData.IsEnabled = SaveID > 0;
                 ButtonLoadAndRun.IsEnabled = SaveID > 0;
             }
@@ -210,12 +217,16 @@ namespace RyuuseiManager
                 }
                 if (!saveBlob.AsSpan().StartsWith(BinaryMagic.HeaderMagic.Raw))
                 {
-                    MessageBox.Show(this, (string)Application.Current.Resources["Msg_InvalidSave"], (string)Application.Current.Resources["Msg_Info"]);
+                    var infoDlg = new InfoDialog(title: (string)Application.Current.Resources["Msg_Info"], prompt: (string)Application.Current.Resources["Msg_InvalidSave"]);
+                    infoDlg.Owner = this;
+                    infoDlg.ShowDialog();
                     return;
                 }
                 else if (!CheckSave(saveBlob, out gameGen))
                 {
-                    MessageBox.Show(this, (string)Application.Current.Resources["Msg_InvalidSave"], (string)Application.Current.Resources["Msg_Info"]);
+                    var infoDlg = new InfoDialog(title: (string)Application.Current.Resources["Msg_Info"], prompt: (string)Application.Current.Resources["Msg_InvalidSave"]);
+                    infoDlg.Owner = this;
+                    infoDlg.ShowDialog();
                     return;
                 }
                 var namedlg = new NameDialog(title: (string)Application.Current.Resources["Dlg_ImportSaveData"], prompt: string.Format((string)Application.Current.Resources["Msg_SpecifyName"], AssembleGameName(gameGen)).Replace("\\n", Environment.NewLine + Environment.NewLine));
@@ -277,6 +288,19 @@ namespace RyuuseiManager
             }
         }
 
+        private void ButtonReplaceSave_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = new ConfirmDialog(title: (string)Application.Current.Resources["Msg_Confirm"], prompt: ((string)Application.Current.Resources["Msg_ReplaceConfirm"]).Replace("\\n", Environment.NewLine + Environment.NewLine));
+            dlg.Owner = this;
+            if (dlg.ShowDialog() == true)
+            {
+                byte[] encSave = ReadFile(Path.Combine(API.SteamInterop.GetSaveDataPath(SteamID), $"data0{GameGen}Slot.bin"));
+                byte[] decSave = key.DecryptBlob(encSave, API.SteamInterop.GetSteamID64(SteamID));
+                DB.ReplaceSaveBlob(decSave, SaveID);
+                RefreshSaveInfo();
+            }
+        }
+
         private void ButtonSettings_Click(object sender, RoutedEventArgs e)
         {
             var dlg = new SettingsWindow();
@@ -317,8 +341,8 @@ namespace RyuuseiManager
 
         private void ButtonDeleteSave_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult result = MessageBox.Show(this, (string)Application.Current.Resources["Msg_DeleteConfirm"], (string)Application.Current.Resources["Msg_Confirm"], MessageBoxButton.YesNo);
-            if (result == MessageBoxResult.Yes)
+            var dlg = new ConfirmDialog(title: (string)Application.Current.Resources["Msg_Confirm"], prompt: (string)Application.Current.Resources["Msg_DeleteConfirm"]);
+            if (dlg.ShowDialog() == true)
             {
                 DB.DeleteSaveById(SaveID);
                 GetSaveDataFromDB(GameGen);
@@ -353,7 +377,9 @@ namespace RyuuseiManager
                     rawSaveData = BinaryMagic.Processor.RepopulateFooter(rawSaveData, GameGen);
                     if (!TrySaveFile(Path.Combine(dlg.FileName), BinaryMagic.Processor.PopulateToSwitchSave(rawSaveData, GameGen / 10)))
                     {
-                        MessageBox.Show(this, (string)Application.Current.Resources["Msg_UnableToSave"], (string)Application.Current.Resources["Msg_Info"]);
+                        var infoDlg = new InfoDialog(title: (string)Application.Current.Resources["Msg_Info"], prompt: (string)Application.Current.Resources["Msg_UnableToSave"]);
+                        infoDlg.Owner = this;
+                        infoDlg.ShowDialog();
                     }
                 }
             }
@@ -386,15 +412,24 @@ namespace RyuuseiManager
                     byte[] signedSave = key.EncryptBlob(rawSaveData, API.SteamInterop.GetSteamID64(SteamID));
                     if (!TrySaveFile(Path.Combine(savePath, $"data0{GameGen}Slot.bin"), signedSave))
                     {
-                        MessageBox.Show(this, (string)Application.Current.Resources["Msg_UnableToSave"], (string)Application.Current.Resources["Msg_Info"]);
+                        var infoDlg = new InfoDialog(title: (string)Application.Current.Resources["Msg_Info"], prompt: (string)Application.Current.Resources["Msg_UnableToSave"]);
+                        infoDlg.Owner = this;
+                        infoDlg.ShowDialog();
                         return false;
                     }
-                    if (prompts) MessageBox.Show(this, (string)Application.Current.Resources["Msg_ImportComplete"], (string)Application.Current.Resources["Msg_Info"]);
-                    return true;
+                    if (prompts)
+                    {
+                        var infoDlg = new InfoDialog(title: (string)Application.Current.Resources["Msg_Info"], prompt: (string)Application.Current.Resources["Msg_ImportComplete"]);
+                        infoDlg.Owner = this;
+                        infoDlg.ShowDialog();
+                        return true;
+                    }
                 }
                 else
                 {
-                    MessageBox.Show(this, (string)Application.Current.Resources["Msg_RunElevate"], (string)Application.Current.Resources["Msg_Info"]);
+                    var infoDlg = new InfoDialog(title: (string)Application.Current.Resources["Msg_Info"], prompt: (string)Application.Current.Resources["Msg_RunElevate"]);
+                    infoDlg.Owner = this;
+                    infoDlg.ShowDialog();
                     return false;
                 }
             }
@@ -453,7 +488,7 @@ namespace RyuuseiManager
         {
             if (API.WineCheck.IsRunningUnderWine())
             {
-                MessageBox.Show((string)Application.Current.Resources["Msg_WineCheck"], (string)Application.Current.Resources["Msg_Info"]);
+                MessageBox.Show((string)Application.Current.Resources["Msg_WineCheck"]);
             }
             else
             {
@@ -484,7 +519,7 @@ namespace RyuuseiManager
             }
             else
             {
-                MessageBox.Show((string)Application.Current.Resources["Msg_NoSteamAccount"], (string)Application.Current.Resources["Msg_Info"]);
+                MessageBox.Show((string)Application.Current.Resources["Msg_NoSteamAccount"]);
             }
         }
 

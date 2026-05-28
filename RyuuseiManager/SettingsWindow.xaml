@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RyuuseiManager"
         mc:Ignorable="d"
-        Title="{DynamicResource Dlg_Settings}" Height="400" Width="400">
+        Title="{DynamicResource Dlg_Settings}" Height="400" Width="400"
+        WindowStartupLocation="CenterOwner">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>

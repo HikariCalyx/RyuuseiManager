@@ -13,9 +13,9 @@
     <Company>Hikari Calyx Tech</Company>
     <Product>RyuuseiManager</Product>
 
-    <Version>1.0.1.1</Version>
-    <AssemblyVersion>1.0.1.1</AssemblyVersion>
-    <FileVersion>1.0.1.1</FileVersion>
+    <Version>1.0.1.2</Version>
+    <AssemblyVersion>1.0.1.2</AssemblyVersion>
+    <FileVersion>1.0.1.2</FileVersion>
   </PropertyGroup>
 
 
@@ -39,6 +39,18 @@
   <ItemGroup>
     <ProjectReference Include="..\MandarinJuiceCore\MandarinJuiceCore.csproj" />
     <ProjectReference Include="..\GameResource\GameResource.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="InfoDialog.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="ConfirmDialog.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="SettingsWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 
 </Project>

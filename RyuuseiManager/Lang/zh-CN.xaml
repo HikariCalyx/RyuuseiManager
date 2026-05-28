@@ -21,6 +21,8 @@
     <system:String x:Key="Msg_NoSaveDataFound">没有找到任何存档。请至少运行一款游戏并存档一次，然后重新运行本程序。</system:String>
     <system:String x:Key="Btn_OK">确定</system:String>
     <system:String x:Key="Btn_Cancel">取消</system:String>
+    <system:String x:Key="Btn_Yes">是</system:String>
+    <system:String x:Key="Btn_No">否</system:String>
     <system:String x:Key="Btn_CreateSave">➕ 创建...</system:String>
     <system:String x:Key="Btn_Duplicate">🗐 复制</system:String>
     <system:String x:Key="Btn_RenameSave">✏️ 重命名</system:String>
@@ -28,6 +30,7 @@
     <system:String x:Key="Btn_ExportSave">📤 导出</system:String>
     <system:String x:Key="Btn_DeleteSave">🗑️ 删除</system:String>
     <system:String x:Key="Btn_Settings">⚙️ 设置</system:String>
+    <system:String x:Key="Btn_ReplaceSave">🔄 替换</system:String>
     <system:String x:Key="Btn_LoadSaveData">➡️ 加载存档</system:String>
     <system:String x:Key="Btn_RunGame">▶️ 启动游戏</system:String>
     <system:String x:Key="Btn_LoadAndRun">🎮 加载存档并启动游戏</system:String>
@@ -56,6 +59,7 @@
     <system:String x:Key="Msg_UnableToExport">无法导出文件。请检查该文件是否被其他程序占用。</system:String>
     <system:String x:Key="Msg_Confirm">确认</system:String>
     <system:String x:Key="Msg_DeleteConfirm">是否要删除本存档？此操作无法撤销。</system:String>
+    <system:String x:Key="Msg_ReplaceConfirm">是否要将此存档替换为当前的Steam存档？\n此操作无法撤销。</system:String>
     <system:String x:Key="Msg_ImportComplete">存档导入完成。</system:String>
     <system:String x:Key="Dlg_Settings">设置</system:String>
     <system:String x:Key="Msg_Language">语言</system:String>

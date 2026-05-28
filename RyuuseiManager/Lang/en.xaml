@@ -21,12 +21,15 @@
     <system:String x:Key="Msg_NoSaveDataFound">We didn't find any save data. Please play at least one game and try again.</system:String>
     <system:String x:Key="Btn_OK">OK</system:String>
     <system:String x:Key="Btn_Cancel">Cancel</system:String>
+    <system:String x:Key="Btn_Yes">Yes</system:String>
+    <system:String x:Key="Btn_No">No</system:String>
     <system:String x:Key="Btn_CreateSave">➕ Create...</system:String>
     <system:String x:Key="Btn_Duplicate">🗐 Duplicate</system:String>
     <system:String x:Key="Btn_RenameSave">✏️ Rename</system:String>
     <system:String x:Key="Btn_ImportSave">📥 Import</system:String>
     <system:String x:Key="Btn_ExportSave">📤 Export</system:String>
     <system:String x:Key="Btn_DeleteSave">🗑️ Delete</system:String>
+    <system:String x:Key="Btn_ReplaceSave">🔄 Replace</system:String>
     <system:String x:Key="Btn_Settings">⚙️ Settings</system:String>
     <system:String x:Key="Btn_LoadSaveData">➡️ Load Save Data</system:String>
     <system:String x:Key="Btn_RunGame">▶️ Run Game</system:String>
@@ -56,6 +59,7 @@
     <system:String x:Key="Msg_UnableToExport">Cannot export file. Please check if it's occupied by another program.</system:String>
     <system:String x:Key="Msg_Confirm">Confirm</system:String>
     <system:String x:Key="Msg_DeleteConfirm">Would you like to delete this save? This cannot be undone.</system:String>
+    <system:String x:Key="Msg_ReplaceConfirm">Do you want to replace this save file with the current Steam save file?\nThis cannot be undone.</system:String>
     <system:String x:Key="Msg_ImportComplete">Save data import complete.</system:String>
     <system:String x:Key="Dlg_Settings">Settings</system:String>
     <system:String x:Key="Msg_Language">Language</system:String>

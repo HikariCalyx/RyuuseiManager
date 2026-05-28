@@ -172,6 +172,19 @@ namespace RyuuseiManager
             }
         }
 
+        public static void ReplaceSaveBlob(byte[] blob, ulong saveId)
+        {
+            string sqlCommand = @"UPDATE saves SET saveblob = @blob WHERE save_id = @id;";
+            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+            {
+                conn.Open();
+                SQLiteCommand cmd = new SQLiteCommand(sqlCommand, conn);
+                cmd.Parameters.AddWithValue("@blob", CompressZlib(blob));
+                cmd.Parameters.AddWithValue("@id", saveId);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
         public static void RenameSaveBlob(string newName, ulong saveId)
         {
             string sqlCommand = @"UPDATE saves SET savename = @name WHERE save_id = @id;";
@@ -295,7 +308,6 @@ namespace RyuuseiManager
             using var input = new MemoryStream(compressed);
             using var deflate = new DeflateStream(input, CompressionMode.Decompress);
             using var output = new MemoryStream();
-
             deflate.CopyTo(output);
             return output.ToArray();
         }

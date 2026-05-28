@@ -42,6 +42,7 @@
             <Button x:Name="ButtonImportSave" Content="{DynamicResource Btn_ImportSave}" Height="26" FontSize="15" Margin="2"  Click="ButtonImportSave_Click"/>
             <Button x:Name="ButtonExportSave" Content="{DynamicResource Btn_ExportSave}" Height="26" FontSize="15" Margin="2" Click="ButtonExportSave_Click" IsEnabled="False"/>
             <Button x:Name="ButtonDeleteSave" Content="{DynamicResource Btn_DeleteSave}" Height="26" FontSize="15" Margin="2" Click="ButtonDeleteSave_Click" IsEnabled="False"/>
+            <Button x:Name="ButtonReplaceSave" Content="{DynamicResource Btn_ReplaceSave}" Height="26" FontSize="15" Margin="2" Click="ButtonReplaceSave_Click" IsEnabled="False"/>
         </StackPanel>
         <TabControl x:Name="MainTabs"
                 Grid.Row="3"

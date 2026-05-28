@@ -3,17 +3,11 @@
 namespace RyuuseiManager
 {
     /// <summary>
-    /// NameDialog.xaml 的交互逻辑
+    /// InfoDialog.xaml 的交互逻辑
     /// </summary>
-    public partial class NameDialog : Window
+    public partial class InfoDialog : Window
     {
-        public string ResultText
-        {
-            get { return InputBox.Text; }
-            set { InputBox.Text = value; }
-        }
-
-        public NameDialog(string title, string prompt)
+        public InfoDialog(string title, string prompt)
         {
             InitializeComponent();
             Title = title;

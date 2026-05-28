@@ -3,17 +3,11 @@
 namespace RyuuseiManager
 {
     /// <summary>
-    /// NameDialog.xaml 的交互逻辑
+    /// ConfirmDialog.xaml 的交互逻辑
     /// </summary>
-    public partial class NameDialog : Window
+    public partial class ConfirmDialog : Window
     {
-        public string ResultText
-        {
-            get { return InputBox.Text; }
-            set { InputBox.Text = value; }
-        }
-
-        public NameDialog(string title, string prompt)
+        public ConfirmDialog(string title, string prompt)
         {
             InitializeComponent();
             Title = title;
