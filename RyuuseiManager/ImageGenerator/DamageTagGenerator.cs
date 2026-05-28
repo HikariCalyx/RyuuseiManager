@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
+﻿using System.Drawing;
 using System.Runtime.InteropServices;
-using System.Security.Policy;
-using System.Text;
 using System.Windows;
 using System.Windows.Media.Imaging;
 
@@ -34,42 +28,34 @@ namespace RyuuseiManager.ImageGenerator
             }
         }
 
-        private static Bitmap BitmapImage2Bitmap(BitmapImage bitmapImage)
+        private static Bitmap LoadBitmap(string uriPath)
         {
-            int width = bitmapImage.PixelWidth;
-            int height = bitmapImage.PixelHeight;
-            int stride = width * 4;
+            var uri = new Uri(uriPath, UriKind.Absolute);
+            var streamInfo = Application.GetResourceStream(uri);
 
-            byte[] pixelData = new byte[height * stride];
-            bitmapImage.CopyPixels(pixelData, stride, 0);
+            if (streamInfo == null) return new Bitmap(1, 1);
 
-            var bmp = new Bitmap(width, height, PixelFormat.Format32bppPArgb);
-
-            var bmpData = bmp.LockBits(
-                new Rectangle(0, 0, width, height),
-                ImageLockMode.WriteOnly,
-                bmp.PixelFormat);
-
-            System.Runtime.InteropServices.Marshal.Copy(pixelData, 0, bmpData.Scan0, pixelData.Length);
-            bmp.UnlockBits(bmpData);
-
+            using var stream = streamInfo.Stream;
+            Bitmap bmp = new Bitmap(stream);
+            bmp.SetResolution(96, 96);
             return bmp;
+
         }
 
         public static BitmapSource GetDamageTag(int damage, int tier)
         {
             if (damage > 999) return null;
-            BitmapImage tierBg = new BitmapImage();
+            Bitmap tierBmp;
             switch (tier)
             {
                 default:
-                case 0: tierBg = new BitmapImage(new Uri("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/Standard.png", UriKind.Absolute)); break;
-                case 1: tierBg = new BitmapImage(new Uri("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/Mega.png", UriKind.Absolute)); break;
-                case 2: tierBg = new BitmapImage(new Uri("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/Giga.png", UriKind.Absolute)); break;
+                case 0: tierBmp = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/Standard.png"); break;
+                case 1: tierBmp = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/Mega.png"); break;
+                case 2: tierBmp = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/Giga.png"); break;
+                case 3: tierBmp = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/White.png"); break;
             }
             if (damage > 0)
             {
-                Bitmap tierBmp = BitmapImage2Bitmap(tierBg);
                 Bitmap damageNumber = new Bitmap(23, 11);
                 using (Graphics g = Graphics.FromImage(damageNumber))
                 {
@@ -87,7 +73,6 @@ namespace RyuuseiManager.ImageGenerator
             }
             else if (damage < 0)
             {
-                Bitmap tierBmp = BitmapImage2Bitmap(tierBg);
                 Bitmap damageNumber = new Bitmap(23, 11);
                 using (Graphics g = Graphics.FromImage(damageNumber))
                 {
@@ -109,14 +94,35 @@ namespace RyuuseiManager.ImageGenerator
             }
         }
 
+        public static BitmapSource GetElementTag(int elements, bool isRegCard = false)
+        {
+            string num = elements.ToString();
+            int width = 14 * num.Length;
+            if (isRegCard) width += 42;
+            Bitmap elementTags = new Bitmap(width, 15);
+            using (Graphics g = Graphics.FromImage(elementTags))
+            {
+                for (int i = 0; i < num.Length; i++)
+                {
+                    DrawElement(g, num[i], i);
+                }
+                if (isRegCard)
+                {
+                    Elements elem = new Elements();
+                    g.DrawImage(elem.Reg, width - elem.Reg.Width, 0, new Rectangle(0, 0, elem.Reg.Width, elem.Reg.Height), GraphicsUnit.Pixel);
+                }
+            }
+            return ToBitmapSource(elementTags);
+        }
+
         private static void DrawNumber(Graphics g, char number, int location)
         {
             int x = location * 8;
             DamageNumber dmgNum = new DamageNumber();
-            Bitmap targetNum = null;
+            Bitmap targetNum;
             switch (number)
             {
-                default: targetNum = dmgNum._q;  break;
+                default: targetNum = dmgNum._q; break;
                 case ' ': return;
                 case '0': targetNum = dmgNum._0; break;
                 case '1': targetNum = dmgNum._1; break;
@@ -132,21 +138,41 @@ namespace RyuuseiManager.ImageGenerator
             g.DrawImage(targetNum, x, 0, new Rectangle(0, 0, targetNum.Width, targetNum.Height), GraphicsUnit.Pixel);
         }
 
+        private static void DrawElement(Graphics g, char number, int location)
+        {
+            int x = location * 14;
+            Elements elem = new Elements();
+            Bitmap targetElem;
+            switch (number)
+            {
+                default: return;
+                case '1': targetElem = elem.Null; break;
+                case '2': targetElem = elem.Aqua; break;
+                case '3': targetElem = elem.Heat; break;
+                case '4': targetElem = elem.Elec; break;
+                case '5': targetElem = elem.Wood; break;
+                case '6': targetElem = elem.Wind; break;
+                case '7': targetElem = elem.Break; break;
+                case '8': targetElem = elem.Sword; break;
+            }
+            g.DrawImage(targetElem, x, 0, new Rectangle(0, 0, targetElem.Width, targetElem.Height), GraphicsUnit.Pixel);
+        }
+
         private class DamageNumber
         {
             public DamageNumber()
             {
-                _0 = BitmapImage2Bitmap(new BitmapImage(new Uri("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/0.png", UriKind.Absolute)));
-                _1 = BitmapImage2Bitmap(new BitmapImage(new Uri("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/1.png", UriKind.Absolute)));
-                _2 = BitmapImage2Bitmap(new BitmapImage(new Uri("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/2.png", UriKind.Absolute)));
-                _3 = BitmapImage2Bitmap(new BitmapImage(new Uri("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/3.png", UriKind.Absolute)));
-                _4 = BitmapImage2Bitmap(new BitmapImage(new Uri("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/4.png", UriKind.Absolute)));
-                _5 = BitmapImage2Bitmap(new BitmapImage(new Uri("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/5.png", UriKind.Absolute)));
-                _6 = BitmapImage2Bitmap(new BitmapImage(new Uri("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/6.png", UriKind.Absolute)));
-                _7 = BitmapImage2Bitmap(new BitmapImage(new Uri("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/7.png", UriKind.Absolute)));
-                _8 = BitmapImage2Bitmap(new BitmapImage(new Uri("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/8.png", UriKind.Absolute)));
-                _9 = BitmapImage2Bitmap(new BitmapImage(new Uri("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/9.png", UriKind.Absolute)));
-                _q = BitmapImage2Bitmap(new BitmapImage(new Uri("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/q.png", UriKind.Absolute)));
+                _0 = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/0.png");
+                _1 = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/1.png");
+                _2 = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/2.png");
+                _3 = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/3.png");
+                _4 = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/4.png");
+                _5 = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/5.png");
+                _6 = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/6.png");
+                _7 = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/7.png");
+                _8 = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/8.png");
+                _9 = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/9.png");
+                _q = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/q.png");
             }
 
             public Bitmap _0 { get; private set; }
@@ -160,6 +186,31 @@ namespace RyuuseiManager.ImageGenerator
             public Bitmap _8 { get; private set; }
             public Bitmap _9 { get; private set; }
             public Bitmap _q { get; private set; }
+        }
+
+        private class Elements
+        {
+            public Elements()
+            {
+                Null = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/Null.png");
+                Aqua = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/Aqua.png");
+                Heat = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/Heat.png");
+                Elec = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/Elec.png");
+                Wood = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/Wood.png");
+                Wind = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/Wind.png");
+                Break = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/Break.png");
+                Sword = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/Sword.png");
+                Reg = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/RegCard.png");
+            }
+            public Bitmap Null { get; private set; }
+            public Bitmap Aqua { get; private set; }
+            public Bitmap Heat { get; private set; }
+            public Bitmap Elec { get; private set; }
+            public Bitmap Wood { get; private set; }
+            public Bitmap Wind { get; private set; }
+            public Bitmap Break { get; private set; }
+            public Bitmap Sword { get; private set; }
+            public Bitmap Reg { get; private set; }
         }
     }
 }

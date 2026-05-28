@@ -61,6 +61,9 @@
                                 <DataTrigger Binding="{Binding CardClass}" Value="2">
                                     <Setter Property="Background" Value="#FFFF0000"/>
                                 </DataTrigger>
+                                <DataTrigger Binding="{Binding CardClass}" Value="3">
+                                    <Setter Property="Background" Value="#FFAAAAAA"/>
+                                </DataTrigger>
                             </Style.Triggers>
                         </Style>
                     </ListBox.ItemContainerStyle>
@@ -107,8 +110,12 @@
                                             </Style>
                                         </TextBlock.Style>
                                     </TextBlock>
-
-
+                                    <Image Margin="0,8,0,0"
+                                           Stretch="None"
+                                           HorizontalAlignment="Left"
+                                           Source="{Binding ElementImage}"
+                                           RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                           SnapsToDevicePixels="True" />
                                 </StackPanel>
 
                                 <TextBlock Grid.Column="2"
@@ -183,6 +190,10 @@
                                                FontSize="16"
                                                TextWrapping="Wrap"
                                                Foreground="White" />
+                                    <Image Margin="0,4,0,0"
+                                           Stretch="UniformToFill"
+                                           HorizontalAlignment="Left"
+                                           Source="{Binding ElementImage}" />
                                 </StackPanel>
 
                                 <TextBlock Grid.Column="2"

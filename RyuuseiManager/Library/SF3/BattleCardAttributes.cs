@@ -458,6 +458,27 @@ namespace RyuuseiManager.Library.SF3
             { BattleCard.AbFirst, -1 },
         };
 
+        // Element Number
+        // 1: Null
+        // 2: Aqua
+        // 3: Heat
+        // 4: Elec
+        // 5: Wood
+        // 6: Wind
+        // 7: Break
+        // 8: Sword
+
+        private static readonly Dictionary<BattleCard, int> element = new()
+        {
+            { BattleCard.EdoBlade1, 18 },
+            { BattleCard.EdoBlade2, 18 },
+            { BattleCard.EdoBlade3, 18 },
+            { BattleCard.EdoBladeX, 18 },
+            { BattleCard.WingBlade, 167 },
+            { BattleCard.GiantAxe, 187 },
+            { BattleCard.GraveJokerGA, 17 },
+        };
+
         public static int GetDamage(BattleCard battleCard)
         {
             if (damage.TryGetValue(battleCard, out int dmg))
@@ -467,6 +488,18 @@ namespace RyuuseiManager.Library.SF3
             else
             {
                 return 0;
+            }
+        }
+
+        public static int GetElements(BattleCard battleCard)
+        {
+            if (element.TryGetValue(battleCard, out int elem))
+            {
+                return elem;
+            }
+            else
+            {
+                return 1;
             }
         }
     }

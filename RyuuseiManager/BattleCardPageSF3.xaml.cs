@@ -20,10 +20,13 @@ namespace RyuuseiManager
             InitializeComponent();
             Folders = new List<Folder>();
             ProfileLanguage = 0;
+            WCard = new WhiteCard();
         }
 
         public List<Folder> Folders { get; set; }
         public int ProfileLanguage { get; set; }
+        public BattleCard RegCard { get; set; }
+        public WhiteCard WCard { get; set; }
         public void SetFolderNames()
         {
             CardFolders.Items.Clear();
@@ -60,10 +63,12 @@ namespace RyuuseiManager
             foreach (var i in battleCards)
             {
                 int damage = BattleCardAttributes.GetDamage(i.Key);
+                int element = BattleCardAttributes.GetElements(i.Key);
                 var entry = new ListEntry
                 {
                     Image = GameResourceRetriver.GetSF3CardImage((int)i.Key),
                     DamageImage = DamageTagGenerator.GetDamageTag(damage, GetCardClass(i.Key)),
+                    ElementImage = DamageTagGenerator.GetElementTag(element, (i.Key == RegCard)),
                     Label = $"{BattleCardName.GetBattleCardName(i.Key, ProfileLanguage)}",
                     Quantity = $"x {i.Value}",
                     IsIllegal = IsIllegalCard(i.Key),
@@ -71,15 +76,44 @@ namespace RyuuseiManager
                 };
                 BattleCardList.Items.Add(entry);
             }
+            foreach (var i in WCard.ToDict())
+            {
+                int damage = BattleCardAttributes.GetDamage(i.Key);
+                int element = BattleCardAttributes.GetElements(i.Key);
+                var entry = new ListEntry
+                {
+                    Image = GameResourceRetriver.GetSF3CardImage((int)i.Key),
+                    DamageImage = DamageTagGenerator.GetDamageTag(damage, 3),
+                    ElementImage = DamageTagGenerator.GetElementTag(element),
+                    Label = $"{BattleCardName.GetBattleCardName(i.Key, ProfileLanguage)}",
+                    Quantity = $"x {i.Value}",
+                    IsIllegal = IsIllegalCard(i.Key),
+                    CardClass = 3
+                };
+                BattleCardList.Items.Add(entry);
+            }
+            foreach (var i in WCard.ToDict().Keys)
+            {
+                if (battleCards.ContainsKey(i))
+                {
+                    battleCards[i] += 1;
+                }
+                else
+                {
+                    battleCards[i] = 1;
+                }
+            }
             Dictionary<BattleCard, int> galaxyAdvances = GaCombo.GetPossibleCombos(battleCards);
             foreach (var i in galaxyAdvances)
             {
                 int damage = BattleCardAttributes.GetDamage(i.Key);
+                int element = BattleCardAttributes.GetElements(i.Key);
                 List<BattleCard> gaCombo = GaCombo.gaCombos[i.Key];
                 var entry = new ListEntry
                 {
                     Image = GameResourceRetriver.GetSF3CardImage((int)i.Key),
                     DamageImage = DamageTagGenerator.GetDamageTag(damage, GetCardClass(i.Key)),
+                    ElementImage = DamageTagGenerator.GetElementTag(element),
                     GaPart0 = GameResourceRetriver.GetSF3CardImage((int)gaCombo[0]),
                     GaPart1 = GameResourceRetriver.GetSF3CardImage((int)gaCombo[1]),
                     GaPart2 = GameResourceRetriver.GetSF3CardImage((int)gaCombo[2]),
@@ -125,6 +159,7 @@ namespace RyuuseiManager
         public class ListEntry
         {
             public BitmapImage Image { get; set; }
+            public BitmapSource ElementImage { get; set; }
             public BitmapImage GaPart0 { get; set; }
             public BitmapImage GaPart1 { get; set; }
             public BitmapImage GaPart2 { get; set; }
