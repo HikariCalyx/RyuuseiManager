@@ -99,6 +99,7 @@ namespace RyuuseiManager
                 coverTabPage.SetMessage(GetMessage(saveBlob));
                 coverTabPage.SetSecret(GetSecret(saveBlob));
                 coverTabFrame.Navigate(coverTabPage);
+                bool showOtherLanguage = DB.GetToggleSwitch("CheckShowLanguage") == 1;
                 List<Folder> folders = GetFolder(saveBlob);
                 if (ComboGameTitle.SelectedItem is ComboItem item)
                 {
@@ -109,10 +110,13 @@ namespace RyuuseiManager
                         case 32:
                         case 33:
                             int whiteCardIndex = Processor.GetSF3SelfWhiteCard(saveBlob);
+                            int equippedFolder = Processor.GetSF3EquippedFolder(saveBlob);
                             var whiteCardCombo = Library.SF3.WhiteCardCombo.GetWhiteCard(whiteCardIndex);
                             var battleCardPageSF3 = new BattleCardPageSF3();
                             battleCardPageSF3.WCard = whiteCardCombo;
+                            battleCardPageSF3.EquippedFolderIndex = equippedFolder;
                             battleCardPageSF3.ProfileLanguage = GetLanguageID();
+                            battleCardPageSF3.ShowOtherLanguage = showOtherLanguage;
                             if (folders.Count > 0) battleCardPageSF3.Folders = folders;
                             battleCardPageSF3.SetFolderNames();
                             battleCardFrame.Navigate(battleCardPageSF3);
@@ -523,6 +527,16 @@ namespace RyuuseiManager
             else
             {
                 MessageBox.Show((string)Application.Current.Resources["Msg_NoSteamAccount"]);
+            }
+        }
+
+        public void ToggleVisibility()
+        {
+            if (MainTabs.Items.Count > 0)
+            {
+                int selectedIndex = MainTabs.SelectedIndex;
+                RefreshSaveInfo();
+                MainTabs.SelectedIndex = selectedIndex;
             }
         }
 

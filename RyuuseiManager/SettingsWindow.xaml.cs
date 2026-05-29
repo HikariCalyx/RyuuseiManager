@@ -17,6 +17,7 @@ namespace RyuuseiManager
             ListLanguage();
             ListSteamPath();
             SetVersionString();
+            GetShowLanguageSettings();
         }
 
         private Version? version = Assembly.GetExecutingAssembly().GetName().Version;
@@ -107,6 +108,20 @@ namespace RyuuseiManager
                 ListSteamPath();
                 _mainWindow.CheckSteamAccount();
             }
+        }
+
+        private void CheckShowLanguage_CheckedChanged(object sender, RoutedEventArgs e)
+        {
+            if (_internal) return;
+            DB.SetToggleSwitch("CheckShowLanguage", CheckShowLanguage.IsChecked ?? false);
+            _mainWindow.ToggleVisibility();
+        }
+
+        private void GetShowLanguageSettings()
+        {
+            _internal = true;
+            CheckShowLanguage.IsChecked = DB.GetToggleSwitch("CheckShowLanguage") == 1;
+            _internal = false;
         }
 
         private void SetVersionString()

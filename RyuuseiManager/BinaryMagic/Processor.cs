@@ -307,7 +307,12 @@ namespace RyuuseiManager.BinaryMagic
                         }
                         int regCardIndex = subBlob[subBlob.IndexOf(HeaderMagic.SF3.RegCardHeaderMagic) + HeaderMagic.SF3.RegCardHeaderMagic.Length];
                         if (regCardIndex < 30) sf3Fldr.RegularCardIndex = regCardIndex;
-
+                        int tagCardIndex = subBlob.IndexOf(FooterMagic.SF3.TagCardIndexFootermagic) - 4;
+                        if (tagCardIndex >= 0)
+                        {
+                            sf3Fldr.TagCards[0] = subBlob[tagCardIndex];
+                            sf3Fldr.TagCards[1] = subBlob[tagCardIndex + 1];
+                        }
                         resultFldr.Add(sf3Fldr);
                     }
                     break;
@@ -322,6 +327,17 @@ namespace RyuuseiManager.BinaryMagic
             if (index >= 0)
             {
                 result = blob[index + HeaderMagic.SF3.WhiteCardHeaderMagic.Length];
+            }
+            return result;
+        }
+
+        public static int GetSF3EquippedFolder(ReadOnlySpan<byte> blob)
+        {
+            int result = 0;
+            int index = blob.IndexOf(HeaderMagic.SF3.EquippedFolderHeaderMagic);
+            if (index >= 0)
+            {
+                result = blob[index + HeaderMagic.SF3.EquippedFolderHeaderMagic.Length];
             }
             return result;
         }
@@ -344,7 +360,7 @@ namespace RyuuseiManager.BinaryMagic
                 int foundAt = offset + index;
 
                 int start = foundAt + pattern.Length;
-                int length = Math.Min(172, source.Length - start);
+                int length = Math.Min(188, source.Length - start);
 
                 results.Add(source.Slice(start, length).ToArray());
 

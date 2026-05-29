@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
+using System.Windows.Documents;
 
 namespace RyuuseiManager
 {
@@ -151,6 +152,51 @@ namespace RyuuseiManager
                 conn.Open();
                 SQLiteCommand cmd = new SQLiteCommand(sqlCommand, conn);
                 cmd.Parameters.AddWithValue("@name", isEnabled ? "1" : "0");
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public static int GetToggleSwitch(string switchName)
+        {
+            InitDatabase();
+            string sqlCommand = @"SELECT value FROM config WHERE variable = @switchname;";
+            string result = "0";
+            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+            {
+                conn.Open();
+                SQLiteCommand cmd = new SQLiteCommand(sqlCommand, conn);
+                cmd.Parameters.AddWithValue("@switchname", switchName);
+                result = (string)cmd.ExecuteScalar();
+            }
+            if (string.IsNullOrEmpty(result))
+            {
+                return -1;
+            }
+            else
+            {
+                return (result == "1") ? 1 : 0;
+            }
+        }
+
+        public static void SetToggleSwitch(string switchName, bool isEnabled)
+        {
+            InitDatabase();
+            string sqlCommand = "";
+            switch (GetToggleSwitch(switchName))
+            {
+                case -1:
+                    sqlCommand = @"INSERT INTO config (variable, value) VALUES (@switchname, @value);"; 
+                    break;
+                default:
+                    sqlCommand = @"UPDATE config SET value = @value WHERE variable = @switchname;";
+                    break;
+            }
+            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+            {
+                conn.Open();
+                SQLiteCommand cmd = new SQLiteCommand(sqlCommand, conn);
+                cmd.Parameters.AddWithValue("@switchname", switchName);
+                cmd.Parameters.AddWithValue("@value", isEnabled ? "1" : "0");
                 cmd.ExecuteNonQuery();
             }
         }

@@ -11,6 +11,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
             <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
             <!-- Header row: Label + ComboBox -->
             <RowDefinition Height="*"/>
             <!-- Rest of the settings area -->
@@ -56,7 +57,23 @@
                       SelectionChanged="ComboSteamPath_SelectionChanged"/>
         </Grid>
 
-        <Border Grid.Row="2"
+
+        <Grid Grid.Row="2" Margin="8,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <CheckBox x:Name="CheckShowLanguage" Grid.Column="1"
+                      VerticalContentAlignment="Center"
+                      Height="30"
+                      Checked="CheckShowLanguage_CheckedChanged"
+                      Unchecked="CheckShowLanguage_CheckedChanged">
+                <Label Content="{DynamicResource Chk_ShowOtherLanguage}" FontSize="16"/>
+            </CheckBox>
+        </Grid>
+
+        <Border Grid.Row="4"
                 Margin="8"
                 Background="#FFF5F5F5"
                 CornerRadius="4"

@@ -2,6 +2,7 @@
 using RyuuseiManager.ImageGenerator;
 using RyuuseiManager.Library.SF3;
 using System.Security.Policy;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Input;
@@ -21,24 +22,41 @@ namespace RyuuseiManager
             Folders = new List<Folder>();
             ProfileLanguage = 0;
             WCard = new WhiteCard();
+            ShowOtherLanguage = false;
+            EquippedFolderIndex = 1;
         }
 
         public List<Folder> Folders { get; set; }
         public int ProfileLanguage { get; set; }
+        public int EquippedFolderIndex { get; set; }
         public WhiteCard WCard { get; set; }
+        public bool ShowOtherLanguage { get; set; }
+        private string GetDpiScaling()
+        {
+            DpiScale dpi = VisualTreeHelper.GetDpi(this);
+            if (dpi.DpiScaleX == 1.0)
+            {
+                return "NearestNeighbor";
+            }
+            else
+            {
+                return "HighQuality";
+            }
+        }
+
         public void SetFolderNames()
         {
             CardFolders.Items.Clear();
             int value = 0;
-            foreach (var i in Folders)
+            for (int i = 0; i < Folders.Count; i++)
             {
                 ComboItem item = new ComboItem();
-                item.Text = i.FolderName;
+                item.Text = (i == EquippedFolderIndex ? "[E] " : "") + Folders[i].FolderName;
                 item.Value = value;
                 CardFolders.Items.Add(item);
                 value++;
             }
-            CardFolders.SelectedIndex = 0;
+            CardFolders.SelectedIndex = EquippedFolderIndex;
         }
 
         private void CardFolders_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -46,10 +64,18 @@ namespace RyuuseiManager
             BattleCardList.Items.Clear();
             GalaxyAdvanceList.Items.Clear();
             Folder selectedFolder = Folders[CardFolders.SelectedIndex];
-            BattleCard regCard = new BattleCard();
+            BattleCard regCard = BattleCard.NoData;
+            List<BattleCard> tagCards = new List<BattleCard>();
             if (selectedFolder.RegularCardIndex != -1)
             {
                 regCard = (BattleCard)selectedFolder.Cards[selectedFolder.RegularCardIndex];
+            }
+            foreach (var i in selectedFolder.TagCards)
+            {
+                if (i < 30)
+                {
+                    tagCards.Add((BattleCard)selectedFolder.Cards[i]);
+                }
             }
             Dictionary<BattleCard, int> battleCards = new Dictionary<BattleCard, int>();
             foreach (var i in selectedFolder.Cards)
@@ -66,17 +92,21 @@ namespace RyuuseiManager
             }
             foreach (var i in battleCards)
             {
+                if (i.Key == BattleCard.NoData) continue;
                 int damage = BattleCardAttributes.GetDamage(i.Key);
                 int element = BattleCardAttributes.GetElements(i.Key);
                 var entry = new ListEntry
                 {
                     Image = GameResourceRetriver.GetSF3CardImage((int)i.Key),
                     DamageImage = DamageTagGenerator.GetDamageTag(damage, GetCardClass(i.Key)),
-                    ElementImage = DamageTagGenerator.GetElementTag(element, (i.Key == regCard)),
+                    ElementImage = DamageTagGenerator.GetElementTag(element, (i.Key == regCard), tagCards.Contains(i.Key)),
                     Label = $"{BattleCardName.GetBattleCardName(i.Key, ProfileLanguage)}",
+                    SecondaryLabel = $"{BattleCardName.GetSecondaryBattleCardName(i.Key, ProfileLanguage)}",
                     Quantity = $"x {i.Value}",
                     IsIllegal = IsIllegalCard(i.Key),
-                    CardClass = GetCardClass(i.Key)
+                    CardClass = GetCardClass(i.Key),
+                    ShowOtherLanguage = ShowOtherLanguage,
+                    ScalingType = GetDpiScaling()
                 };
                 BattleCardList.Items.Add(entry);
             }
@@ -91,9 +121,12 @@ namespace RyuuseiManager
                     DamageImage = DamageTagGenerator.GetDamageTag(damage, 3),
                     ElementImage = DamageTagGenerator.GetElementTag(element),
                     Label = $"{BattleCardName.GetBattleCardName(i.Key, ProfileLanguage)}",
+                    SecondaryLabel = $"{BattleCardName.GetSecondaryBattleCardName(i.Key, ProfileLanguage)}",
                     Quantity = $"x {i.Value}",
                     IsIllegal = IsIllegalCard(i.Key),
-                    CardClass = 3
+                    CardClass = 3,
+                    ShowOtherLanguage = ShowOtherLanguage,
+                    ScalingType = GetDpiScaling()
                 };
                 BattleCardList.Items.Add(entry);
             }
@@ -124,10 +157,21 @@ namespace RyuuseiManager
                     GaPart1 = GameResourceRetriver.GetSF3CardImage((int)gaCombo[1]),
                     GaPart2 = GameResourceRetriver.GetSF3CardImage((int)gaCombo[2]),
                     Label = $"{BattleCardName.GetBattleCardName(i.Key, ProfileLanguage)}",
+                    SecondaryLabel = $"{BattleCardName.GetSecondaryBattleCardName(i.Key, ProfileLanguage)}",
                     Quantity = $"x {i.Value}",
-                    CardClass = GetCardClass(i.Key)
+                    CardClass = GetCardClass(i.Key),
+                    ShowOtherLanguage = ShowOtherLanguage,
+                    ScalingType = GetDpiScaling()
                 };
                 GalaxyAdvanceList.Items.Add(entry);
+            }
+        }
+
+        public void ToggleOtherNameVisibility(bool visibility)
+        {
+            foreach (ListEntry i in BattleCardList.Items)
+            {
+                i.ShowOtherLanguage = visibility;
             }
         }
 
@@ -174,8 +218,11 @@ namespace RyuuseiManager
             public int PixelHeight => Image.PixelHeight;
             public bool IsIllegal { get; set; }
             public string Label { get; set; }
+            public string SecondaryLabel { get; set; }
             public string Quantity { get; set; }
             public int CardClass { get; set; }
+            public bool ShowOtherLanguage { get; set; }
+            public string ScalingType { get; set; }
         }
 
     }

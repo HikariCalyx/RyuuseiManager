@@ -76,4 +76,5 @@
     <system:String x:Key="USVersion">美版</system:String>
     <system:String x:Key="EUVersion">欧版</system:String>
     <system:String x:Key="GalaxyAdvance">银河进阶</system:String>
+    <system:String x:Key="Chk_ShowOtherLanguage">完全显示其他语言的名称</system:String>
 </ResourceDictionary>

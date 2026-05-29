@@ -80,11 +80,15 @@
                                     <Image Width="72"
                                            Height="54"
                                            Stretch="UniformToFill"
+                                           RenderOptions.BitmapScalingMode="{Binding ScalingType}"
+                                           SnapsToDevicePixels="True"
                                            Source="{Binding Image}" />
                                     <Image Width="32"
                                            Height="14"
                                            Source="{Binding DamageImage}"
                                            Stretch="UniformToFill"
+                                           RenderOptions.BitmapScalingMode="{Binding ScalingType}"
+                                           SnapsToDevicePixels="True"
                                            HorizontalAlignment="Right"
                                            VerticalAlignment="Bottom"
                                            Margin="0"/>
@@ -110,11 +114,29 @@
                                             </Style>
                                         </TextBlock.Style>
                                     </TextBlock>
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        Margin="0,0,0,0"
+                                        Foreground="White"
+                                        Text="{Binding SecondaryLabel}">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Visibility" Value="Hidden"/>
+                                                <Setter Property="FontSize" Value="0.01"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding ShowOtherLanguage}" Value="True">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                        <Setter Property="FontSize" Value="12"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
                                     <Image Margin="0,8,0,0"
                                            Stretch="None"
                                            HorizontalAlignment="Left"
                                            Source="{Binding ElementImage}"
-                                           RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                           RenderOptions.BitmapScalingMode="{Binding ScalingType}"
                                            SnapsToDevicePixels="True" />
                                 </StackPanel>
 
@@ -171,6 +193,8 @@
                                     <Image Width="72"
                                            Height="54"
                                            Stretch="UniformToFill"
+                                           RenderOptions.BitmapScalingMode="{Binding ScalingType}"
+                                           SnapsToDevicePixels="True"
                                            Source="{Binding Image}" />
                                     <Image Width="32"
                                            Height="14"
@@ -178,6 +202,8 @@
                                            Stretch="UniformToFill"
                                            HorizontalAlignment="Right"
                                            VerticalAlignment="Bottom"
+                                           RenderOptions.BitmapScalingMode="{Binding ScalingType}"
+                                           SnapsToDevicePixels="True"
                                            Margin="0"/>
                                 </Grid>
 
@@ -190,11 +216,29 @@
                                                FontSize="16"
                                                TextWrapping="Wrap"
                                                Foreground="White" />
+                                    <TextBlock
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,0,0"
+                                           Foreground="White"
+                                           Text="{Binding SecondaryLabel}">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Visibility" Value="Hidden"/>
+                                                <Setter Property="FontSize" Value="0.01"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding ShowOtherLanguage}" Value="True">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                        <Setter Property="FontSize" Value="12"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
                                     <Image Margin="0,8,0,0"
                                            Stretch="None"
                                            HorizontalAlignment="Left"
                                            Source="{Binding ElementImage}"
-                                           RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                           RenderOptions.BitmapScalingMode="{Binding ScalingType}"
                                            SnapsToDevicePixels="True" />
                                 </StackPanel>
 

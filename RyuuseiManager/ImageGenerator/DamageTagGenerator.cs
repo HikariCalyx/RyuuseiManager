@@ -76,10 +76,10 @@ namespace RyuuseiManager.ImageGenerator
             return rtb;
         }
 
-        public static BitmapSource GetElementTag(int elements, bool isRegCard = false)
+        public static BitmapSource GetElementTag(int elements, bool isRegCard = false, bool isTagCard = false)
         {
             string num = elements.ToString();
-            int width = 14 * num.Length + (isRegCard ? 42 : 0);
+            int width = 14 * num.Length + (isRegCard ? 42 : 0) + (isTagCard ? 42 : 0);
             int height = 15;
 
             var dv = new DrawingVisual();
@@ -93,8 +93,16 @@ namespace RyuuseiManager.ImageGenerator
                 if (isRegCard)
                 {
                     var reg = elementAtlas.Reg;
-                    double x = width - reg.PixelWidth;
+                    double x = width - reg.PixelWidth - (isTagCard ? reg.PixelWidth : 0);
                     dc.DrawImage(reg, new Rect(x, 0, reg.PixelWidth, reg.PixelHeight));
+                }
+
+                // draw Tag icon
+                if (isTagCard)
+                {
+                    var tag = elementAtlas.Tag;
+                    double x = width - tag.PixelWidth;
+                    dc.DrawImage(tag, new Rect(x, 0, tag.PixelWidth, tag.PixelHeight));
                 }
             }
 
@@ -177,6 +185,7 @@ namespace RyuuseiManager.ImageGenerator
             public BitmapSource Break { get; } = LoadBitmapSource("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/Break.png");
             public BitmapSource Sword { get; } = LoadBitmapSource("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/Sword.png");
             public BitmapSource Reg { get; } = LoadBitmapSource("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/RegCard.png");
+            public BitmapSource Tag { get; } = LoadBitmapSource("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/TagCard.png");
         }
     }
 }

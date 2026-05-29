@@ -1833,5 +1833,61 @@ namespace RyuuseiManager.Library.SF3
                 return "(null)";
             }
         }
+
+        public static string GetSecondaryBattleCardName(BattleCard card, int language)
+        {
+            Dictionary<BattleCard, string> subLang1 = new Dictionary<BattleCard, string>();
+            Dictionary<BattleCard, string> subLang2 = new Dictionary<BattleCard, string>();
+            Dictionary<BattleCard, string> subLang3 = new Dictionary<BattleCard, string>();
+            switch (language)
+            {
+                case 0:
+                    subLang1 = ja;
+                    subLang2 = zh_cn;
+                    subLang3 = zh_tw;
+                    break;
+                case 1:
+                    subLang1 = en;
+                    subLang2 = zh_cn;
+                    subLang3 = zh_tw;
+                    break;
+                case 2:
+                    subLang1 = en;
+                    subLang2 = ja;
+                    subLang3 = zh_tw;
+                    break;
+                case 3:
+                    subLang1 = en;
+                    subLang2 = ja;
+                    subLang3 = zh_cn;
+                    break;
+            }
+            List<string> subLangString = new List<string>();
+            if (subLang1.TryGetValue(card, out string? value))
+            {
+                subLangString.Add(value);
+            }
+            else
+            {
+                subLangString.Add("(null)");
+            }
+            if (subLang2.TryGetValue(card, out value))
+            {
+                subLangString.Add(value);
+            }
+            else
+            {
+                subLangString.Add("(null)");
+            }
+            if (subLang3.TryGetValue(card, out value))
+            {
+                subLangString.Add(value);
+            }
+            else
+            {
+                subLangString.Add("(null)");
+            }
+            return string.Join(" | ", subLangString);
+        }
     }
 }

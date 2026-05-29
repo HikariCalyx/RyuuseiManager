@@ -76,4 +76,5 @@
     <system:String x:Key="USVersion">US Version</system:String>
     <system:String x:Key="EUVersion">European Version</system:String>
     <system:String x:Key="GalaxyAdvance">Galaxy Advance</system:String>
+    <system:String x:Key="Chk_ShowOtherLanguage">Show names in other language</system:String>
 </ResourceDictionary>
