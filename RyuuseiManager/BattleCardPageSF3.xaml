@@ -190,21 +190,23 @@
                                                FontSize="16"
                                                TextWrapping="Wrap"
                                                Foreground="White" />
-                                    <Image Margin="0,4,0,0"
-                                           Stretch="UniformToFill"
+                                    <Image Margin="0,8,0,0"
+                                           Stretch="None"
                                            HorizontalAlignment="Left"
-                                           Source="{Binding ElementImage}" />
+                                           Source="{Binding ElementImage}"
+                                           RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                           SnapsToDevicePixels="True" />
                                 </StackPanel>
 
                                 <TextBlock Grid.Column="2"
                                            VerticalAlignment="Center"
                                            HorizontalAlignment="Right"
-                                           Margin="8,0,0,0"
+                                           Margin="8,0,8,0"
                                            FontSize="20"
                                            Foreground="White"
                                            Text="{Binding Quantity}" />
 
-                                <Grid Grid.Column="3" Width="24" Height="54" Margin="5,0,0,0">
+                                <Grid Grid.Column="3" Width="24" Height="54" Margin="0,0,0,0">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="18"/>
                                         <RowDefinition Height="18"/>
@@ -212,16 +214,22 @@
                                     </Grid.RowDefinitions>
                                     <Image Grid.Row="0" Width="24"
                                            Height="18"
-                                           Stretch="UniformToFill"
-                                           Source="{Binding GaPart0}"/>
+                                           Stretch="Uniform"
+                                           Source="{Binding GaPart0}"
+                                           RenderOptions.BitmapScalingMode="HighQuality"
+                                           SnapsToDevicePixels="True"/>
                                     <Image Grid.Row="1" Width="24"
                                            Height="18"
-                                           Stretch="UniformToFill"
-                                           Source="{Binding GaPart1}" />
+                                           Stretch="Uniform"
+                                           Source="{Binding GaPart1}"
+                                           RenderOptions.BitmapScalingMode="HighQuality"
+                                           SnapsToDevicePixels="True" />
                                     <Image Grid.Row="2" Width="24"
                                            Height="18"
-                                           Stretch="UniformToFill"
-                                           Source="{Binding GaPart2}" />
+                                           Stretch="Uniform"
+                                           Source="{Binding GaPart2}"
+                                           RenderOptions.BitmapScalingMode="HighQuality"
+                                           SnapsToDevicePixels="True" />
                                 </Grid>
                             </Grid>
                         </DataTemplate>

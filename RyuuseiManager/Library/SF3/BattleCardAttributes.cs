@@ -568,7 +568,6 @@ namespace RyuuseiManager.Library.SF3
             { BattleCard.EdoBlade1, 18 },
             { BattleCard.EdoBlade2, 18 },
             { BattleCard.EdoBlade3, 18 },
-            { BattleCard.EdoBladeX, 18 },
             { BattleCard.SkullArrow1, 1 },
             { BattleCard.SkullArrow2, 1 },
             { BattleCard.SkullArrow3, 1 },

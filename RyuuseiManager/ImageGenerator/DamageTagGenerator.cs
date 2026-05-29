@@ -1,216 +1,182 @@
-﻿using System.Drawing;
-using System.Runtime.InteropServices;
+﻿using System;
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace RyuuseiManager.ImageGenerator
 {
-    public class DamageTagGenerator
+    public static class DamageTagGenerator
     {
-        [DllImport("gdi32.dll")]
-        private static extern bool DeleteObject(IntPtr hObject);
+        private static readonly DamageNumberAtlas damageAtlas = new DamageNumberAtlas();
+        private static readonly ElementAtlas elementAtlas = new ElementAtlas();
 
-        private static BitmapSource ToBitmapSource(Bitmap bitmap)
-        {
-            IntPtr hBitmap = bitmap.GetHbitmap();
-
-            try
-            {
-                return System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
-                    hBitmap,
-                    IntPtr.Zero,
-                    Int32Rect.Empty,
-                    BitmapSizeOptions.FromEmptyOptions());
-            }
-            finally
-            {
-                DeleteObject(hBitmap);
-            }
-        }
-
-        private static Bitmap LoadBitmap(string uriPath)
+        private static BitmapSource LoadBitmapSource(string uriPath)
         {
             var uri = new Uri(uriPath, UriKind.Absolute);
             var streamInfo = Application.GetResourceStream(uri);
-
-            if (streamInfo == null) return new Bitmap(1, 1);
+            if (streamInfo == null)
+                return new RenderTargetBitmap(1, 1, 96, 96, PixelFormats.Pbgra32);
 
             using var stream = streamInfo.Stream;
-            Bitmap bmp = new Bitmap(stream);
-            bmp.SetResolution(96, 96);
+            var bmp = new BitmapImage();
+            bmp.BeginInit();
+            bmp.StreamSource = stream;
+            bmp.CacheOption = BitmapCacheOption.OnLoad;
+            bmp.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
+            bmp.EndInit();
+            bmp.Freeze();
             return bmp;
+        }
 
+        private static RenderTargetBitmap CreateRTB(int width, int height)
+        {
+            return new RenderTargetBitmap(width, height, 96, 96, PixelFormats.Pbgra32);
         }
 
         public static BitmapSource GetDamageTag(int damage, int tier)
         {
-            if (damage > 999) return null;
-            Bitmap tierBmp;
-            switch (tier)
+            if (damage > 999)
+                return CreateRTB(1, 1);
+
+            BitmapSource tierBmp = tier switch
             {
-                default:
-                case 0: tierBmp = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/Standard.png"); break;
-                case 1: tierBmp = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/Mega.png"); break;
-                case 2: tierBmp = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/Giga.png"); break;
-                case 3: tierBmp = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/White.png"); break;
-            }
-            if (damage > 0)
+                1 => LoadBitmapSource("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/Mega.png"),
+                2 => LoadBitmapSource("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/Giga.png"),
+                3 => LoadBitmapSource("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/White.png"),
+                _ => LoadBitmapSource("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/Standard.png")
+            };
+
+            if (damage == 0)
+                return CreateRTB(1, 1);
+
+            string num = damage > 0
+                ? damage.ToString().PadLeft(3, ' ')
+                : "???";
+
+            int w = tierBmp.PixelWidth;
+            int h = tierBmp.PixelHeight;
+
+            var dv = new DrawingVisual();
+            using (var dc = dv.RenderOpen())
             {
-                Bitmap damageNumber = new Bitmap(23, 11);
-                using (Graphics g = Graphics.FromImage(damageNumber))
-                {
-                    string num = damage.ToString().PadLeft(3, ' ');
-                    for (int i = 0; i < num.Length; i++)
-                    {
-                        DrawNumber(g, num[i], i);
-                    }
-                }
-                using (Graphics g = Graphics.FromImage(tierBmp))
-                {
-                    g.DrawImage(damageNumber, 8, 2, new Rectangle(0, 0, 23, 11), GraphicsUnit.Pixel);
-                }
-                return ToBitmapSource(tierBmp);
+                // background
+                dc.DrawImage(tierBmp, new Rect(0, 0, w, h));
+
+                // numbers at (8,2)
+                double baseX = 8;
+                double baseY = 2;
+
+                for (int i = 0; i < num.Length; i++)
+                    DrawNumber(dc, num[i], i, baseX, baseY);
             }
-            else if (damage < 0)
-            {
-                Bitmap damageNumber = new Bitmap(23, 11);
-                using (Graphics g = Graphics.FromImage(damageNumber))
-                {
-                    string num = "???";
-                    for (int i = 0; i < num.Length; i++)
-                    {
-                        DrawNumber(g, num[i], i);
-                    }
-                }
-                using (Graphics g = Graphics.FromImage(tierBmp))
-                {
-                    g.DrawImage(damageNumber, 8, 2, new Rectangle(0, 0, 23, 11), GraphicsUnit.Pixel);
-                }
-                return ToBitmapSource(tierBmp);
-            }
-            else
-            {
-                return ToBitmapSource(new Bitmap(1, 1));
-            }
+
+            var rtb = CreateRTB(w, h);
+            rtb.Render(dv);
+            rtb.Freeze();
+            return rtb;
         }
 
         public static BitmapSource GetElementTag(int elements, bool isRegCard = false)
         {
             string num = elements.ToString();
-            int width = 14 * num.Length;
-            if (isRegCard) width += 42;
-            Bitmap elementTags = new Bitmap(width, 15);
-            using (Graphics g = Graphics.FromImage(elementTags))
+            int width = 14 * num.Length + (isRegCard ? 42 : 0);
+            int height = 15;
+
+            var dv = new DrawingVisual();
+            using (var dc = dv.RenderOpen())
             {
+                // draw element icons
                 for (int i = 0; i < num.Length; i++)
-                {
-                    DrawElement(g, num[i], i);
-                }
+                    DrawElement(dc, num[i], i);
+
+                // draw Reg icon
                 if (isRegCard)
                 {
-                    Elements elem = new Elements();
-                    g.DrawImage(elem.Reg, width - elem.Reg.Width, 0, new Rectangle(0, 0, elem.Reg.Width, elem.Reg.Height), GraphicsUnit.Pixel);
+                    var reg = elementAtlas.Reg;
+                    double x = width - reg.PixelWidth;
+                    dc.DrawImage(reg, new Rect(x, 0, reg.PixelWidth, reg.PixelHeight));
                 }
             }
-            return ToBitmapSource(elementTags);
+
+            var rtb = CreateRTB(width, height);
+            rtb.Render(dv);
+            rtb.Freeze();
+            return rtb;
         }
 
-        private static void DrawNumber(Graphics g, char number, int location)
+        private static void DrawNumber(DrawingContext dc, char number, int index, double offsetX, double offsetY)
         {
-            int x = location * 8;
-            DamageNumber dmgNum = new DamageNumber();
-            Bitmap targetNum;
-            switch (number)
+            BitmapSource? src = number switch
             {
-                default: targetNum = dmgNum._q; break;
-                case ' ': return;
-                case '0': targetNum = dmgNum._0; break;
-                case '1': targetNum = dmgNum._1; break;
-                case '2': targetNum = dmgNum._2; break;
-                case '3': targetNum = dmgNum._3; break;
-                case '4': targetNum = dmgNum._4; break;
-                case '5': targetNum = dmgNum._5; break;
-                case '6': targetNum = dmgNum._6; break;
-                case '7': targetNum = dmgNum._7; break;
-                case '8': targetNum = dmgNum._8; break;
-                case '9': targetNum = dmgNum._9; break;
-            }
-            g.DrawImage(targetNum, x, 0, new Rectangle(0, 0, targetNum.Width, targetNum.Height), GraphicsUnit.Pixel);
+                '0' => damageAtlas._0,
+                '1' => damageAtlas._1,
+                '2' => damageAtlas._2,
+                '3' => damageAtlas._3,
+                '4' => damageAtlas._4,
+                '5' => damageAtlas._5,
+                '6' => damageAtlas._6,
+                '7' => damageAtlas._7,
+                '8' => damageAtlas._8,
+                '9' => damageAtlas._9,
+                ' ' => null,
+                _ => damageAtlas._q
+            };
+
+            if (src == null)
+                return;
+
+            double x = offsetX + index * 8;
+            dc.DrawImage(src, new Rect(x, offsetY, src.PixelWidth, src.PixelHeight));
         }
 
-        private static void DrawElement(Graphics g, char number, int location)
+        private static void DrawElement(DrawingContext dc, char number, int index)
         {
-            int x = location * 14;
-            Elements elem = new Elements();
-            Bitmap targetElem;
-            switch (number)
+            BitmapSource? src = number switch
             {
-                default: return;
-                case '1': targetElem = elem.Null; break;
-                case '2': targetElem = elem.Aqua; break;
-                case '3': targetElem = elem.Heat; break;
-                case '4': targetElem = elem.Elec; break;
-                case '5': targetElem = elem.Wood; break;
-                case '6': targetElem = elem.Wind; break;
-                case '7': targetElem = elem.Break; break;
-                case '8': targetElem = elem.Sword; break;
-            }
-            g.DrawImage(targetElem, x, 0, new Rectangle(0, 0, targetElem.Width, targetElem.Height), GraphicsUnit.Pixel);
+                '1' => elementAtlas.Null,
+                '2' => elementAtlas.Aqua,
+                '3' => elementAtlas.Heat,
+                '4' => elementAtlas.Elec,
+                '5' => elementAtlas.Wood,
+                '6' => elementAtlas.Wind,
+                '7' => elementAtlas.Break,
+                '8' => elementAtlas.Sword,
+                _ => null
+            };
+
+            if (src == null)
+                return;
+
+            double x = index * 14;
+            dc.DrawImage(src, new Rect(x, 0, src.PixelWidth, src.PixelHeight));
         }
 
-        private class DamageNumber
+        private class DamageNumberAtlas
         {
-            public DamageNumber()
-            {
-                _0 = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/0.png");
-                _1 = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/1.png");
-                _2 = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/2.png");
-                _3 = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/3.png");
-                _4 = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/4.png");
-                _5 = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/5.png");
-                _6 = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/6.png");
-                _7 = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/7.png");
-                _8 = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/8.png");
-                _9 = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/9.png");
-                _q = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/q.png");
-            }
-
-            public Bitmap _0 { get; private set; }
-            public Bitmap _1 { get; private set; }
-            public Bitmap _2 { get; private set; }
-            public Bitmap _3 { get; private set; }
-            public Bitmap _4 { get; private set; }
-            public Bitmap _5 { get; private set; }
-            public Bitmap _6 { get; private set; }
-            public Bitmap _7 { get; private set; }
-            public Bitmap _8 { get; private set; }
-            public Bitmap _9 { get; private set; }
-            public Bitmap _q { get; private set; }
+            public BitmapSource _0 { get; } = LoadBitmapSource("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/0.png");
+            public BitmapSource _1 { get; } = LoadBitmapSource("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/1.png");
+            public BitmapSource _2 { get; } = LoadBitmapSource("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/2.png");
+            public BitmapSource _3 { get; } = LoadBitmapSource("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/3.png");
+            public BitmapSource _4 { get; } = LoadBitmapSource("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/4.png");
+            public BitmapSource _5 { get; } = LoadBitmapSource("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/5.png");
+            public BitmapSource _6 { get; } = LoadBitmapSource("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/6.png");
+            public BitmapSource _7 { get; } = LoadBitmapSource("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/7.png");
+            public BitmapSource _8 { get; } = LoadBitmapSource("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/8.png");
+            public BitmapSource _9 { get; } = LoadBitmapSource("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/9.png");
+            public BitmapSource _q { get; } = LoadBitmapSource("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/q.png");
         }
 
-        private class Elements
+        private class ElementAtlas
         {
-            public Elements()
-            {
-                Null = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/Null.png");
-                Aqua = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/Aqua.png");
-                Heat = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/Heat.png");
-                Elec = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/Elec.png");
-                Wood = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/Wood.png");
-                Wind = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/Wind.png");
-                Break = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/Break.png");
-                Sword = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/Sword.png");
-                Reg = LoadBitmap("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/RegCard.png");
-            }
-            public Bitmap Null { get; private set; }
-            public Bitmap Aqua { get; private set; }
-            public Bitmap Heat { get; private set; }
-            public Bitmap Elec { get; private set; }
-            public Bitmap Wood { get; private set; }
-            public Bitmap Wind { get; private set; }
-            public Bitmap Break { get; private set; }
-            public Bitmap Sword { get; private set; }
-            public Bitmap Reg { get; private set; }
+            public BitmapSource Null { get; } = LoadBitmapSource("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/Null.png");
+            public BitmapSource Aqua { get; } = LoadBitmapSource("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/Aqua.png");
+            public BitmapSource Heat { get; } = LoadBitmapSource("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/Heat.png");
+            public BitmapSource Elec { get; } = LoadBitmapSource("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/Elec.png");
+            public BitmapSource Wood { get; } = LoadBitmapSource("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/Wood.png");
+            public BitmapSource Wind { get; } = LoadBitmapSource("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/Wind.png");
+            public BitmapSource Break { get; } = LoadBitmapSource("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/Break.png");
+            public BitmapSource Sword { get; } = LoadBitmapSource("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/Sword.png");
+            public BitmapSource Reg { get; } = LoadBitmapSource("pack://application:,,,/GameResource;component/Resources/BattleCard/Common/RegCard.png");
         }
     }
 }
