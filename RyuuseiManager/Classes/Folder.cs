@@ -10,11 +10,11 @@ namespace RyuuseiManager.Classes
         {
             FolderName = "(null)";
             Cards = [];
-            DefaultCardIndex = -1;
+            RegularCardIndex = -1;
         }
 
         public string FolderName { get; set; }
         public List<int> Cards { get; set; }
-        public int DefaultCardIndex { get; set; }
+        public int RegularCardIndex { get; set; }
     }
 }

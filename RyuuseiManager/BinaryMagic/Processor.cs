@@ -305,6 +305,9 @@ namespace RyuuseiManager.BinaryMagic
                                 sf3Fldr.Cards.Add(BitConverter.ToUInt16(CardData, i));
                             }
                         }
+                        int regCardIndex = subBlob[subBlob.IndexOf(HeaderMagic.SF3.RegCardHeaderMagic) + HeaderMagic.SF3.RegCardHeaderMagic.Length];
+                        if (regCardIndex < 30) sf3Fldr.RegularCardIndex = regCardIndex;
+
                         resultFldr.Add(sf3Fldr);
                     }
                     break;

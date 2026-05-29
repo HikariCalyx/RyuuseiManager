@@ -25,7 +25,6 @@ namespace RyuuseiManager
 
         public List<Folder> Folders { get; set; }
         public int ProfileLanguage { get; set; }
-        public BattleCard RegCard { get; set; }
         public WhiteCard WCard { get; set; }
         public void SetFolderNames()
         {
@@ -47,6 +46,11 @@ namespace RyuuseiManager
             BattleCardList.Items.Clear();
             GalaxyAdvanceList.Items.Clear();
             Folder selectedFolder = Folders[CardFolders.SelectedIndex];
+            BattleCard regCard = new BattleCard();
+            if (selectedFolder.RegularCardIndex != -1)
+            {
+                regCard = (BattleCard)selectedFolder.Cards[selectedFolder.RegularCardIndex];
+            }
             Dictionary<BattleCard, int> battleCards = new Dictionary<BattleCard, int>();
             foreach (var i in selectedFolder.Cards)
             {
@@ -68,7 +72,7 @@ namespace RyuuseiManager
                 {
                     Image = GameResourceRetriver.GetSF3CardImage((int)i.Key),
                     DamageImage = DamageTagGenerator.GetDamageTag(damage, GetCardClass(i.Key)),
-                    ElementImage = DamageTagGenerator.GetElementTag(element, (i.Key == RegCard)),
+                    ElementImage = DamageTagGenerator.GetElementTag(element, (i.Key == regCard)),
                     Label = $"{BattleCardName.GetBattleCardName(i.Key, ProfileLanguage)}",
                     Quantity = $"x {i.Value}",
                     IsIllegal = IsIllegalCard(i.Key),

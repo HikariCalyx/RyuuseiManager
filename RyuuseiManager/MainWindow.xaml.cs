@@ -110,7 +110,6 @@ namespace RyuuseiManager
                         case 33:
                             var whiteCardCombo = Library.SF3.WhiteCardCombo.A14;
                             var battleCardPageSF3 = new BattleCardPageSF3();
-                            battleCardPageSF3.RegCard = Library.SF3.BattleCard.IllegalWarriorBlood;
                             battleCardPageSF3.WCard = whiteCardCombo;
                             battleCardPageSF3.ProfileLanguage = GetLanguageID();
                             if (folders.Count > 0) battleCardPageSF3.Folders = folders;
