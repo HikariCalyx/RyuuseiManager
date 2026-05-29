@@ -108,7 +108,8 @@ namespace RyuuseiManager
                         case 31:
                         case 32:
                         case 33:
-                            var whiteCardCombo = Library.SF3.WhiteCardCombo.A14;
+                            int whiteCardIndex = Processor.GetSF3SelfWhiteCard(saveBlob);
+                            var whiteCardCombo = Library.SF3.WhiteCardCombo.GetWhiteCard(whiteCardIndex);
                             var battleCardPageSF3 = new BattleCardPageSF3();
                             battleCardPageSF3.WCard = whiteCardCombo;
                             battleCardPageSF3.ProfileLanguage = GetLanguageID();

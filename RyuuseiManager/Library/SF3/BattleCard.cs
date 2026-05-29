@@ -7,7 +7,8 @@ namespace RyuuseiManager.Library.SF3
     public enum BattleCard
     {
         // Standard Card
-        Cannon = 1,
+        NoData,
+        Cannon,
         PlusCannon,
         HeavyCannon,
         PlasmaGun,

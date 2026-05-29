@@ -315,6 +315,17 @@ namespace RyuuseiManager.BinaryMagic
             return resultFldr;
         }
 
+        public static int GetSF3SelfWhiteCard(ReadOnlySpan<byte> blob)
+        {
+            int result = 0xFF;
+            int index = blob.IndexOf(HeaderMagic.SF3.WhiteCardHeaderMagic);
+            if (index >= 0)
+            {
+                result = blob[index + HeaderMagic.SF3.WhiteCardHeaderMagic.Length];
+            }
+            return result;
+        }
+
         private static List<byte[]> GetSF3FolderBlob(ReadOnlySpan<byte> source, ReadOnlySpan<byte> pattern)
         {
             var results = new List<byte[]>();
@@ -341,7 +352,5 @@ namespace RyuuseiManager.BinaryMagic
             }
             return results;
         }
-
-
     }
 }

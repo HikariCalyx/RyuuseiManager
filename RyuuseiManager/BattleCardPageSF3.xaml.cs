@@ -82,6 +82,7 @@ namespace RyuuseiManager
             }
             foreach (var i in WCard.ToDict())
             {
+                if (i.Key == BattleCard.NoData) continue;
                 int damage = BattleCardAttributes.GetDamage(i.Key);
                 int element = BattleCardAttributes.GetElements(i.Key);
                 var entry = new ListEntry
@@ -98,6 +99,7 @@ namespace RyuuseiManager
             }
             foreach (var i in WCard.ToDict().Keys)
             {
+                if (i == BattleCard.NoData) continue;
                 if (battleCards.ContainsKey(i))
                 {
                     battleCards[i] += 1;
