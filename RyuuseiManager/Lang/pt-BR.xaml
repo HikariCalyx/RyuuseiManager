@@ -84,6 +84,7 @@
     <system:String x:Key="Chk_DoNotAskAgain">Não perguntar novamente</system:String>
     <system:String x:Key="Dlg_BrotherEditor">Brother Editor</system:String>
     <system:String x:Key="Dlg_AbilityEditor">Ability Editor</system:String>
+    <system:String x:Key="Msg_NoiseForm">Noise Form</system:String>
     <system:String x:Key="Item_SecretSatelliteServer">Secret Satellite Server</system:String>
     <system:String x:Key="Item_MeteorServer">Meteor Server</system:String>
     <system:String x:Key="Item_Brother">Brother</system:String>
