@@ -44,8 +44,10 @@
                     <StackPanel Grid.Column="1"
         Orientation="Vertical">
                         <TextBox x:Name="NoiseForm"
-                                 Height="20"
-                                 Margin="4"
+                                 Height="25"
+                                 Margin="0,4,0,4"
+                                 FontSize="20"
+                                 FontWeight="Bold"
                                  IsReadOnly="True"
                                  Background="Transparent"
                                  BorderBrush="Transparent"
@@ -55,7 +57,6 @@
 
                         <TextBox x:Name="Message"
                                  Height="20"
-                                 Margin="4"
                                  IsReadOnly="True"
                                  Background="Transparent"
                                  BorderBrush="Transparent"
@@ -85,8 +86,10 @@
                     <StackPanel Grid.Column="1"
         Orientation="Vertical">
                         <TextBox x:Name="TeamName"
-                                 Height="20"
-                                 Margin="4"
+                                 Height="25"
+                                 Margin="0,4,0,4"
+                                 FontSize="20"
+                                 FontWeight="Bold"
                                  IsReadOnly="True"
                                  Background="Transparent"
                                  BorderBrush="Transparent"
@@ -96,7 +99,6 @@
 
                         <TextBox x:Name="TeamPurpose"
                                  Height="20"
-                                 Margin="4"
                                  IsReadOnly="True"
                                  Background="Transparent"
                                  BorderBrush="Transparent"
