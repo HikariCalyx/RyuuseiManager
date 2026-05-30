@@ -95,4 +95,6 @@
     <system:String x:Key="LinkPower">Link Power</system:String>
     <system:String x:Key="TeamName">Nome da equipe</system:String>
     <system:String x:Key="TeamPurpose">Objetivo da Equipe</system:String>
+    <system:String x:Key="IllegalBuildDetection_1">Uma compilação ilegal foi detectada. Os resultados da edição não serão salvos.</system:String>
+    <system:String x:Key="IsLegal">Legalidade</system:String>
 </ResourceDictionary>

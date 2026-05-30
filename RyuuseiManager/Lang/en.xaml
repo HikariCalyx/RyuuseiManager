@@ -95,4 +95,6 @@
     <system:String x:Key="LinkPower">Link Power</system:String>
     <system:String x:Key="TeamName">Team Name</system:String>
     <system:String x:Key="TeamPurpose">Team Purpose</system:String>
+    <system:String x:Key="IllegalBuildDetection_1">Illegal build detected. The edited result cannot be saved.</system:String>
+    <system:String x:Key="IsLegal">Legality</system:String>
 </ResourceDictionary>

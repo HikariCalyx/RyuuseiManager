@@ -95,4 +95,6 @@
     <system:String x:Key="LinkPower">情谊之力</system:String>
     <system:String x:Key="TeamName">隊名</system:String>
     <system:String x:Key="TeamPurpose">目標</system:String>
+    <system:String x:Key="IllegalBuildDetection_1">偵測到非法構築，編輯結果將無法儲存。</system:String>
+    <system:String x:Key="IsLegal">構築合法性</system:String>
 </ResourceDictionary>
