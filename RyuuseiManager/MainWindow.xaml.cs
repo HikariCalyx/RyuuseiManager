@@ -66,6 +66,7 @@ namespace RyuuseiManager
                 GetSaveDataFromDB(gen);
             }
             ComboSaveName.IsEnabled = true;
+            ComboSaveName.SelectedIndex = 0;
             ButtonCreateSave.IsEnabled = false;
             ButtonDuplicate.IsEnabled = false;
             ButtonDeleteSave.IsEnabled = false;
@@ -112,13 +113,17 @@ namespace RyuuseiManager
                         case 32:
                         case 33:
                             var coverTabPageSF3 = new CoverTabPageSF3();
-                            coverTabPageSF3.ImageSource = GetMugshot(saveBlob);
+                            coverTabPageSF3.ImageSourceMugshot = GetMugshot(saveBlob);
+                            coverTabPageSF3.ImageSourceTeamIcon = GameResourceRetriver.GetTeamIcon(9);
                             coverTabPageSF3.SetMessage(GetMessage(saveBlob));
                             coverTabPageSF3.SetSecret(GetSecret(saveBlob));
+                            coverTabPageSF3.SetNoiseForm("Noise Form Name");
+                            coverTabPageSF3.SetPurpose("Purpose Name");
                             coverTabPageSF3.GameVersion = (int)((item.Value - 30) / 2);
                             coverTabPageSF3.ProfileLanguage = GetLanguageID();
                             List<int> abilityList = Processor.GetAbilities(saveBlob, 3);
                             coverTabPageSF3.SetAbilities(abilityList);
+                            coverTabPageSF3.SetProfileColor();
                             coverTabFrame.Navigate(coverTabPageSF3);
                             int whiteCardIndex = Processor.GetSF3SelfWhiteCard(saveBlob);
                             int equippedFolder = Processor.GetSF3EquippedFolder(saveBlob);
@@ -162,15 +167,6 @@ namespace RyuuseiManager
                         Margin = new Thickness(10)
                     }
                 };
-                var noiseModGearTab = new TabItem
-                {
-                    Header = (string)Application.Current.Resources["Tab_NoiseModGear"],
-                    Content = new TextBlock
-                    {
-                        Text = (string)Application.Current.Resources["Msg_TBA"],
-                        Margin = new Thickness(10)
-                    }
-                };
                 if (ComboGameTitle.SelectedItem is ComboItem itemTitle)
                 {
                     MainTabs.Items.Clear();
@@ -196,7 +192,6 @@ namespace RyuuseiManager
                         case 33:
                             MainTabs.Items.Add(battleCardTab);
                             MainTabs.Items.Add(brotherTab);
-                            MainTabs.Items.Add(noiseModGearTab);
                             break;
                         default:
                             break;

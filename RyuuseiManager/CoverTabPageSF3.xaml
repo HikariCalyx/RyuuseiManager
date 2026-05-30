@@ -10,35 +10,109 @@
 
     <Grid Margin="6">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="214"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="230"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Column="0"
-                Orientation="Vertical">
+        <Grid Grid.Column="0" x:Name="ProfileGrid">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-            <Image x:Name="Mugshot"
-               Width="214"
-               Height="259"
-               Stretch="UniformToFill"
-               Source="{Binding ImageSource, RelativeSource={RelativeSource AncestorType=Page}}"
-               Margin="0,0,0,6"/>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-            <TextBox x:Name="Message"
-                 Width="214"
-                 Height="24"
-                 Margin="0,0,0,6"
-                 IsReadOnly="True"/>
+                <Grid Grid.Column="0" Margin="4">
+                    <Image x:Name="Mugshot"
+                           Width="40"
+                           Height="48"
+                           Stretch="UniformToFill"
+                           Source="{Binding ImageSourceMugshot, RelativeSource={RelativeSource AncestorType=Page}}"
+                           SnapsToDevicePixels="True"
+                           RenderOptions.BitmapScalingMode="{Binding ScalingType, RelativeSource={RelativeSource AncestorType=Page}}"/>
 
-            <TextBox x:Name="Secret"
-                 Width="214"
-                 Height="24"
-                 Margin="0,0,0,6"
-                 IsReadOnly="True"/>
-        </StackPanel>
+                </Grid>
 
-        <Grid Grid.Column="2" Margin="8,0,8,0" Background="#FFE7720D">
+
+                <Grid Grid.Column="1">
+                    <StackPanel Grid.Column="1"
+        Orientation="Vertical">
+                        <TextBox x:Name="NoiseForm"
+                                 Height="20"
+                                 Margin="4"
+                                 IsReadOnly="True"
+                                 Background="Transparent"
+                                 BorderBrush="Transparent"
+                                 Foreground="White"
+                                 VerticalAlignment="Center"
+                                 VerticalContentAlignment="Center"/>
+
+                        <TextBox x:Name="Message"
+                                 Height="20"
+                                 Margin="4"
+                                 IsReadOnly="True"
+                                 Background="Transparent"
+                                 BorderBrush="Transparent"
+                                 Foreground="White"
+                                 VerticalAlignment="Center"
+                                 VerticalContentAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+            </Grid> <!-- Personal -->
+            <Grid Grid.Row="1" Background="#FF309AD3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0" Margin="4">
+                    <Image x:Name="TeamIcon"
+                           Width="50"
+                           Height="54"
+                           Stretch="UniformToFill"
+                           Source="{Binding ImageSourceTeamIcon, RelativeSource={RelativeSource AncestorType=Page}}"
+                           SnapsToDevicePixels="True"
+                           RenderOptions.BitmapScalingMode="{Binding ScalingType, RelativeSource={RelativeSource AncestorType=Page}}"/>
+                </Grid>
+
+                <Grid Grid.Column="1">
+                    <StackPanel Grid.Column="1"
+        Orientation="Vertical">
+                        <TextBox x:Name="TeamName"
+                                 Height="20"
+                                 Margin="4"
+                                 IsReadOnly="True"
+                                 Background="Transparent"
+                                 BorderBrush="Transparent"
+                                 Foreground="White"
+                                 VerticalAlignment="Center"
+                                 VerticalContentAlignment="Center"/>
+
+                        <TextBox x:Name="TeamPurpose"
+                                 Height="20"
+                                 Margin="4"
+                                 IsReadOnly="True"
+                                 Background="Transparent"
+                                 BorderBrush="Transparent"
+                                 Foreground="White"
+                                 VerticalAlignment="Center"
+                                 VerticalContentAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+            <Grid Grid.Row="2" Background="White">
+                
+            </Grid>
+            <!-- Team -->
+        </Grid>
+
+        <Grid Grid.Column="1" Margin="8,0,8,0" Background="#FFE7720D">
             <Grid.RowDefinitions>
                 <RowDefinition Height="25"/>
                 <RowDefinition Height="*"/>

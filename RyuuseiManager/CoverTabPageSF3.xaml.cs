@@ -16,22 +16,51 @@ namespace RyuuseiManager
             InitializeComponent();
             GameVersion = 0;
             ProfileLanguage = 0;
+            ScalingType = GetDpiScaling();
         }
 
         public int GameVersion { get; set; }
         public int ProfileLanguage { get; set; }
 
-        public static readonly DependencyProperty ImageSourceProperty =
+        private string ScalingType;
+
+        private string GetDpiScaling()
+        {
+            DpiScale dpi = VisualTreeHelper.GetDpi(this);
+            if (dpi.DpiScaleX == 1.0)
+            {
+                return "NearestNeighbor";
+            }
+            else
+            {
+                return "HighQuality";
+            }
+        }
+
+        public static readonly DependencyProperty isp1 =
         DependencyProperty.Register(
-            nameof(ImageSource),
+            nameof(ImageSourceMugshot),
             typeof(ImageSource),
             typeof(CoverTabPageSF3),
             new PropertyMetadata(null));
 
-        public ImageSource ImageSource
+        public ImageSource ImageSourceMugshot
         {
-            get => (ImageSource)GetValue(ImageSourceProperty);
-            set => SetValue(ImageSourceProperty, value);
+            get => (ImageSource)GetValue(isp1);
+            set => SetValue(isp1, value);
+        }
+
+        public static readonly DependencyProperty isp2 =
+        DependencyProperty.Register(
+            nameof(ImageSourceTeamIcon),
+            typeof(ImageSource),
+            typeof(CoverTabPageSF3),
+            new PropertyMetadata(null));
+
+        public ImageSource ImageSourceTeamIcon
+        {
+            get => (ImageSource)GetValue(isp2);
+            set => SetValue(isp2, value);
         }
 
         public void SetMessage(string message)
@@ -39,9 +68,32 @@ namespace RyuuseiManager
             Message.Text = message;
         }
 
-        public void SetSecret(string secret)
+        public void SetSecret(string teamName)
         {
-            Secret.Text = secret;
+            TeamName.Text = teamName;
+        }
+
+        public void SetPurpose(string purpose)
+        {
+            TeamPurpose.Text = purpose;
+        }
+
+        public void SetNoiseForm(string noiseForm)
+        {
+            NoiseForm.Text = noiseForm;
+        }
+
+        public void SetProfileColor()
+        {
+            switch (GameVersion)
+            {
+                case 0:
+                    ProfileGrid.Background = FromArgb("#FF6A6A6A");
+                    break;
+                case 1:
+                    ProfileGrid.Background = FromArgb("#FFD60D00");
+                    break;
+            }
         }
 
         public void SetAbilities(List<int> abilityList)
@@ -60,6 +112,21 @@ namespace RyuuseiManager
                 AbilityList.Items.Add(entry);
             }
             TotalCost.Content = totalAbilityCost;
+        }
+
+        private Brush FromArgb(string argb)
+        {
+            Color color;
+            try
+            {
+                color = (Color)ColorConverter.ConvertFromString(argb);
+            }
+            catch
+            {
+                color = (Color)ColorConverter.ConvertFromString("#FF000000");
+            }
+            Brush brush = new SolidColorBrush(color);
+            return brush;
         }
 
         public class ListEntry
