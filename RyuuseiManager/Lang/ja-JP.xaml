@@ -78,4 +78,5 @@
     <system:String x:Key="GalaxyAdvance">ギャラクシーアドバンス</system:String>
     <system:String x:Key="Chk_ShowOtherLanguage">名前を他の言語で完全に表示する</system:String>
     <system:String x:Key="Cover_Abilities">アビリティ</system:String>
+    <system:String x:Key="Cover_Total">合計</system:String>
 </ResourceDictionary>

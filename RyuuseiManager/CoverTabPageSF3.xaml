@@ -116,7 +116,7 @@
                 </Grid.ColumnDefinitions>
 
                 <Grid Grid.Column="0">
-                    <Label Content="TOTAL" FontSize="13" Foreground="#FFFFD640" FontWeight="Heavy" VerticalAlignment="Center"/>
+                    <Label Content="{DynamicResource Cover_Total}" FontSize="13" Foreground="#FFFFD640" FontWeight="Heavy" VerticalAlignment="Center"/>
                 </Grid>
                 <Grid Grid.Column="1">
                     <Label x:Name="TotalCost" Content="0" FontSize="13" Foreground="White" FontWeight="Heavy" VerticalAlignment="Center" HorizontalAlignment="Right"/>

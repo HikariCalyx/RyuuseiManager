@@ -78,4 +78,5 @@
     <system:String x:Key="GalaxyAdvance">Galaxy Advance</system:String>
     <system:String x:Key="Chk_ShowOtherLanguage">Exibir nomes em outro idioma</system:String>
     <system:String x:Key="Cover_Abilities">Habilidades Equipadas</system:String>
+    <system:String x:Key="Cover_Total">TOTAL</system:String>
 </ResourceDictionary>
