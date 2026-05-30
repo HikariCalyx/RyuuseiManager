@@ -15,6 +15,7 @@
             internal class SF3
             {
                 public const int NoiseForm = 0x88;
+                public const int Ability = 0xF4;
             }
         }
 

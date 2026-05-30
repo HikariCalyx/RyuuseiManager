@@ -4,7 +4,7 @@ using System.Text;
 
 namespace RyuuseiManager.Library.SF3
 {
-    public enum Ability
+    public enum AbilityType
     {
         Undershirt,
         AirShoes,
@@ -145,5 +145,6 @@ namespace RyuuseiManager.Library.SF3
         SwordStar,
         BreakStar,
         JokerPrgm = 146,
+        Unknown = 255,
     }
 }

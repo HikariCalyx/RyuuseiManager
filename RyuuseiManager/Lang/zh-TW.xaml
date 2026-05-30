@@ -77,4 +77,5 @@
     <system:String x:Key="EUVersion">歐洲版</system:String>
     <system:String x:Key="GalaxyAdvance">銀河進階</system:String>
     <system:String x:Key="Chk_ShowOtherLanguage">完全顯示其他語言的名稱</system:String>
+    <system:String x:Key="Cover_Abilities">已裝備能力</system:String>
 </ResourceDictionary>

@@ -89,26 +89,37 @@ namespace RyuuseiManager
                 {
                     NavigationUIVisibility = System.Windows.Navigation.NavigationUIVisibility.Hidden
                 };
-                var coverTabPage = new CoverTabPage();
                 var battleCardFrame = new Frame
                 {
                     NavigationUIVisibility = System.Windows.Navigation.NavigationUIVisibility.Hidden
                 };
                 var saveBlob = GetCurrentSave();
-                coverTabPage.ImageSource = GetMugshot(saveBlob);
-                coverTabPage.SetMessage(GetMessage(saveBlob));
-                coverTabPage.SetSecret(GetSecret(saveBlob));
-                coverTabFrame.Navigate(coverTabPage);
                 bool showOtherLanguage = DB.GetToggleSwitch("CheckShowLanguage") == 1;
                 List<Folder> folders = GetFolder(saveBlob);
                 if (ComboGameTitle.SelectedItem is ComboItem item)
                 {
                     switch (item.Value)
                     {
+                        default:
+                            var coverTabPage = new CoverTabPage();
+                            coverTabPage.ImageSource = GetMugshot(saveBlob);
+                            coverTabPage.SetMessage(GetMessage(saveBlob));
+                            coverTabPage.SetSecret(GetSecret(saveBlob));
+                            coverTabFrame.Navigate(coverTabPage);
+                            break;
                         case 30:
                         case 31:
                         case 32:
                         case 33:
+                            var coverTabPageSF3 = new CoverTabPageSF3();
+                            coverTabPageSF3.ImageSource = GetMugshot(saveBlob);
+                            coverTabPageSF3.SetMessage(GetMessage(saveBlob));
+                            coverTabPageSF3.SetSecret(GetSecret(saveBlob));
+                            coverTabPageSF3.GameVersion = (int)((item.Value - 30) / 2);
+                            coverTabPageSF3.ProfileLanguage = GetLanguageID();
+                            List<int> abilityList = Processor.GetAbilities(saveBlob, 3);
+                            coverTabPageSF3.SetAbilities(abilityList);
+                            coverTabFrame.Navigate(coverTabPageSF3);
                             int whiteCardIndex = Processor.GetSF3SelfWhiteCard(saveBlob);
                             int equippedFolder = Processor.GetSF3EquippedFolder(saveBlob);
                             var whiteCardCombo = Library.SF3.WhiteCardCombo.GetWhiteCard(whiteCardIndex);

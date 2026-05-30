@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Buffers.Binary;
+using System.Text;
 using System.Windows;
 using RyuuseiManager.Classes;
 
@@ -318,6 +319,24 @@ namespace RyuuseiManager.BinaryMagic
                     break;
             }
             return resultFldr;
+        }
+
+        public static List<int> GetAbilities(ReadOnlySpan<byte> blob, int gameID)
+        {
+            List<int> abilities = new List<int>();
+            switch (gameID)
+            {
+                case 3:
+                    for (int pos = Offset.Absolute.SF3.Ability; pos + 1 < blob.Length; pos += 2)
+                    {
+                        int value = BinaryPrimitives.ReadUInt16LittleEndian(blob.Slice(pos, 2));
+                        if (value == 0) break;
+
+                        abilities.Add(value);
+                    }
+                    break;
+            }
+            return abilities;
         }
 
         public static int GetSF3SelfWhiteCard(ReadOnlySpan<byte> blob)
