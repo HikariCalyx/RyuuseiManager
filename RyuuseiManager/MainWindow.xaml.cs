@@ -66,7 +66,6 @@ namespace RyuuseiManager
                 GetSaveDataFromDB(gen);
             }
             ComboSaveName.IsEnabled = true;
-            ComboSaveName.SelectedIndex = 0;
             ButtonCreateSave.IsEnabled = false;
             ButtonDuplicate.IsEnabled = false;
             ButtonDeleteSave.IsEnabled = false;
@@ -75,6 +74,7 @@ namespace RyuuseiManager
             ButtonLoadSaveData.IsEnabled = false;
             ButtonLoadAndRun.IsEnabled = false;
             ButtonExportSave.IsEnabled = false;
+            if (ComboSaveName.Items.Count > 0) ComboSaveName.SelectedIndex = 0;
         }
 
         private void ComboSaveName_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -114,11 +114,11 @@ namespace RyuuseiManager
                         case 33:
                             var coverTabPageSF3 = new CoverTabPageSF3();
                             coverTabPageSF3.ImageSourceMugshot = GetMugshot(saveBlob);
-                            coverTabPageSF3.ImageSourceTeamIcon = GameResourceRetriver.GetTeamIcon(9);
+                            coverTabPageSF3.ImageSourceTeamIcon = GameResourceRetriver.GetTeamIcon(Processor.GetSF3TeamIconID(saveBlob));
                             coverTabPageSF3.SetMessage(GetMessage(saveBlob));
                             coverTabPageSF3.SetSecret(GetSecret(saveBlob));
                             coverTabPageSF3.SetNoiseForm("Noise Form"); // TBA
-                            coverTabPageSF3.SetPurpose("Purpose"); // TBA
+                            coverTabPageSF3.SetPurpose(Processor.GetSF3TeamPurpose(saveBlob)); // TBA
                             coverTabPageSF3.GameVersion = (int)((item.Value - 30) / 2);
                             coverTabPageSF3.ProfileLanguage = GetLanguageID();
                             List<int> abilityList = Processor.GetAbilities(saveBlob, 3);

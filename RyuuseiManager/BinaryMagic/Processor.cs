@@ -284,6 +284,31 @@ namespace RyuuseiManager.BinaryMagic
             return Encoding.Unicode.GetString(contentBytes);
         }
 
+        public static int GetSF3TeamIconID(ReadOnlySpan<byte> blob)
+        {
+            int startIndex = -1;
+            startIndex = blob.IndexOf(HeaderMagic.SF3.TeamIconHeaderMagic);
+            if (startIndex < 0) return 0;
+
+            int teamIconId = blob[startIndex + HeaderMagic.SF3.TeamIconHeaderMagic.Length] - 1;
+            return teamIconId;
+        }
+
+        public static string GetSF3TeamPurpose(ReadOnlySpan<byte> blob)
+        {
+            int endIndex = -1;
+            endIndex = blob.IndexOf(FooterMagic.SF3.TeamPurposeFooterMagic);
+            if (endIndex < 0) return "";
+
+            var beforeEnd = blob.Slice(0, endIndex);
+            int startIndex = beforeEnd.LastIndexOf(HeaderMagic.SF3.TeamPurposeHeaderMagic) + HeaderMagic.SF3.TeamPurposeHeaderMagic.Length;
+
+            var contentBytes = blob.Slice(startIndex, endIndex - startIndex).ToArray();
+            contentBytes = new byte[] { 0xFF, 0xFE }.Concat(contentBytes).ToArray();
+            return Encoding.Unicode.GetString(contentBytes);
+
+        }
+
         public static List<Folder> GetFolders(ReadOnlySpan<byte> blob, int gameID)
         {
             List<Folder> resultFldr = new List<Folder>();
