@@ -79,4 +79,19 @@
     <system:String x:Key="Chk_ShowOtherLanguage">Exibir nomes em outro idioma</system:String>
     <system:String x:Key="Cover_Abilities">Habilidades Equipadas</system:String>
     <system:String x:Key="Cover_Total">TOTAL</system:String>
+    <system:String x:Key="Msg_DuplicateBeforeEdit">Você precisa duplicar seus dados salvos existentes antes de editar.</system:String>
+    <system:String x:Key="Msg_OverwriteWarn">Seus dados salvos serão sobrescritos após a edição.\nDeseja prosseguir mesmo assim?</system:String>
+    <system:String x:Key="Chk_DoNotAskAgain">Não perguntar novamente</system:String>
+    <system:String x:Key="Dlg_BrotherEditor">Brother Editor</system:String>
+    <system:String x:Key="Dlg_AbilityEditor">Ability Editor</system:String>
+    <system:String x:Key="Item_SecretSatelliteServer">Secret Satellite Server</system:String>
+    <system:String x:Key="Item_MeteorServer">Meteor Server</system:String>
+    <system:String x:Key="Item_Brother">Brother</system:String>
+    <system:String x:Key="Platform">Platform</system:String>
+    <system:String x:Key="NintendoSwitch">Nintendo Switch</system:String>
+    <system:String x:Key="BrotherIdentifier">Identificador Brother</system:String>
+    <system:String x:Key="WhiteCardCombo">White Card Combo</system:String>
+    <system:String x:Key="LinkPower">Link Power</system:String>
+    <system:String x:Key="TeamName">Nome da equipe</system:String>
+    <system:String x:Key="TeamPurpose">Objetivo da Equipe</system:String>
 </ResourceDictionary>

@@ -79,4 +79,20 @@
     <system:String x:Key="Chk_ShowOtherLanguage">完全显示其他语言的名称</system:String>
     <system:String x:Key="Cover_Abilities">装备能力</system:String>
     <system:String x:Key="Cover_Total">总计</system:String>
+    <system:String x:Key="Msg_DuplicateBeforeEdit">编辑前需要复制现有存档数据。</system:String>
+    <system:String x:Key="Msg_OverwriteWarn">编辑后存档数据将被覆盖。\n是否继续？</system:String>
+    <system:String x:Key="Chk_DoNotAskAgain">不再询问</system:String>
+    <system:String x:Key="Dlg_BrotherEditor">伙伴编辑器</system:String>
+    <system:String x:Key="Dlg_AbilityEditor">能力编辑器</system:String>
+    <system:String x:Key="Msg_NoiseForm">噪声形态</system:String>
+    <system:String x:Key="Item_SecretSatelliteServer">秘密卫星服务器</system:String>
+    <system:String x:Key="Item_MeteorServer">流星服务器</system:String>
+    <system:String x:Key="Item_Brother">伙伴</system:String>
+    <system:String x:Key="Platform">所属平台</system:String>
+    <system:String x:Key="NintendoSwitch">任天堂 Switch</system:String>
+    <system:String x:Key="BrotherIdentifier">伙伴识别编码</system:String>
+    <system:String x:Key="WhiteCardCombo">白色卡组合</system:String>
+    <system:String x:Key="LinkPower">情谊值</system:String>
+    <system:String x:Key="TeamName">队名</system:String>
+    <system:String x:Key="TeamPurpose">目标</system:String>
 </ResourceDictionary>

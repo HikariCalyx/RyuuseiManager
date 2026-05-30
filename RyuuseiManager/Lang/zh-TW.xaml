@@ -79,4 +79,20 @@
     <system:String x:Key="Chk_ShowOtherLanguage">完全顯示其他語言的名稱</system:String>
     <system:String x:Key="Cover_Abilities">已裝備能力</system:String>
     <system:String x:Key="Cover_Total">總計</system:String>
+    <system:String x:Key="Msg_DuplicateBeforeEdit">編輯前需要複製現有存檔資料。</system:String>
+    <system:String x:Key="Msg_OverwriteWarn">編輯後存檔資料將會被覆寫。 \n是否繼續？</system:String>
+    <system:String x:Key="Chk_DoNotAskAgain">不再詢問</system:String>
+    <system:String x:Key="Dlg_BrotherEditor">盟友編輯器</system:String>
+    <system:String x:Key="Dlg_AbilityEditor">能力編輯器</system:String>
+    <system:String x:Key="Msg_NoiseForm">雜訊形態</system:String>
+    <system:String x:Key="Item_SecretSatelliteServer">秘密衛星伺服器</system:String>
+    <system:String x:Key="Item_MeteorServer">流星伺服器</system:String>
+    <system:String x:Key="Item_Brother">盟友</system:String>
+    <system:String x:Key="Platform">所屬平台</system:String>
+    <system:String x:Key="NintendoSwitch">任天堂 Switch</system:String>
+    <system:String x:Key="BrotherIdentifier">盟友識別碼</system:String>
+    <system:String x:Key="WhiteCardCombo">白色卡組合</system:String>
+    <system:String x:Key="LinkPower">情谊之力</system:String>
+    <system:String x:Key="TeamName">隊名</system:String>
+    <system:String x:Key="TeamPurpose">目標</system:String>
 </ResourceDictionary>

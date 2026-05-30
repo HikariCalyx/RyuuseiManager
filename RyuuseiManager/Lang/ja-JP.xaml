@@ -79,4 +79,20 @@
     <system:String x:Key="Chk_ShowOtherLanguage">名前を他の言語で完全に表示する</system:String>
     <system:String x:Key="Cover_Abilities">アビリティ</system:String>
     <system:String x:Key="Cover_Total">合計</system:String>
+    <system:String x:Key="Msg_DuplicateBeforeEdit">編集前に既存のセーブデータを複製する必要があります。</system:String>
+    <system:String x:Key="Msg_OverwriteWarn">編集後、セーブデータは上書きされます。\n続行しますか？</system:String>
+    <system:String x:Key="Chk_DoNotAskAgain">次回以降は確認しない</system:String>
+    <system:String x:Key="Dlg_BrotherEditor">ブラザーエディター</system:String>
+    <system:String x:Key="Dlg_AbilityEditor">アビリティエディター</system:String>
+    <system:String x:Key="Msg_NoiseForm">ノイズ</system:String>
+    <system:String x:Key="Item_SecretSatelliteServer">SSサーバー</system:String>
+    <system:String x:Key="Item_MeteorServer">流星サーバー</system:String>
+    <system:String x:Key="Item_Brother">ブラザー</system:String>
+    <system:String x:Key="Platform">プラットフォーム</system:String>
+    <system:String x:Key="NintendoSwitch">ニンテンドースイッチ</system:String>
+    <system:String x:Key="BrotherIdentifier">ブラザー識別子</system:String>
+    <system:String x:Key="WhiteCardCombo">ホワイトカードコンボ</system:String>
+    <system:String x:Key="LinkPower">キズナリョク</system:String>
+    <system:String x:Key="TeamName">チーム名</system:String>
+    <system:String x:Key="TeamPurpose">レゾン</system:String>
 </ResourceDictionary>
