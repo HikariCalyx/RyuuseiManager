@@ -88,10 +88,10 @@ namespace RyuuseiManager
             switch (GameVersion)
             {
                 case 0:
-                    ProfileGrid.Background = FromArgb("#FF6A6A6A");
+                    ProfileRow.Background = FromArgb("#FF6A6A6A");
                     break;
                 case 1:
-                    ProfileGrid.Background = FromArgb("#FFD60D00");
+                    ProfileRow.Background = FromArgb("#FFD60D00");
                     break;
             }
         }
