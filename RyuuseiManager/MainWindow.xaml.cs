@@ -117,8 +117,8 @@ namespace RyuuseiManager
                             coverTabPageSF3.ImageSourceTeamIcon = GameResourceRetriver.GetTeamIcon(9);
                             coverTabPageSF3.SetMessage(GetMessage(saveBlob));
                             coverTabPageSF3.SetSecret(GetSecret(saveBlob));
-                            coverTabPageSF3.SetNoiseForm("Noise Form Name");
-                            coverTabPageSF3.SetPurpose("Purpose Name");
+                            coverTabPageSF3.SetNoiseForm("Noise Form"); // TBA
+                            coverTabPageSF3.SetPurpose("Purpose"); // TBA
                             coverTabPageSF3.GameVersion = (int)((item.Value - 30) / 2);
                             coverTabPageSF3.ProfileLanguage = GetLanguageID();
                             List<int> abilityList = Processor.GetAbilities(saveBlob, 3);
