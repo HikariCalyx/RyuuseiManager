@@ -98,4 +98,6 @@
     <system:String x:Key="IllegalBuildDetection_1">Uma compilação ilegal foi detectada. Os resultados da edição não serão salvos.</system:String>
     <system:String x:Key="IsLegal">Legalidade</system:String>
     <system:String x:Key="Btn_EditFolder">Edit Folder</system:String>
+    <system:String x:Key="Btn_Remove">Remover ❌</system:String>
+    <system:String x:Key="Btn_Add">➕ Adicionar</system:String>
 </ResourceDictionary>

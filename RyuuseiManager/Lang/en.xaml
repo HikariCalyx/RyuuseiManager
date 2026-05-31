@@ -98,4 +98,7 @@
     <system:String x:Key="IllegalBuildDetection_1">Illegal build detected. The edited result cannot be saved.</system:String>
     <system:String x:Key="IsLegal">Legality</system:String>
     <system:String x:Key="Btn_EditFolder">Edit Folder</system:String>
+    <system:String x:Key="Dlg_BattleCardEditor">Battle Card Editor</system:String>
+    <system:String x:Key="Btn_Remove">Remove ❌</system:String>
+    <system:String x:Key="Btn_Add">➕ Add</system:String>
 </ResourceDictionary>

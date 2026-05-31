@@ -98,4 +98,7 @@
     <system:String x:Key="IllegalBuildDetection_1">偵測到非法構築，編輯結果將無法儲存。</system:String>
     <system:String x:Key="IsLegal">構築合法性</system:String>
     <system:String x:Key="Btn_EditFolder">編輯卡片夾</system:String>
+    <system:String x:Key="Dlg_BattleCardEditor">戰鬥卡片編輯器</system:String>
+    <system:String x:Key="Btn_Remove">移除 ❌</system:String>
+    <system:String x:Key="Btn_Add">➕ 添加</system:String>
 </ResourceDictionary>

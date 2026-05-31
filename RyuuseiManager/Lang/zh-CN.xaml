@@ -40,7 +40,7 @@
     <system:String x:Key="Msg_RunElevate">请使用管理员权限运行流星管理器。</system:String>
     <system:String x:Key="Msg_Info">信息</system:String>
     <system:String x:Key="Tab_Cover">封面</system:String>
-    <system:String x:Key="Tab_BattleCard">战斗卡片</system:String>
+    <system:String x:Key="Tab_BattleCard">战斗卡</system:String>
     <system:String x:Key="Tab_Brother">伙伴</system:String>
     <system:String x:Key="Tab_NoiseModGear">噪音改造齿轮</system:String>
     <system:String x:Key="Cmb_CurrentSteamSave">(当前的 Steam 存档)</system:String>
@@ -98,4 +98,7 @@
     <system:String x:Key="IllegalBuildDetection_1">检测到非法构筑配置，编辑结果将无法保存。</system:String>
     <system:String x:Key="IsLegal">构筑合法性</system:String>
     <system:String x:Key="Btn_EditFolder">编辑卡片夹</system:String>
+    <system:String x:Key="Dlg_BattleCardEditor">战斗卡编辑器</system:String>
+    <system:String x:Key="Btn_Remove">移除 ❌</system:String>
+    <system:String x:Key="Btn_Add">➕ 添加</system:String>
 </ResourceDictionary>

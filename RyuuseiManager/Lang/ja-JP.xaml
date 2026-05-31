@@ -98,4 +98,7 @@
     <system:String x:Key="IllegalBuildDetection_1">不正なビルドが検出されました。編集結果は保存されません。</system:String>
     <system:String x:Key="IsLegal">ビルドの合法性</system:String>
     <system:String x:Key="Btn_EditFolder">編集</system:String>
+    <system:String x:Key="Dlg_BattleCardEditor">バトルカードエディター</system:String>
+    <system:String x:Key="Btn_Remove">もどす ❌</system:String>
+    <system:String x:Key="Btn_Add">➕ ついか</system:String>
 </ResourceDictionary>

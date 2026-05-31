@@ -205,6 +205,12 @@
                          HorizontalContentAlignment="Stretch"
                          Background="#FFE7720D"
                          BorderBrush="Transparent">
+                    <ListBox.Resources>
+                        <sys:Double x:Key="{x:Static SystemParameters.VerticalScrollBarWidthKey}" 
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">4</sys:Double>
+                        <sys:Double x:Key="{x:Static SystemParameters.HorizontalScrollBarHeightKey}" 
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">4</sys:Double>
+                    </ListBox.Resources>
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="ListBoxItem">
                             <Setter Property="Background" Value="#FFB45929"/>

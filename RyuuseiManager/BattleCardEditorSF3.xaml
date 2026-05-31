@@ -1,57 +1,51 @@
-﻿<Page x:Class="RyuuseiManager.BattleCardPageSF3"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:RyuuseiManager"
-      mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
-      Title="BattleCardPageSF3">
+﻿<Window x:Class="RyuuseiManager.BattleCardEditorSF3"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RyuuseiManager"
+        mc:Ignorable="d"
+        Title="{DynamicResource Dlg_BattleCardEditor}" Height="500" Width="800" MinWidth="800" MaxWidth="800" WindowStyle="ToolWindow"
+        WindowStartupLocation="CenterOwner">
+    <Grid Margin="4">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
-    <Grid Margin="6">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0" Margin="0,0,4,0">
+            <!-- Current Battle Card Folder -->
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-            <Grid Grid.Column="0">
+            <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <Grid Grid.Column="0" HorizontalAlignment="Left">
-                    <ComboBox x:Name="CardFolders"
-                      Width="150"
-                      Height="24"
-                      DisplayMemberPath="Text"
-                      SelectedValuePath="Value"
-                      SelectionChanged="CardFolders_SelectionChanged"/>
-                </Grid>
-                <Grid Grid.Column="1" HorizontalAlignment="Right" Margin="0,0,3,0">
-                    <Button x:Name="BtnBattleCardEditor"
-                            Height="24"
-                            Padding="4,0,4,0"
-                            Content="{DynamicResource Btn_EditFolder}"
-                            Click="BtnBattleCardEditor_Click"/>
-                </Grid>
+                
+                <TextBox Grid.Column="0" x:Name="TxtFolderName" FontSize="16" Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="2" MaxLength="8"/>
+                <Button Grid.Column="1" x:Name="BtnExport" FontSize="16" Content="{DynamicResource Btn_ExportSave}" Background="Transparent" BorderBrush="Transparent" Margin="2"/>
+                <Button Grid.Column="2" x:Name="BtnImport" FontSize="16" Content="{DynamicResource Btn_ImportSave}" Background="Transparent" BorderBrush="Transparent" Margin="2"/>
             </Grid>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-            <Grid Grid.Column="1" HorizontalAlignment="Left">
-                <Label Content="{DynamicResource GalaxyAdvance}" FontSize="15"/>
+                <Button Grid.Column="4" x:Name="BtnRemove" FontSize="16" Padding="4,0,4,0" Content="{DynamicResource Btn_Remove}" Background="Transparent" BorderThickness="2" Margin="2"/>
             </Grid>
-        </Grid>
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-
-            <Grid Grid.Column="0">
+            <Grid Grid.Row="2">
                 <ListBox x:Name="BattleCardList" 
                          HorizontalContentAlignment="Stretch"
                          BorderBrush="Transparent">
@@ -60,18 +54,39 @@
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">4</sys:Double>
                         <sys:Double x:Key="{x:Static SystemParameters.HorizontalScrollBarHeightKey}" 
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">4</sys:Double>
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Red" />
                     </ListBox.Resources>
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="ListBoxItem">
                             <Setter Property="Background" Value="Transparent"/>
-                            <Setter Property="Focusable" Value="False"/>
-                            <Setter Property="IsSelected" Value="False"/>
-                            <Setter Property="IsHitTestVisible" Value="False"/>
+                            <Setter Property="BorderBrush" Value="Transparent"/>
+                            <Setter Property="BorderThickness" Value="2"/>
+
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListBoxItem">
+                                        <Border x:Name="Bd"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                                            <ContentPresenter/>
+                                        </Border>
+
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter TargetName="Bd" Property="BorderBrush" Value="Green"/>
+                                                <Setter TargetName="Bd" Property="BorderThickness" Value="2"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+
                             <Style.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="Transparent"/>
-                                    <Setter Property="BorderBrush" Value="Transparent"/>
+                                    <Setter Property="Background" Value="#7F000000"/>
                                 </Trigger>
+
                                 <DataTrigger Binding="{Binding CardClass}" Value="0">
                                     <Setter Property="Background" Value="#FFFF7700"/>
                                 </DataTrigger>
@@ -87,6 +102,7 @@
                             </Style.Triggers>
                         </Style>
                     </ListBox.ItemContainerStyle>
+
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Grid Margin="4" SnapsToDevicePixels="True" UseLayoutRounding="False">
@@ -159,22 +175,46 @@
                                            RenderOptions.BitmapScalingMode="{Binding ScalingType}"
                                            SnapsToDevicePixels="True" />
                                 </StackPanel>
-
-                                <TextBlock Grid.Column="2"
-                                           VerticalAlignment="Center"
-                                           HorizontalAlignment="Right"
-                                           Margin="8,0,0,0"
-                                           FontSize="20"
-                                           Foreground="White"
-                                           Text="{Binding Quantity}" />
                             </Grid>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
             </Grid>
+            <Grid Grid.Row="4">
+                <Button x:Name="BtnSave" Content="Save" Padding="4" FontSize="16" IsEnabled="False" HorizontalAlignment="Right" />
+            </Grid>
+        </Grid>
+        <Grid Grid.Column="1" Margin="4,0,0,0">
+            <!-- Available Cards -->
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-            <Grid Grid.Column="1">
-                <ListBox x:Name="GalaxyAdvanceList"
+            <TextBox Grid.Row="0" x:Name="TxtSearchBox" FontSize="16" Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="2" TextChanged="TxtSearchBox_TextChanged" />
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" x:Name="BtnAdd" FontSize="16" Padding="4,0,4,0" Content="{DynamicResource Btn_Add}" Background="Transparent" BorderThickness="2" Margin="2"/>
+                <Button Grid.Column="2" x:Name="BtnAll" FontSize="16" Padding="4,0,4,0" Content="A" FontWeight="Bold" Background="White" BorderThickness="2" Margin="2" Click="BtnAll_Click" IsEnabled="False"/>
+                <Button Grid.Column="3" x:Name="BtnStandard" FontSize="16" Padding="4,0,4,0" Content="S" FontWeight="Bold" Foreground="White" Background="#FFFF7700" BorderThickness="2" Margin="2" Click="BtnStandard_Click"/>
+                <Button Grid.Column="4" x:Name="BtnMega" FontSize="16" Padding="4,0,4,0" Content="M" FontWeight="Bold" Foreground="White" Background="#FF0050FF" BorderThickness="2" Margin="2" Click="BtnMega_Click"/>
+                <Button Grid.Column="5" x:Name="BtnGiga" FontSize="16" Padding="4,0,4,0" Content="G" FontWeight="Bold" Foreground="White" Background="Red" BorderThickness="2" Margin="2" Click="BtnGiga_Click"/>
+                <Button Grid.Column="6" x:Name="BtnGalaxyAdvance" FontSize="16" Padding="4,0,4,0" Content="G.A." FontWeight="Bold" Foreground="White" Background="#FF5E11D9" BorderThickness="2" Margin="2" Click="BtnGalaxyAdvance_Click"/>
+            </Grid>
+            <Grid Grid.Row="2">
+                <ListBox x:Name="AvailableCardsList"
                          HorizontalContentAlignment="Stretch"
                          BorderBrush="Transparent">
                     <ListBox.Resources>
@@ -186,14 +226,34 @@
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="ListBoxItem">
                             <Setter Property="Background" Value="Transparent"/>
-                            <Setter Property="Focusable" Value="False"/>
-                            <Setter Property="IsSelected" Value="False"/>
-                            <Setter Property="IsHitTestVisible" Value="False"/>
+                            <Setter Property="BorderBrush" Value="Transparent"/>
+                            <Setter Property="BorderThickness" Value="2"/>
+
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListBoxItem">
+                                        <Border x:Name="Bd"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                                            <ContentPresenter/>
+                                        </Border>
+
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter TargetName="Bd" Property="BorderBrush" Value="Green"/>
+                                                <Setter TargetName="Bd" Property="BorderThickness" Value="2"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+
                             <Style.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="Transparent"/>
-                                    <Setter Property="BorderBrush" Value="Transparent"/>
+                                    <Setter Property="Background" Value="#7F000000"/>
                                 </Trigger>
+
                                 <DataTrigger Binding="{Binding CardClass}" Value="0">
                                     <Setter Property="Background" Value="#FFFF7700"/>
                                 </DataTrigger>
@@ -202,6 +262,9 @@
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding CardClass}" Value="2">
                                     <Setter Property="Background" Value="#FFFF0000"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding CardClass}" Value="3">
+                                    <Setter Property="Background" Value="#FFAAAAAA"/>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
@@ -241,8 +304,20 @@
 
                                     <TextBlock Text="{Binding Label}"
                                                FontSize="16"
-                                               TextWrapping="Wrap"
-                                               Foreground="White" />
+                                               TextWrapping="Wrap">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Foreground" Value="White"/>
+                                                <Setter Property="FontWeight" Value="Normal"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsIllegal}" Value="True">
+                                                        <Setter Property="Foreground" Value="#FF80FFFF"/>
+                                                        <Setter Property="FontWeight" Value="Bold"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
                                     <TextBlock
                                            VerticalAlignment="Center"
                                            Margin="0,0,0,0"
@@ -268,14 +343,6 @@
                                            RenderOptions.BitmapScalingMode="{Binding ScalingType}"
                                            SnapsToDevicePixels="True" />
                                 </StackPanel>
-
-                                <TextBlock Grid.Column="2"
-                                           VerticalAlignment="Center"
-                                           HorizontalAlignment="Right"
-                                           Margin="8,0,8,0"
-                                           FontSize="20"
-                                           Foreground="White"
-                                           Text="{Binding Quantity}" />
 
                                 <Grid Grid.Column="3" Width="24" Height="54" Margin="0,0,0,0">
                                     <Grid.RowDefinitions>
@@ -307,6 +374,9 @@
                     </ListBox.ItemTemplate>
                 </ListBox>
             </Grid>
+            <Grid Grid.Row="4">
+                <Button x:Name="BtnReset" Content="Reset" FontSize="16" Padding="4" IsEnabled="True" HorizontalAlignment="Left" />
+            </Grid>
         </Grid>
     </Grid>
-</Page>
+</Window>

@@ -1,6 +1,7 @@
 ﻿using RyuuseiManager.Classes;
 using RyuuseiManager.ImageGenerator;
 using RyuuseiManager.Library.SF3;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -27,6 +28,7 @@ namespace RyuuseiManager
         public int ProfileLanguage { get; set; }
         public int EquippedFolderIndex { get; set; }
         public WhiteCard WCard { get; set; }
+        public MainWindow _mainWindow { get; set; }
         public bool ShowOtherLanguage { get; set; }
         private string GetDpiScaling()
         {
@@ -162,6 +164,17 @@ namespace RyuuseiManager
                 };
                 GalaxyAdvanceList.Items.Add(entry);
             }
+        }
+
+        private void BtnBattleCardEditor_Click(object sender, EventArgs e)
+        {
+            BattleCardEditorSF3 dlg = new BattleCardEditorSF3();
+            dlg.ProfileLanguage = ProfileLanguage;
+            dlg.ShowOtherLanguage = ShowOtherLanguage;
+            dlg.GameVersion = 1;
+            dlg.SetBattleCardList(Folders[CardFolders.SelectedIndex]);
+            dlg.Owner = _mainWindow;
+            dlg.ShowDialog();
         }
 
         public void ToggleOtherNameVisibility(bool visibility)

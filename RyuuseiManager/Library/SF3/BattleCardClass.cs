@@ -1,39 +1,111 @@
 ﻿namespace RyuuseiManager.Library.SF3
 {
-    public class BattleCardClass
+    public static class BattleCardClass
     {
-        public static readonly List<int> Standard = Enumerable.Range(1, 151).ToList(); // max 5ea
-        public static readonly List<int> Mega = Enumerable.Range(151, 196).ToList();  // max 1ea, total 5 max in baseline
-        public static readonly List<int> GigaBA = Enumerable.Range(196, 201).ToList(); // max 1ea, total 1 max in baseline, not allowed to equip in RJ
-        public static readonly List<int> GigaRJ = Enumerable.Range(201, 206).ToList(); // max 1ea, total 1 max in baseline, not allowed to equip in BA
-        public static readonly List<int> GigaEvent = Enumerable.Range(206, 208).ToList(); // max 1ea total 1 max in baseline, sum along with GigaBA/RJ/Illegal
+        private static readonly (int Start, int End)[] StandardRanges =
+        {
+        (1, 150)
+    };
 
-        public static readonly List<int> StandardIllegal = Enumerable.Range(208, 324).ToList(); // max 5ea
-        public static readonly List<int> MegaIllegal = Enumerable.Range(324, 387).ToList(); // max 1ea, total 5 max in baseline
-        public static readonly List<int> GigaIllegal = Enumerable.Range(387, 398).ToList(); // max 1ea total 1 max in baseline, sum along with GigaBA/RJ/Event
+        private static readonly (int Start, int End)[] MegaRanges =
+        {
+        (151, 195)
+    };
+
+        private static readonly (int Start, int End)[] GigaBARanges =
+        {
+        (196, 200)
+    };
+
+        private static readonly (int Start, int End)[] GigaRJRanges =
+        {
+        (201, 205)
+    };
+
+        private static readonly (int Start, int End)[] GigaEventRanges =
+        {
+        (206, 207)
+    };
+
+        private static readonly (int Start, int End)[] StandardIllegalRanges =
+        {
+        (208, 323)
+    };
+
+        private static readonly (int Start, int End)[] MegaIllegalRanges =
+        {
+        (324, 386)
+    };
+
+        private static readonly (int Start, int End)[] GigaIllegalRanges =
+        {
+        (387, 397)
+    };
+
+        private static List<int> ExpandRanges(params (int Start, int End)[] ranges)
+            => ranges.SelectMany(r => Enumerable.Range(r.Start, r.End - r.Start + 1)).ToList();
 
         public static List<int> GetAllowedBattleCardList(int gameVersion)
         {
-            List<int> allowedCardId = new List<int>();
-            allowedCardId = allowedCardId.
-                Concat(Standard).
-                Concat(Mega).
-                Concat(GigaEvent).
-                Concat(StandardIllegal).
-                Concat(MegaIllegal).
-                Concat(GigaIllegal).
-                ToList();
+            var allowed = new List<int>();
+
+            allowed.AddRange(ExpandRanges(StandardRanges));
+            allowed.AddRange(ExpandRanges(MegaRanges));
+            allowed.AddRange(ExpandRanges(GigaEventRanges));
+            allowed.AddRange(ExpandRanges(StandardIllegalRanges));
+            allowed.AddRange(ExpandRanges(MegaIllegalRanges));
+            allowed.AddRange(ExpandRanges(GigaIllegalRanges));
+
             switch (gameVersion)
             {
                 case 0:
-                    allowedCardId = allowedCardId.Concat(GigaBA).ToList();
+                    allowed.AddRange(ExpandRanges(GigaBARanges));
                     break;
                 case 1:
-                    allowedCardId = allowedCardId.Concat(GigaRJ).ToList();
+                    allowed.AddRange(ExpandRanges(GigaRJRanges));
                     break;
             }
-            allowedCardId.Sort();
-            return allowedCardId;
+
+            allowed.Sort();
+            return allowed;
+        }
+
+        public static List<int> GetStandardCards()
+        {
+            var allowed = new List<int>();
+
+            allowed.AddRange(ExpandRanges(StandardRanges));
+            allowed.AddRange(ExpandRanges(StandardIllegalRanges));
+            allowed.Sort();
+            return allowed;
+        }
+
+        public static List<int> GetMegaCards()
+        {
+            var allowed = new List<int>();
+            allowed.AddRange(ExpandRanges(MegaRanges));
+            allowed.AddRange(ExpandRanges(MegaIllegalRanges));
+            allowed.Sort();
+            return allowed;
+        }
+
+        public static List<int> GetGigaCards(int gameVersion)
+        {
+            var allowed = new List<int>();
+            allowed.AddRange(ExpandRanges(GigaEventRanges));
+            allowed.AddRange(ExpandRanges(GigaIllegalRanges));
+            switch (gameVersion)
+            {
+                case 0:
+                    allowed.AddRange(ExpandRanges(GigaBARanges));
+                    break;
+                case 1:
+                    allowed.AddRange(ExpandRanges(GigaRJRanges));
+                    break;
+            }
+            allowed.Sort();
+            return allowed;
         }
     }
+
 }

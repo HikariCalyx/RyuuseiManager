@@ -129,6 +129,7 @@ namespace RyuuseiManager
                             int equippedFolder = Processor.GetSF3EquippedFolder(saveBlob);
                             var whiteCardCombo = Library.SF3.WhiteCardCombo.GetWhiteCard(whiteCardIndex);
                             var battleCardPageSF3 = new BattleCardPageSF3();
+                            battleCardPageSF3._mainWindow = this;
                             battleCardPageSF3.WCard = whiteCardCombo;
                             battleCardPageSF3.EquippedFolderIndex = equippedFolder;
                             battleCardPageSF3.ProfileLanguage = GetLanguageID();
