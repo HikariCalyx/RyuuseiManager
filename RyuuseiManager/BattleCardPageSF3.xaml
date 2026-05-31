@@ -19,13 +19,25 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Grid Grid.Column="0" HorizontalAlignment="Left">
-                <ComboBox x:Name="CardFolders"
+            <Grid Grid.Column="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0" HorizontalAlignment="Left">
+                    <ComboBox x:Name="CardFolders"
                       Width="150"
                       Height="24"
                       DisplayMemberPath="Text"
                       SelectedValuePath="Value"
                       SelectionChanged="CardFolders_SelectionChanged"/>
+                </Grid>
+                <Grid Grid.Column="1" HorizontalAlignment="Right">
+                    <Button x:Name="FolderEdit"
+                            Height="24"
+                            Padding="4,0,4,0"
+                            Content="{DynamicResource Btn_EditFolder}"/>
+                </Grid>
             </Grid>
 
             <Grid Grid.Column="1" HorizontalAlignment="Left">

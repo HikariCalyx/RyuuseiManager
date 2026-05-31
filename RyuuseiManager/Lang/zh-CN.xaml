@@ -97,4 +97,5 @@
     <system:String x:Key="TeamPurpose">目标</system:String>
     <system:String x:Key="IllegalBuildDetection_1">检测到非法构筑配置，编辑结果将无法保存。</system:String>
     <system:String x:Key="IsLegal">构筑合法性</system:String>
+    <system:String x:Key="Btn_EditFolder">编辑卡片夹</system:String>
 </ResourceDictionary>

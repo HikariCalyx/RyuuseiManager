@@ -97,4 +97,5 @@
     <system:String x:Key="TeamPurpose">Team Purpose</system:String>
     <system:String x:Key="IllegalBuildDetection_1">Illegal build detected. The edited result cannot be saved.</system:String>
     <system:String x:Key="IsLegal">Legality</system:String>
+    <system:String x:Key="Btn_EditFolder">Edit Folder</system:String>
 </ResourceDictionary>

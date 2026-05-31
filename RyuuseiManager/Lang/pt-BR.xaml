@@ -97,4 +97,5 @@
     <system:String x:Key="TeamPurpose">Objetivo da Equipe</system:String>
     <system:String x:Key="IllegalBuildDetection_1">Uma compilação ilegal foi detectada. Os resultados da edição não serão salvos.</system:String>
     <system:String x:Key="IsLegal">Legalidade</system:String>
+    <system:String x:Key="Btn_EditFolder">Edit Folder</system:String>
 </ResourceDictionary>

@@ -97,4 +97,5 @@
     <system:String x:Key="TeamPurpose">レゾン</system:String>
     <system:String x:Key="IllegalBuildDetection_1">不正なビルドが検出されました。編集結果は保存されません。</system:String>
     <system:String x:Key="IsLegal">ビルドの合法性</system:String>
+    <system:String x:Key="Btn_EditFolder">編集</system:String>
 </ResourceDictionary>

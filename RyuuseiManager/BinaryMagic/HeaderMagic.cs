@@ -1,4 +1,6 @@
-﻿namespace RyuuseiManager.BinaryMagic
+﻿using System.Text;
+
+namespace RyuuseiManager.BinaryMagic
 {
     public class HeaderMagic
     {
@@ -11,6 +13,15 @@
         // 0x45: SF2
         // 0x53: SF3
         public static readonly byte[] Raw = { 0x99, 0xF1, 0xE3, 0xDB };
+
+        public class RSM
+        {
+            public static readonly byte[] AbilityHeader = Encoding.ASCII.GetBytes("RSMA");
+            public static readonly byte[] BrotherHeader = Encoding.ASCII.GetBytes("RSMB");
+            public static readonly byte[] BestComboHeader = Encoding.ASCII.GetBytes("RSMC");
+            public static readonly byte[] FolderHeader = Encoding.ASCII.GetBytes("RSMF");
+            public static readonly byte[] NoiseCardHeader = Encoding.ASCII.GetBytes("RSMN");
+        }
 
         public class SF1
         {
