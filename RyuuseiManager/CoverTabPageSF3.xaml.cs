@@ -79,7 +79,7 @@ namespace RyuuseiManager
 
         public void SetNoiseForm(string noiseForm)
         {
-            NoiseForm.Text = noiseForm;
+            NoiseForm.Content = noiseForm;
         }
 
         public void SetProfileColor()

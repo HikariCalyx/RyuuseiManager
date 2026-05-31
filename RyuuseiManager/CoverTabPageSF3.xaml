@@ -21,6 +21,7 @@
                 <RowDefinition Height="6" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="6" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
@@ -45,12 +46,10 @@
                 <Grid Grid.Column="1">
                     <StackPanel Grid.Column="1"
         Orientation="Vertical" VerticalAlignment="Center">
-                        <TextBox x:Name="NoiseForm"
-                                 Height="25"
-                                 Margin="0,0,4,4"
+                        <Label x:Name="NoiseForm"
+                                 Height="32"
                                  FontSize="20"
                                  FontWeight="Bold"
-                                 IsReadOnly="True"
                                  Background="Transparent"
                                  BorderBrush="Transparent"
                                  Foreground="White"
@@ -59,7 +58,7 @@
 
                         <TextBox x:Name="Message"
                                  Height="20"
-                                 Margin="0,0,4,0"
+                                 Margin="4,0,4,0"
                                  IsReadOnly="True"
                                  Background="Transparent"
                                  BorderBrush="Transparent"
@@ -69,7 +68,71 @@
                     </StackPanel>
                 </Grid>
             </Grid> <!-- Personal -->
-            <Grid Grid.Row="2" Background="#FF309AD3">
+            <Grid Grid.Row="2" Background="#FFBCF6E4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0" Margin="4">
+                    <Image x:Name="WarRockMugshot"
+                           Width="40"
+                           Height="48"
+                           Stretch="UniformToFill"
+                           Source="/GameResource;component/Resources/Mugshots/279.png"
+                           SnapsToDevicePixels="True"
+                           RenderOptions.BitmapScalingMode="{Binding ScalingType, RelativeSource={RelativeSource AncestorType=Page}}"/>
+
+                </Grid>
+                <Grid Grid.Column="1">
+                    <Label x:Name="WarRockWeapon"
+                                 Height="50"
+                                 Margin="0,0,4,4"
+                                 FontSize="20"
+                                 FontWeight="Bold"
+                                 Foreground="#FF1A2A58"
+                             Content="撼地手环"
+                                 VerticalContentAlignment="Center"/>
+                </Grid>
+                <StackPanel Grid.Column="2"
+        Orientation="Vertical" VerticalAlignment="Center">
+                    <TextBox x:Name="Attack"
+                             Margin="0,0,4,0"
+                             IsReadOnly="True"
+                             Text="5"
+                             FontWeight="Bold"
+                             IsEnabled="False"
+                             Background="Black"
+                             BorderBrush="Transparent"
+                             Foreground="White"
+                             VerticalAlignment="Center"
+                             VerticalContentAlignment="Center"/>
+                    <TextBox x:Name="Rapid"
+                             Margin="0,0,4,0"
+                             IsReadOnly="True"
+                             Text="3"
+                             FontWeight="Bold"
+                             IsEnabled="False"
+                             Background="Black"
+                             BorderBrush="Transparent"
+                             Foreground="White"
+                             VerticalAlignment="Center"
+                             VerticalContentAlignment="Center"/>
+                    <TextBox x:Name="Charge"
+                             Margin="0,0,4,0"
+                             IsReadOnly="True"
+                             Text="4"
+                             FontWeight="Bold"
+                             IsEnabled="False"
+                             Background="Black"
+                             BorderBrush="Transparent"
+                             Foreground="White"
+                             VerticalAlignment="Center"
+                             VerticalContentAlignment="Center"/>
+                </StackPanel>
+            </Grid><!-- Wizard Equip -->
+            <Grid Grid.Row="4" Background="#FF309AD3">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
@@ -111,11 +174,10 @@
                                  VerticalContentAlignment="Center"/>
                     </StackPanel>
                 </Grid>
-            </Grid>
-            <Grid Grid.Row="4" Background="White">
+            </Grid><!-- Team -->
+            <Grid Grid.Row="5" Background="White">
                 
             </Grid>
-            <!-- Team -->
         </Grid>
 
         <Grid Grid.Column="1" Margin="8,0,8,0" Background="#FFE7720D">
