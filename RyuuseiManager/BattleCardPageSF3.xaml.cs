@@ -1,11 +1,8 @@
 ﻿using RyuuseiManager.Classes;
 using RyuuseiManager.ImageGenerator;
 using RyuuseiManager.Library.SF3;
-using System.Security.Policy;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Forms;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 

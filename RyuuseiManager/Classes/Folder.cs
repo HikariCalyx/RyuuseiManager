@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace RyuuseiManager.Classes
+﻿namespace RyuuseiManager.Classes
 {
     public class Folder
     {

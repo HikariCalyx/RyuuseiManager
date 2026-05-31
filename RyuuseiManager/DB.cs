@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
-using System.Windows.Documents;
 
 namespace RyuuseiManager
 {
@@ -185,7 +184,7 @@ namespace RyuuseiManager
             switch (GetToggleSwitch(switchName))
             {
                 case -1:
-                    sqlCommand = @"INSERT INTO config (variable, value) VALUES (@switchname, @value);"; 
+                    sqlCommand = @"INSERT INTO config (variable, value) VALUES (@switchname, @value);";
                     break;
                 default:
                     sqlCommand = @"UPDATE config SET value = @value WHERE variable = @switchname;";

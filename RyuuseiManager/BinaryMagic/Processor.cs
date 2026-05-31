@@ -1,7 +1,6 @@
-﻿using System.Buffers.Binary;
+﻿using RyuuseiManager.Classes;
+using System.Buffers.Binary;
 using System.Text;
-using System.Windows;
-using RyuuseiManager.Classes;
 
 namespace RyuuseiManager.BinaryMagic
 {
