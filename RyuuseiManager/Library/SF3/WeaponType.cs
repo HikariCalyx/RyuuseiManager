@@ -1,0 +1,29 @@
+﻿namespace RyuuseiManager.Library.SF3
+{
+    public enum WeaponType
+    {
+        Unknown,
+        SharpFang,
+        TangaroaPierce,
+        KageshibariNail,
+        QuickRing,
+        WaterDragonFang,
+        ShippuuPierce,
+        ParalysisWing,
+        MachineGunClaw,
+        ZennyDecide,
+        TitanGlove,
+        SenkoBracelet,
+        KaiserKnuckle,
+        BugRiseClaw,
+        IllusionPupil,
+        ImpactBracelet,
+        CollectorEye,
+        CosmicRave,
+        NightSpirit,
+        WhiteFang,
+        HeadwindNail,
+        DangerRing,
+        EXEBlasterEX,
+    }
+}
