@@ -55,5 +55,40 @@ namespace RyuuseiManager.Library.SF3
             Npc = Npc.DrYoiri,
             MugshotID = 277
         };
+        public static readonly NpcBrother FutagoyamaUou = new NpcBrother()
+        {
+            Npc = Npc.FutagoyamaUou,
+            MugshotID = 25
+        };
+        public static readonly NpcBrother TetsukugiUtsuzou = new NpcBrother()
+        {
+            Npc = Npc.TetsukugiUtsuzou,
+            MugshotID = 22
+        };
+        public static readonly NpcBrother NambaKazuko = new NpcBrother()
+        {
+            Npc = Npc.NambaKazuko,
+            MugshotID = 263
+        };
+        public static readonly NpcBrother OikakeMasumi = new NpcBrother()
+        {
+            Npc = Npc.OikakeMasumi,
+            MugshotID = 18
+        };
+        public static readonly NpcBrother AtsumeTaiyou = new NpcBrother()
+        {
+            Npc = Npc.AtsumeTaiyou,
+            MugshotID = 17
+        };
+        public static readonly NpcBrother Hiroki = new NpcBrother()
+        {
+            Npc = Npc.Hiroki,
+            MugshotID = 262
+        };
+        public static readonly NpcBrother KagayakiTerumi = new NpcBrother()
+        {
+            Npc = Npc.KagayakiTerumi,
+            MugshotID = 261
+        };
     }
 }
