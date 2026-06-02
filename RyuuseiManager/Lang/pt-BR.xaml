@@ -100,4 +100,5 @@
     <system:String x:Key="Btn_EditFolder">Edit Folder</system:String>
     <system:String x:Key="Btn_Remove">Remover ❌</system:String>
     <system:String x:Key="Btn_Add">➕ Adicionar</system:String>
+    <system:String x:Key="Btn_NpcBrother">NPC Brother</system:String>
 </ResourceDictionary>

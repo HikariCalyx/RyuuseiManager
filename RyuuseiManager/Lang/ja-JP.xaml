@@ -101,4 +101,5 @@
     <system:String x:Key="Dlg_BattleCardEditor">バトルカードエディター</system:String>
     <system:String x:Key="Btn_Remove">もどす ❌</system:String>
     <system:String x:Key="Btn_Add">➕ ついか</system:String>
+    <system:String x:Key="Btn_NpcBrother">NPC ブラザー</system:String>
 </ResourceDictionary>

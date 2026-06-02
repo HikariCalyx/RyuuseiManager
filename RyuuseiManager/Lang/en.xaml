@@ -101,4 +101,5 @@
     <system:String x:Key="Dlg_BattleCardEditor">Battle Card Editor</system:String>
     <system:String x:Key="Btn_Remove">Remove ❌</system:String>
     <system:String x:Key="Btn_Add">➕ Add</system:String>
+    <system:String x:Key="Btn_NpcBrother">NPC Brother</system:String>
 </ResourceDictionary>

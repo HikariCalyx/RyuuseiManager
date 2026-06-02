@@ -101,4 +101,5 @@
     <system:String x:Key="Dlg_BattleCardEditor">战斗卡编辑器</system:String>
     <system:String x:Key="Btn_Remove">移除 ❌</system:String>
     <system:String x:Key="Btn_Add">➕ 添加</system:String>
+    <system:String x:Key="Btn_NpcBrother">NPC 伙伴</system:String>
 </ResourceDictionary>

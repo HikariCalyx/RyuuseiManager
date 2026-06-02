@@ -94,6 +94,10 @@ namespace RyuuseiManager
                 {
                     NavigationUIVisibility = System.Windows.Navigation.NavigationUIVisibility.Hidden
                 };
+                var brotherFrame = new Frame
+                {
+                    NavigationUIVisibility = System.Windows.Navigation.NavigationUIVisibility.Hidden
+                };
                 var saveBlob = GetCurrentSave();
                 bool showOtherLanguage = DB.GetToggleSwitch("CheckShowLanguage") == 1;
                 List<Folder> folders = GetFolder(saveBlob);
@@ -137,6 +141,9 @@ namespace RyuuseiManager
                             if (folders.Count > 0) battleCardPageSF3.Folders = folders;
                             battleCardPageSF3.SetFolderNames();
                             battleCardFrame.Navigate(battleCardPageSF3);
+                            var brotherPageSF3 = new BrotherPageSF3();
+                            brotherPageSF3.ImageSourceMugshot = GetMugshot(saveBlob);
+                            brotherFrame.Navigate(brotherPageSF3);
                             break;
                     }
                 }
@@ -162,11 +169,7 @@ namespace RyuuseiManager
                 var brotherTab = new TabItem
                 {
                     Header = (string)Application.Current.Resources["Tab_Brother"],
-                    Content = new TextBlock
-                    {
-                        Text = (string)Application.Current.Resources["Msg_TBA"],
-                        Margin = new Thickness(10)
-                    }
+                    Content = brotherFrame
                 };
                 if (ComboGameTitle.SelectedItem is ComboItem itemTitle)
                 {
