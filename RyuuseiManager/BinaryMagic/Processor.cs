@@ -6,13 +6,18 @@ namespace RyuuseiManager.BinaryMagic
 {
     public class Processor
     {
+        private const byte BoundaryByte = 0x08;
+        private const int CardDataSize = 60;
+        private const int MinFolderNameLength = 0x01;
+        private const int MaxFolderNameLength = 0x08;
+        private const int SF3FolderBlobSize = 188;
+
         public static bool TryGetNextByte(ReadOnlySpan<byte> source, ReadOnlySpan<byte> header, out byte nextByte)
         {
             nextByte = default;
-            if (!source.StartsWith(header))
+            if (!source.StartsWith(header) || source.Length <= header.Length)
                 return false;
-            if (source.Length <= header.Length)
-                return false;
+
             nextByte = source[header.Length];
             return true;
         }
@@ -20,85 +25,96 @@ namespace RyuuseiManager.BinaryMagic
         public static byte[] RepopulateFooter(ReadOnlySpan<byte> blob, int targetGameID)
         {
             int footerOffset = blob.IndexOf(FooterMagic.SaveFooterMagic) + FooterMagic.SaveFooterMagic.Length;
-            byte[] result = blob.Slice(0, footerOffset).ToArray();
-            switch (targetGameID)
-            {
-                case 10:
-                    result = result.Concat(FooterMagic.SF1.Pegasus.zh_CN).ToArray(); break;
-                case 11:
-                    result = result.Concat(FooterMagic.SF1.Leo.zh_CN).ToArray(); break;
-                case 12:
-                    result = result.Concat(FooterMagic.SF1.Dragon.zh_CN).ToArray(); break;
-                case 20:
-                    result = result.Concat(FooterMagic.SF2.Ninja.zh_CN).ToArray(); break;
-                case 21:
-                    result = result.Concat(FooterMagic.SF2.Saurian.zh_CN).ToArray(); break;
-                case 22:
-                    result = result.Concat(FooterMagic.SF2.ZerkerNinja.zh_CN).ToArray(); break;
-                case 23:
-                    result = result.Concat(FooterMagic.SF2.ZerkerSaurian.zh_CN).ToArray(); break;
-                case 30:
-                    result = result.Concat(FooterMagic.SF3.BlackAce1.zh_CN).ToArray(); break;
-                case 31:
-                    result = result.Concat(FooterMagic.SF3.BlackAce2.zh_CN).ToArray(); break;
-                case 32:
-                    result = result.Concat(FooterMagic.SF3.RedJoker1.zh_CN).ToArray(); break;
-                case 33:
-                    result = result.Concat(FooterMagic.SF3.RedJoker2.zh_CN).ToArray(); break;
-                default:
-                    result = blob.ToArray(); break;
-            }
+            byte[] footerData = GetFooterByGameID(targetGameID);
+
+            if (footerData == null)
+                return blob.ToArray();
+
+            var result = new byte[footerOffset + footerData.Length];
+            blob.Slice(0, footerOffset).CopyTo(result);
+            footerData.AsSpan().CopyTo(result.AsSpan(footerOffset));
+
             return result;
         }
 
+        private static byte[] GetFooterByGameID(int gameID) => gameID switch
+        {
+            10 => FooterMagic.SF1.Pegasus.zh_CN,
+            11 => FooterMagic.SF1.Leo.zh_CN,
+            12 => FooterMagic.SF1.Dragon.zh_CN,
+            20 => FooterMagic.SF2.Ninja.zh_CN,
+            21 => FooterMagic.SF2.Saurian.zh_CN,
+            22 => FooterMagic.SF2.ZerkerNinja.zh_CN,
+            23 => FooterMagic.SF2.ZerkerSaurian.zh_CN,
+            30 => FooterMagic.SF3.BlackAce1.zh_CN,
+            31 => FooterMagic.SF3.BlackAce2.zh_CN,
+            32 => FooterMagic.SF3.RedJoker1.zh_CN,
+            33 => FooterMagic.SF3.RedJoker2.zh_CN,
+            _ => null
+        };
+
         public static byte[] StripSwitchSave(ReadOnlySpan<byte> blob)
         {
-            if (blob.StartsWith(HeaderMagic.Switch)) blob = blob.Slice(HeaderMagic.Switch.Length).ToArray();
+            // Remove Switch header if present
+            if (blob.StartsWith(HeaderMagic.Switch))
+                blob = blob.Slice(HeaderMagic.Switch.Length);
+
+            // Find and trim to EOF footer
+            blob = TrimToEofFooter(blob);
+
+            int gameID = blob[^4] / 10;
+            byte[] pattern = GetPlatformPattern(gameID);
+
+            if (pattern == null)
+                return blob.ToArray();
+
+            // Find and remove platform magic prefix
+            return RemovePlatformMagicPrefix(blob, pattern);
+        }
+
+        private static ReadOnlySpan<byte> TrimToEofFooter(ReadOnlySpan<byte> blob)
+        {
             int footerLength = FooterMagic.Eof.Length;
 
             for (int i = 0; i <= blob.Length - footerLength; i++)
             {
-                var slice = blob.Slice(i, footerLength);
-                bool match = true;
-                for (int j = 0; j < footerLength; j++)
+                if (MatchesEofFooter(blob.Slice(i, footerLength)))
                 {
-                    if (j == 12) continue;
-                    if (slice[j] != FooterMagic.Eof[j])
-                    {
-                        match = false;
-                        break;
-                    }
-                }
-                if (match)
-                {
-                    blob = blob.Slice(0, i + footerLength).ToArray();
+                    return blob.Slice(0, i + footerLength);
                 }
             }
-            int gameID = blob[^4] / 10;
+            return blob;
+        }
 
-            byte[] pattern;
-            switch (gameID)
+        private static bool MatchesEofFooter(ReadOnlySpan<byte> slice)
+        {
+            for (int j = 0; j < slice.Length; j++)
             {
-                case 1:
-                    pattern = PlatformMagic.SF1; break;
-                case 2:
-                    pattern = PlatformMagic.SF2; break;
-                case 3:
-                    pattern = PlatformMagic.SF3; break;
-                default:
-                    return blob.ToArray();
+                if (j != 12 && slice[j] != FooterMagic.Eof[j])
+                    return false;
             }
+            return true;
+        }
+
+        private static byte[] GetPlatformPattern(int gameID) => gameID switch
+        {
+            1 => PlatformMagic.SF1,
+            2 => PlatformMagic.SF2,
+            3 => PlatformMagic.SF3,
+            _ => null
+        };
+
+        private static byte[] RemovePlatformMagicPrefix(ReadOnlySpan<byte> blob, ReadOnlySpan<byte> pattern)
+        {
             byte[] source = blob.ToArray();
+
             for (int i = 0; i <= blob.Length - pattern.Length; i++)
             {
                 if (blob.Slice(i, pattern.Length).SequenceEqual(pattern) && i >= 8)
                 {
-                    if (blob[i - 8] == 0x08 &&
-                        blob[i - 7] == 0x00 &&
-                        blob[i - 6] == 0x00 &&
-                        blob[i - 5] == 0x00)
+                    if (IsPlatformMagicPrefix(blob, i))
                     {
-                        // Remove those 4 bytes
+                        // Remove the 4-byte prefix
                         var result = new byte[source.Length - 4];
                         Buffer.BlockCopy(source, 0, result, 0, i - 4);
                         Buffer.BlockCopy(source, i, result, i - 4, source.Length - i);
@@ -109,6 +125,14 @@ namespace RyuuseiManager.BinaryMagic
             return source;
         }
 
+        private static bool IsPlatformMagicPrefix(ReadOnlySpan<byte> blob, int index)
+        {
+            return blob[index - 8] == 0x08 &&
+                   blob[index - 7] == 0x00 &&
+                   blob[index - 6] == 0x00 &&
+                   blob[index - 5] == 0x00;
+        }
+
         public static int GetGameGen(ReadOnlySpan<byte> blob)
         {
             return blob[^4];
@@ -116,168 +140,152 @@ namespace RyuuseiManager.BinaryMagic
 
         public static byte[] PopulateToSwitchSave(ReadOnlySpan<byte> blob, int gameID)
         {
-            byte[] pattern;
-            byte[] footerMagic;
-            byte[] filler;
-            switch (gameID)
-            {
-                case 1:
-                    pattern = PlatformMagic.SF1;
-                    footerMagic = FooterMagic.SF1.SwitchFooterMagic;
-                    filler = new byte[] { 0xBF, 0x75, 0xED, 0x75 }; break;
-                case 2:
-                    pattern = PlatformMagic.SF2;
-                    footerMagic = FooterMagic.SF2.SwitchFooterMagic;
-                    filler = new byte[] { 0x04, 0x00, 0x00, 0x00 }; break;
-                case 3:
-                    pattern = PlatformMagic.SF3;
-                    footerMagic = FooterMagic.SF3.SwitchFooterMagic;
-                    filler = new byte[] { 0x00, 0x00, 0x00, 0x00 }; break;
-                default:
-                    return blob.ToArray();
-            }
-            byte[] source = blob.ToArray();
-            byte[] switchSave = Array.Empty<byte>();
-            int patternIndex = blob.IndexOf(pattern);
-            if (patternIndex < 0) return source;
-            else
-            {
-                var before = blob.Slice(0, patternIndex).ToArray();
-                var after = blob.Slice(patternIndex).ToArray();
+            var config = GetSwitchSaveConfig(gameID);
+            if (config == null)
+                return blob.ToArray();
 
-                switchSave = HeaderMagic.Switch
-                    .Concat(before)
-                    .Concat(filler)
-                    .Concat(after)
-                    .Concat(FooterMagic.SwitchSaveFooterMagic)
-                    .Concat(gameID == 1 ? Array.Empty<byte>() : new byte[] { 0x04, 0x00, 0x00, 0x00 })
-                    .Concat(footerMagic)
-                    .ToArray();
-            }
+            byte[] source = blob.ToArray();
+            int patternIndex = blob.IndexOf(config.Value.Pattern);
+            if (patternIndex < 0)
+                return source;
+
+            var before = blob.Slice(0, patternIndex).ToArray();
+            var after = blob.Slice(patternIndex).ToArray();
+
+            byte[] switchSave = BuildSwitchSave(before, after, gameID, config.Value);
             byte[] murmurChecksum = BitConverter.GetBytes(MurmurHash3.Hash32(switchSave, 0xFFFFFFFF));
-            return switchSave.Concat(murmurChecksum).ToArray();
+
+            var result = new byte[switchSave.Length + murmurChecksum.Length];
+            Buffer.BlockCopy(switchSave, 0, result, 0, switchSave.Length);
+            Buffer.BlockCopy(murmurChecksum, 0, result, switchSave.Length, murmurChecksum.Length);
+            return result;
+        }
+
+        private static (byte[] Pattern, byte[] SwitchFooterMagic, byte[] Filler)? GetSwitchSaveConfig(int gameID) =>
+            gameID switch
+            {
+                1 => (PlatformMagic.SF1, FooterMagic.SF1.SwitchFooterMagic, new byte[] { 0xBF, 0x75, 0xED, 0x75 }),
+                2 => (PlatformMagic.SF2, FooterMagic.SF2.SwitchFooterMagic, new byte[] { 0x04, 0x00, 0x00, 0x00 }),
+                3 => (PlatformMagic.SF3, FooterMagic.SF3.SwitchFooterMagic, new byte[] { 0x00, 0x00, 0x00, 0x00 }),
+                _ => null
+            };
+
+        private static byte[] BuildSwitchSave(byte[] before, byte[] after, int gameID,
+            (byte[] Pattern, byte[] SwitchFooterMagic, byte[] Filler) config)
+        {
+            var parts = new List<byte[]>
+            {
+                HeaderMagic.Switch,
+                before,
+                config.Filler,
+                after,
+                FooterMagic.SwitchSaveFooterMagic
+            };
+
+            if (gameID != 1)
+                parts.Add(new byte[] { 0x04, 0x00, 0x00, 0x00 });
+
+            parts.Add(config.SwitchFooterMagic);
+
+            int totalLength = parts.Sum(p => p.Length);
+            var result = new byte[totalLength];
+            int offset = 0;
+
+            foreach (var part in parts)
+            {
+                Buffer.BlockCopy(part, 0, result, offset, part.Length);
+                offset += part.Length;
+            }
+
+            return result;
         }
 
         public static int GetMugshotID(ReadOnlySpan<byte> blob, int gameID)
         {
-            int mugshotOffset = 0;
-            switch (gameID)
+            return gameID switch
             {
-                case 1:
-                    mugshotOffset = Offset.Absolute.SF1.Mugshot; break;
-                case 2:
-                    mugshotOffset = Offset.Absolute.SF2.Mugshot; break;
-                case 3:
-                    return 278;
-                    mugshotOffset = Offset.Absolute.SF3.NoiseForm;
-                    int noiseForm = (int)BitConverter.ToUInt16(blob.ToArray(), mugshotOffset);
-                    switch (noiseForm)
-                    {
-                        default:
-                            return 278;
-                        case 0: // cygnus
-                            return 335;
-                        case 1: // ophiuca
-                            return 333;
-                        case 2: // burai
-                            return 345;
-                        case 3: // wolf
-                            return 343;
-                        case 4: // cancer
-                            return 329;
-                        case 5: // gemini
-                            return 331;
-                        case 6: // libra
-                            return 325;
-                        case 7: // no form
-                            return 278;
-                        case 8: // corvus
-                            return 327;
-                        case 9: // virgo
-                            return 339;
-                        case 10: // crown
-                            return 341;
-                        case 11: // ox
-                            return 337;
-                    }
-            }
-            return (int)BitConverter.ToUInt16(blob.ToArray(), mugshotOffset);
+                1 => (int)BitConverter.ToUInt16(blob.ToArray(), Offset.Absolute.SF1.Mugshot),
+                2 => (int)BitConverter.ToUInt16(blob.ToArray(), Offset.Absolute.SF2.Mugshot),
+                3 => GetSF3MugshotID(blob),
+                _ => 0
+            };
+        }
+
+        private static int GetSF3MugshotID(ReadOnlySpan<byte> blob)
+        {
+            int noiseForm = (int)BitConverter.ToUInt16(blob.ToArray(), Offset.Absolute.SF3.NoiseForm);
+            return noiseForm switch
+            {
+                0 => 335,  // cygnus
+                1 => 333,  // ophiuca
+                2 => 345,  // burai
+                3 => 343,  // wolf
+                4 => 329,  // cancer
+                5 => 331,  // gemini
+                6 => 325,  // libra
+                7 => 278,  // no form
+                8 => 327,  // corvus
+                9 => 339,  // virgo
+                10 => 341, // crown
+                11 => 337, // ox
+                _ => 278
+            };
         }
 
         public static string GetMessage(ReadOnlySpan<byte> blob, int gameID)
         {
-            int endIndex = -1;
-            switch (gameID)
-            {
-                case 1:
-                    endIndex = blob.IndexOf(FooterMagic.SF1.MessageFooterMagic);
-                    break;
-                case 2:
-                    endIndex = blob.IndexOf(FooterMagic.SF2.MessageFooterMagic);
-                    break;
-                case 3:
-                    endIndex = blob.IndexOf(FooterMagic.SF3.MessageFooterMagic);
-                    break;
-            }
-            if (endIndex < 0) return "";
-
-            var beforeEnd = blob.Slice(0, endIndex);
-            int startIndex = 0;
-            switch (gameID)
-            {
-                case 1:
-                    startIndex = beforeEnd.LastIndexOf(HeaderMagic.SF1.HeaderMagic) + HeaderMagic.SF1.HeaderMagic.Length + 4;
-                    break;
-                case 2:
-                    startIndex = beforeEnd.LastIndexOf(HeaderMagic.SF2.HeaderMagic) + HeaderMagic.SF2.HeaderMagic.Length + 4;
-                    break;
-                case 3:
-                    startIndex = beforeEnd.LastIndexOf(HeaderMagic.SF3.HeaderMagic) + HeaderMagic.SF3.HeaderMagic.Length + 4;
-                    break;
-
-            }
-            var contentBytes = blob.Slice(startIndex, endIndex - startIndex).ToArray();
-            if (contentBytes.Length > 0 && contentBytes[0] < 0x80)
-            {
-                contentBytes = new byte[] { 0xFF, 0xFE }.Concat(contentBytes).ToArray();
-            }
-            return Encoding.Unicode.GetString(contentBytes);
+            return ExtractTextByGameID(blob, gameID, isSecret: false);
         }
 
         public static string GetSecret(ReadOnlySpan<byte> blob, int gameID)
         {
-            int endIndex = -1;
-            switch (gameID)
-            {
-                case 1:
-                    endIndex = blob.IndexOf(FooterMagic.SF1.SecretFooterMagic);
-                    break;
-                case 2:
-                    endIndex = blob.IndexOf(FooterMagic.SF2.SecretFooterMagic);
-                    break;
-                case 3:
-                    endIndex = blob.IndexOf(FooterMagic.SF3.TeamNameFooterMagic);
-                    break;
-            }
-            if (endIndex < 0) return "";
+            return ExtractTextByGameID(blob, gameID, isSecret: true);
+        }
+
+        private static string ExtractTextByGameID(ReadOnlySpan<byte> blob, int gameID, bool isSecret)
+        {
+            var footerMagic = GetTextFooterMagic(gameID, isSecret);
+            var headerMagic = GetHeaderMagic(gameID);
+
+            if (footerMagic == null || headerMagic == null)
+                return "";
+
+            int endIndex = blob.IndexOf(footerMagic);
+            if (endIndex < 0)
+                return "";
 
             var beforeEnd = blob.Slice(0, endIndex);
-            int startIndex = 0;
-            switch (gameID)
-            {
-                case 1:
-                    startIndex = beforeEnd.LastIndexOf(HeaderMagic.SF1.HeaderMagic) + HeaderMagic.SF1.HeaderMagic.Length + 4;
-                    break;
-                case 2:
-                    startIndex = beforeEnd.LastIndexOf(HeaderMagic.SF2.HeaderMagic) + HeaderMagic.SF2.HeaderMagic.Length + 4;
-                    break;
-                case 3:
-                    startIndex = beforeEnd.LastIndexOf(HeaderMagic.SF3.HeaderMagic) + HeaderMagic.SF3.HeaderMagic.Length + 4;
-                    break;
-            }
+            int startIndex = beforeEnd.LastIndexOf(headerMagic) + headerMagic.Length + 4;
+
             var contentBytes = blob.Slice(startIndex, endIndex - startIndex).ToArray();
+            return DecodeUnicodeWithBOM(contentBytes);
+        }
+
+        private static ReadOnlySpan<byte> GetHeaderMagic(int gameID) => gameID switch
+        {
+            1 => HeaderMagic.SF1.HeaderMagic,
+            2 => HeaderMagic.SF2.HeaderMagic,
+            3 => HeaderMagic.SF3.HeaderMagic,
+            _ => null
+        };
+
+        private static ReadOnlySpan<byte> GetTextFooterMagic(int gameID, bool isSecret) =>
+            (gameID, isSecret) switch
+            {
+                (1, false) => FooterMagic.SF1.MessageFooterMagic,
+                (1, true) => FooterMagic.SF1.SecretFooterMagic,
+                (2, false) => FooterMagic.SF2.MessageFooterMagic,
+                (2, true) => FooterMagic.SF2.SecretFooterMagic,
+                (3, false) => FooterMagic.SF3.MessageFooterMagic,
+                (3, true) => FooterMagic.SF3.TeamNameFooterMagic,
+                _ => null
+            };
+
+        private static string DecodeUnicodeWithBOM(byte[] contentBytes)
+        {
             if (contentBytes.Length > 0 && contentBytes[0] < 0x80)
             {
+                // Add UTF-16 LE BOM
                 contentBytes = new byte[] { 0xFF, 0xFE }.Concat(contentBytes).ToArray();
             }
             return Encoding.Unicode.GetString(contentBytes);
@@ -310,39 +318,59 @@ namespace RyuuseiManager.BinaryMagic
 
         public static List<Folder> GetFolders(ReadOnlySpan<byte> blob, int gameID)
         {
-            List<Folder> resultFldr = new List<Folder>();
-            switch (gameID)
+            var resultFolders = new List<Folder>();
+
+            if (gameID != 3)
+                return resultFolders;
+
+            var folderBlobs = GetSF3FolderBlob(blob, HeaderMagic.SF3.FolderHeaderMagic);
+            foreach (var folderBlob in folderBlobs)
             {
-                case 3:
-                    List<byte[]> fldrBlobs = GetSF3FolderBlob(blob, HeaderMagic.SF3.FolderHeaderMagic);
-                    foreach (var subBlob in fldrBlobs)
-                    {
-                        int fldrNameLength = subBlob[0];
-                        if (fldrNameLength < 0x01 || fldrNameLength > 0x08) continue;
-                        Folder sf3Fldr = new Folder();
-                        sf3Fldr.FolderName = Encoding.Unicode.GetString(subBlob.AsSpan(4, fldrNameLength * 2));
-                        int cardDataFooterIndex = subBlob.IndexOf(FooterMagic.SF3.CardListFooterMagic);
-                        if (cardDataFooterIndex > 60)
-                        {
-                            byte[] CardData = subBlob.AsSpan(cardDataFooterIndex - 60, 60).ToArray();
-                            for (int i = 0; i < CardData.Length; i += 2)
-                            {
-                                sf3Fldr.Cards.Add(BitConverter.ToUInt16(CardData, i));
-                            }
-                        }
-                        int regCardIndex = subBlob[subBlob.IndexOf(HeaderMagic.SF3.RegCardHeaderMagic) + HeaderMagic.SF3.RegCardHeaderMagic.Length];
-                        if (regCardIndex < 30) sf3Fldr.RegularCardIndex = regCardIndex;
-                        int tagCardIndex = subBlob.IndexOf(FooterMagic.SF3.TagCardIndexFootermagic) - 4;
-                        if (tagCardIndex >= 0)
-                        {
-                            sf3Fldr.TagCards[0] = subBlob[tagCardIndex];
-                            sf3Fldr.TagCards[1] = subBlob[tagCardIndex + 1];
-                        }
-                        resultFldr.Add(sf3Fldr);
-                    }
-                    break;
+                var folder = ParseSF3Folder(folderBlob);
+                if (folder != null)
+                    resultFolders.Add(folder);
             }
-            return resultFldr;
+
+            return resultFolders;
+        }
+
+        private static Folder ParseSF3Folder(byte[] folderBlob)
+        {
+            int folderNameLength = folderBlob[0];
+            if (folderNameLength < MinFolderNameLength || folderNameLength > MaxFolderNameLength)
+                return null;
+
+            var folder = new Folder
+            {
+                FolderName = Encoding.Unicode.GetString(folderBlob.AsSpan(4, folderNameLength * 2))
+            };
+
+            // Extract card data
+            int cardDataFooterIndex = folderBlob.IndexOf(FooterMagic.SF3.CardListFooterMagic);
+            if (cardDataFooterIndex > CardDataSize)
+            {
+                byte[] cardData = folderBlob.AsSpan(cardDataFooterIndex - CardDataSize, CardDataSize).ToArray();
+                for (int i = 0; i < cardData.Length; i += 2)
+                {
+                    folder.Cards.Add(BitConverter.ToUInt16(cardData, i));
+                }
+            }
+
+            // Extract regular card index
+            int regCardIndex = folderBlob[folderBlob.IndexOf(HeaderMagic.SF3.RegCardHeaderMagic) +
+                                         HeaderMagic.SF3.RegCardHeaderMagic.Length];
+            if (regCardIndex < 30)
+                folder.RegularCardIndex = regCardIndex;
+
+            // Extract tag cards
+            int tagCardIndex = folderBlob.IndexOf(FooterMagic.SF3.TagCardIndexFootermagic) - 4;
+            if (tagCardIndex >= 0)
+            {
+                folder.TagCards[0] = folderBlob[tagCardIndex];
+                folder.TagCards[1] = folderBlob[tagCardIndex + 1];
+            }
+
+            return folder;
         }
 
         public static List<int> GetAbilities(ReadOnlySpan<byte> blob, int gameID)
@@ -401,15 +429,16 @@ namespace RyuuseiManager.BinaryMagic
                     break;
 
                 int foundAt = offset + index;
-
                 int start = foundAt + pattern.Length;
-                int length = Math.Min(188, source.Length - start);
+                int length = Math.Min(SF3FolderBlobSize, source.Length - start);
 
                 results.Add(source.Slice(start, length).ToArray());
 
                 offset = foundAt + pattern.Length;
             }
+
             return results;
         }
     }
 }
+
