@@ -81,5 +81,25 @@ namespace RyuuseiManager.Library.SF3
             { NpcBrother.Hiroki, "廣樹" },
             { NpcBrother.KagayakiTerumi, "旬照美井" },
         };
+
+        public static string GetBrotherName(NpcBrother brother, int language)
+        {
+            Dictionary<NpcBrother, string> targetLanguage = new Dictionary<NpcBrother, string>();
+            switch (language)
+            {
+                case 0: targetLanguage = en; break;
+                case 1: targetLanguage = ja; break;
+                case 2: targetLanguage = zh_cn; break;
+                case 3: targetLanguage = zh_tw; break;
+            }
+            if (targetLanguage.TryGetValue(brother, out string? value))
+            {
+                return value;
+            }
+            else
+            {
+                return "(null)";
+            }
+        }
     }
 }
