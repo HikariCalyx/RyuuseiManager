@@ -175,56 +175,63 @@
             </Grid>
 
             <Grid Grid.Column="1">
-                <ListBox x:Name="GalaxyAdvanceList"
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+                    <ListBox x:Name="GalaxyAdvanceList"
                          HorizontalContentAlignment="Stretch"
                          BorderBrush="Transparent">
-                    <ListBox.Resources>
-                        <sys:Double x:Key="{x:Static SystemParameters.VerticalScrollBarWidthKey}" 
+                        <ListBox.Resources>
+                            <sys:Double x:Key="{x:Static SystemParameters.VerticalScrollBarWidthKey}" 
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">4</sys:Double>
-                        <sys:Double x:Key="{x:Static SystemParameters.HorizontalScrollBarHeightKey}" 
+                            <sys:Double x:Key="{x:Static SystemParameters.HorizontalScrollBarHeightKey}" 
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">4</sys:Double>
-                    </ListBox.Resources>
-                    <ListBox.ItemContainerStyle>
-                        <Style TargetType="ListBoxItem">
-                            <Setter Property="Background" Value="Transparent"/>
-                            <Setter Property="Focusable" Value="False"/>
-                            <Setter Property="IsSelected" Value="False"/>
-                            <Setter Property="IsHitTestVisible" Value="False"/>
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="Transparent"/>
-                                    <Setter Property="BorderBrush" Value="Transparent"/>
-                                </Trigger>
-                                <DataTrigger Binding="{Binding CardClass}" Value="0">
-                                    <Setter Property="Background" Value="#FFFF7700"/>
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding CardClass}" Value="1">
-                                    <Setter Property="Background" Value="#FF0050FF"/>
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding CardClass}" Value="2">
-                                    <Setter Property="Background" Value="#FFFF0000"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ListBox.ItemContainerStyle>
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Margin="4" SnapsToDevicePixels="True" UseLayoutRounding="False">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="24"/>
-                                </Grid.ColumnDefinitions>
+                        </ListBox.Resources>
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="Focusable" Value="False"/>
+                                <Setter Property="IsSelected" Value="False"/>
+                                <Setter Property="IsHitTestVisible" Value="False"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="Transparent"/>
+                                        <Setter Property="BorderBrush" Value="Transparent"/>
+                                    </Trigger>
+                                    <DataTrigger Binding="{Binding CardClass}" Value="0">
+                                        <Setter Property="Background" Value="#FFFF7700"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding CardClass}" Value="1">
+                                        <Setter Property="Background" Value="#FF0050FF"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding CardClass}" Value="2">
+                                        <Setter Property="Background" Value="#FFFF0000"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="4" SnapsToDevicePixels="True" UseLayoutRounding="False">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="24"/>
+                                    </Grid.ColumnDefinitions>
 
-                                <Grid Grid.Column="0" Width="72" Height="54">
-                                    <Image Width="72"
+                                    <Grid Grid.Column="0" Width="72" Height="54">
+                                        <Image Width="72"
                                            Height="54"
                                            Stretch="UniformToFill"
                                            RenderOptions.BitmapScalingMode="{Binding ScalingType}"
                                            SnapsToDevicePixels="True"
                                            Source="{Binding Image}" />
-                                    <Image Width="32"
+                                        <Image Width="32"
                                            Height="14"
                                            Source="{Binding DamageImage}"
                                            Stretch="UniformToFill"
@@ -233,44 +240,44 @@
                                            RenderOptions.BitmapScalingMode="{Binding ScalingType}"
                                            SnapsToDevicePixels="True"
                                            Margin="0"/>
-                                </Grid>
+                                    </Grid>
 
 
-                                <StackPanel Grid.Column="1"
+                                    <StackPanel Grid.Column="1"
                                             Margin="8,0,0,0"
                                             VerticalAlignment="Center">
 
-                                    <TextBlock Text="{Binding Label}"
+                                        <TextBlock Text="{Binding Label}"
                                                FontSize="16"
                                                TextWrapping="Wrap"
                                                Foreground="White" />
-                                    <TextBlock
+                                        <TextBlock
                                            VerticalAlignment="Center"
                                            Margin="0,0,0,0"
                                            Foreground="White"
                                            Text="{Binding SecondaryLabel}">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Visibility" Value="Hidden"/>
-                                                <Setter Property="FontSize" Value="0.01"/>
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding ShowOtherLanguage}" Value="True">
-                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                        <Setter Property="FontSize" Value="12"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
-                                    <Image Margin="0,8,0,0"
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Hidden"/>
+                                                    <Setter Property="FontSize" Value="0.01"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding ShowOtherLanguage}" Value="True">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                            <Setter Property="FontSize" Value="12"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                        <Image Margin="0,8,0,0"
                                            Stretch="None"
                                            HorizontalAlignment="Left"
                                            Source="{Binding ElementImage}"
                                            RenderOptions.BitmapScalingMode="{Binding ScalingType}"
                                            SnapsToDevicePixels="True" />
-                                </StackPanel>
+                                    </StackPanel>
 
-                                <TextBlock Grid.Column="2"
+                                    <TextBlock Grid.Column="2"
                                            VerticalAlignment="Center"
                                            HorizontalAlignment="Right"
                                            Margin="8,0,8,0"
@@ -278,35 +285,39 @@
                                            Foreground="White"
                                            Text="{Binding Quantity}" />
 
-                                <Grid Grid.Column="3" Width="24" Height="54" Margin="0,0,0,0">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="18"/>
-                                        <RowDefinition Height="18"/>
-                                        <RowDefinition Height="18"/>
-                                    </Grid.RowDefinitions>
-                                    <Image Grid.Row="0" Width="24"
+                                    <Grid Grid.Column="3" Width="24" Height="54" Margin="0,0,0,0">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="18"/>
+                                            <RowDefinition Height="18"/>
+                                            <RowDefinition Height="18"/>
+                                        </Grid.RowDefinitions>
+                                        <Image Grid.Row="0" Width="24"
                                            Height="18"
                                            Stretch="Uniform"
                                            Source="{Binding GaPart0}"
                                            RenderOptions.BitmapScalingMode="HighQuality"
                                            SnapsToDevicePixels="True"/>
-                                    <Image Grid.Row="1" Width="24"
+                                        <Image Grid.Row="1" Width="24"
                                            Height="18"
                                            Stretch="Uniform"
                                            Source="{Binding GaPart1}"
                                            RenderOptions.BitmapScalingMode="HighQuality"
                                            SnapsToDevicePixels="True" />
-                                    <Image Grid.Row="2" Width="24"
+                                        <Image Grid.Row="2" Width="24"
                                            Height="18"
                                            Stretch="Uniform"
                                            Source="{Binding GaPart2}"
                                            RenderOptions.BitmapScalingMode="HighQuality"
                                            SnapsToDevicePixels="True" />
+                                    </Grid>
                                 </Grid>
-                            </Grid>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+                <Grid Grid.Row="1" HorizontalAlignment="Left">
+                    <Label Content="伙伴随机白色卡" FontSize="15"/>
+                </Grid>
             </Grid>
         </Grid>
     </Grid>

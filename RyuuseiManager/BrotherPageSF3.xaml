@@ -9,57 +9,58 @@
       Title="BrotherPageSF3">
 
     <Grid>
+        <!-- Brother Buttons -->
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Grid Grid.Column="1">
-            <!-- Brother Buttons -->
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-
-            <Grid Grid.Column="0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <Button x:Name="BtnBrother0" Grid.Row="0" Width="200" Margin="4"/>
-                <Button x:Name="BtnBrother1" Grid.Row="1" Width="200" Margin="4"/>
-                <Button x:Name="BtnBrother2" Grid.Row="2" Width="200" Margin="4"/>
-            </Grid>
-            <Grid Grid.Column="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Button x:Name="BtnNpcBrother" Content="{DynamicResource Btn_NpcBrother}" Grid.Row="0" FontSize="16" Padding="5" Margin="20" />
-                <Image x:Name="Mugshot" Grid.Row="1"
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Button x:Name="BtnBrother0" Grid.Row="0" Margin="4" Background="Transparent"/>
+            <Button x:Name="BtnBrother1" Grid.Row="1" Margin="4" Background="Transparent"/>
+            <Button x:Name="BtnBrother2" Grid.Row="2" Margin="4" Background="Transparent"/>
+        </Grid>
+        <Grid Grid.Column="1" Margin="4">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Button x:Name="BtnNpcBrother" Content="{DynamicResource Btn_NpcBrother}" Grid.Row="0" FontSize="16" Padding="5" Margin="20" />
+            <Image x:Name="Mugshot" Grid.Row="1"
                            Width="80"
                            Height="96"
                            Stretch="UniformToFill"
                            Source="{Binding ImageSourceMugshot, RelativeSource={RelativeSource AncestorType=Page}}"
                            SnapsToDevicePixels="True"
                            RenderOptions.BitmapScalingMode="{Binding ScalingType, RelativeSource={RelativeSource AncestorType=Page}}"/>
-                <Grid Grid.Row="2" Background="#FFE7720D"></Grid>
-                <Button x:Name="BtnLinkPower" Content="1900" Grid.Row="2" FontSize="16" Padding="5" Margin="20" />
-            </Grid>
-            <Grid Grid.Column="2">
+            <Grid Grid.Row="2" Background="#FFE7720D">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <Button x:Name="BtnBrother3" Grid.Row="0" Width="200" Margin="4"/>
-                <Button x:Name="BtnBrother4" Grid.Row="1" Width="200" Margin="4"/>
-                <Button x:Name="BtnBrother5" Grid.Row="2" Width="200" Margin="4"/>
+                <TextBlock Text="{DynamicResource LinkPower}" FontSize="13" Grid.Row="0" Padding="2" Margin="4,4,4,0" VerticalAlignment="Center" FontWeight="Bold" Foreground="#FFFBDB69"/>
+                <Grid Grid.Row="1" Margin="4" Background="#FF305141">
+                    <TextBlock Text="1900" FontSize="60" HorizontalAlignment="Right" FontWeight="Bold" Padding="5,0,5,0" Margin="2" Foreground="White" />
+                </Grid>
             </Grid>
+        </Grid>
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Button x:Name="BtnBrother3" Grid.Row="0" Margin="4" Background="Transparent"/>
+            <Button x:Name="BtnBrother4" Grid.Row="1" Margin="4" Background="Transparent"/>
+            <Button x:Name="BtnBrother5" Grid.Row="2" Margin="4" Background="Transparent"/>
         </Grid>
     </Grid>
 </Page>

@@ -6,10 +6,10 @@
         {
             { 0x00, new()
                 {
-                    Card1 = BattleCard.NoData,
-                    Card2 = BattleCard.NoData,
-                    Card3 = BattleCard.NoData,
-                    Card4 = BattleCard.NoData,
+                    Card1 = BattleCard.Cannon,
+                    Card2 = BattleCard.AirSpread1,
+                    Card3 = BattleCard.Sword,
+                    Card4 = BattleCard.Recovery30,
                 }
             },
             { 0x01, new()
