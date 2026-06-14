@@ -125,6 +125,7 @@ namespace RyuuseiManager
                             coverTabPageSF3.SetPurpose(Processor.GetSF3TeamPurpose(saveBlob)); // TBA
                             coverTabPageSF3.GameVersion = (int)((item.Value - 30) / 2);
                             coverTabPageSF3.ProfileLanguage = GetLanguageID();
+                            coverTabPageSF3.UpdateWarRockWeapon(Library.SF3.Weapons.weapons[5]);
                             List<int> abilityList = Processor.GetAbilities(saveBlob, 3);
                             coverTabPageSF3.SetAbilities(abilityList);
                             coverTabPageSF3.SetProfileColor();

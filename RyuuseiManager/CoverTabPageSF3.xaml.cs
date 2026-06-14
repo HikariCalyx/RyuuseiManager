@@ -82,6 +82,14 @@ namespace RyuuseiManager
             NoiseForm.Content = noiseForm;
         }
 
+        public void UpdateWarRockWeapon(Weapon weapon)
+        {
+            WarRockWeapon.Content = WeaponName.GetWeaponName(weapon.Type, ProfileLanguage);
+            Attack.Text = weapon.Attack.ToString();
+            Rapid.Text = weapon.Rapid.ToString();
+            Charge.Text = weapon.Charge.ToString();
+        }
+
         public void SetProfileColor()
         {
             switch (GameVersion)

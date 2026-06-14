@@ -92,7 +92,6 @@
                                  FontSize="20"
                                  FontWeight="Bold"
                                  Foreground="#FF1A2A58"
-                             Content="撼地手环"
                                  VerticalContentAlignment="Center"/>
                 </Grid>
                 <StackPanel Grid.Column="2"
@@ -100,7 +99,6 @@
                     <TextBox x:Name="Attack"
                              Margin="0,0,4,0"
                              IsReadOnly="True"
-                             Text="5"
                              FontWeight="Bold"
                              IsEnabled="False"
                              Background="Black"
@@ -111,7 +109,6 @@
                     <TextBox x:Name="Rapid"
                              Margin="0,0,4,0"
                              IsReadOnly="True"
-                             Text="3"
                              FontWeight="Bold"
                              IsEnabled="False"
                              Background="Black"
@@ -122,7 +119,6 @@
                     <TextBox x:Name="Charge"
                              Margin="0,0,4,0"
                              IsReadOnly="True"
-                             Text="4"
                              FontWeight="Bold"
                              IsEnabled="False"
                              Background="Black"
