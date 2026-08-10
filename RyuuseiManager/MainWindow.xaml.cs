@@ -15,14 +15,23 @@ namespace RyuuseiManager
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
-        {
-            InitializeComponent();
-            LoadLanguage();
-            DB.InitDatabase();
-            CheckSteamAccount();
+        #region Nested Types
 
+        public class ComboItem
+        {
+            public string Text { get; set; }
+            public ulong Value { get; set; }
         }
+
+        #endregion
+
+        #region Fields
+
+        private readonly API.MandarinKey key = new API.MandarinKey();
+
+        #endregion
+
+        #region Properties
 
         public int GameGen
         {
@@ -42,7 +51,44 @@ namespace RyuuseiManager
             private set;
         }
 
-        private API.MandarinKey key = new API.MandarinKey();
+        #endregion
+
+        #region Constructor & Initialization
+
+        public MainWindow()
+        {
+            InitializeComponent();
+            LoadLanguage();
+            DB.InitDatabase();
+            CheckSteamAccount();
+        }
+
+        private void LoadLanguage()
+        {
+            if (string.IsNullOrEmpty(DB.GetCurrentLanguage()))
+            {
+                DB.SetLanguage(DB.ChooseSuitableLangCode());
+            }
+            else
+            {
+                DB.SetLanguage(DB.GetCurrentLanguage());
+            }
+        }
+
+        private int GetLanguageID()
+        {
+            switch (DB.GetCurrentLanguage())
+            {
+                default: return 0;
+                case "ja-JP": return 1;
+                case "zh-CN": return 2;
+                case "zh-TW": return 3;
+            }
+        }
+
+        #endregion
+
+        #region ComboBox Event Handlers
 
         private void ComboSteamUser_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -82,139 +128,9 @@ namespace RyuuseiManager
             RefreshSaveInfo();
         }
 
-        private void RefreshSaveInfo()
-        {
-            if (ComboSaveName.SelectedItem is ComboItem itemSave)
-            {
-                var coverTabFrame = new Frame
-                {
-                    NavigationUIVisibility = System.Windows.Navigation.NavigationUIVisibility.Hidden
-                };
-                var battleCardFrame = new Frame
-                {
-                    NavigationUIVisibility = System.Windows.Navigation.NavigationUIVisibility.Hidden
-                };
-                var brotherFrame = new Frame
-                {
-                    NavigationUIVisibility = System.Windows.Navigation.NavigationUIVisibility.Hidden
-                };
-                var saveBlob = GetCurrentSave();
-                bool showOtherLanguage = DB.GetToggleSwitch("CheckShowLanguage") == 1;
-                List<Folder> folders = GetFolder(saveBlob);
-                if (ComboGameTitle.SelectedItem is ComboItem item)
-                {
-                    switch (item.Value)
-                    {
-                        default:
-                            var coverTabPage = new CoverTabPage();
-                            coverTabPage.ImageSource = GetMugshot(saveBlob);
-                            coverTabPage.SetMessage(GetMessage(saveBlob));
-                            coverTabPage.SetSecret(GetSecret(saveBlob));
-                            coverTabFrame.Navigate(coverTabPage);
-                            break;
-                        case 30:
-                        case 31:
-                        case 32:
-                        case 33:
-                            var coverTabPageSF3 = new CoverTabPageSF3();
-                            coverTabPageSF3.ImageSourceMugshot = GetMugshot(saveBlob);
-                            coverTabPageSF3.ImageSourceTeamIcon = GameResourceRetriver.GetTeamIcon(Processor.GetSF3TeamIconID(saveBlob));
-                            coverTabPageSF3.SetMessage(GetMessage(saveBlob));
-                            coverTabPageSF3.SetSecret(GetSecret(saveBlob));
-                            coverTabPageSF3.SetNoiseForm("Noise Form"); // TBA
-                            coverTabPageSF3.SetPurpose(Processor.GetSF3TeamPurpose(saveBlob)); // TBA
-                            coverTabPageSF3.GameVersion = (int)((item.Value - 30) / 2);
-                            coverTabPageSF3.ProfileLanguage = GetLanguageID();
-                            coverTabPageSF3.UpdateWarRockWeapon(Library.SF3.Weapons.weapons[5]);
-                            List<int> abilityList = Processor.GetAbilities(saveBlob, 3);
-                            coverTabPageSF3.SetAbilities(abilityList);
-                            coverTabPageSF3.SetProfileColor();
-                            coverTabFrame.Navigate(coverTabPageSF3);
-                            int whiteCardIndex = Processor.GetSF3SelfWhiteCard(saveBlob);
-                            int equippedFolder = Processor.GetSF3EquippedFolder(saveBlob);
-                            var whiteCardCombo = Library.SF3.WhiteCardCombo.GetWhiteCard(whiteCardIndex);
-                            var battleCardPageSF3 = new BattleCardPageSF3();
-                            battleCardPageSF3._mainWindow = this;
-                            battleCardPageSF3.WCard = whiteCardCombo;
-                            battleCardPageSF3.EquippedFolderIndex = equippedFolder;
-                            battleCardPageSF3.ProfileLanguage = GetLanguageID();
-                            battleCardPageSF3.ShowOtherLanguage = showOtherLanguage;
-                            if (folders.Count > 0) battleCardPageSF3.Folders = folders;
-                            battleCardPageSF3.SetFolderNames();
-                            battleCardFrame.Navigate(battleCardPageSF3);
-                            var brotherPageSF3 = new BrotherPageSF3();
-                            brotherPageSF3.ImageSourceMugshot = GetMugshot(saveBlob);
-                            brotherFrame.Navigate(brotherPageSF3);
-                            break;
-                    }
-                }
-                var coverTab = new TabItem
-                {
-                    Header = (string)Application.Current.Resources["Tab_Cover"],
-                    Content = coverTabFrame
-                };
-                var defaultBattleCardTab = new TabItem
-                {
-                    Header = (string)Application.Current.Resources["Tab_BattleCard"],
-                    Content = new TextBlock
-                    {
-                        Text = (string)Application.Current.Resources["Msg_TBA"],
-                        Margin = new Thickness(10)
-                    }
-                };
-                var battleCardTab = new TabItem
-                {
-                    Header = (string)Application.Current.Resources["Tab_BattleCard"],
-                    Content = battleCardFrame
-                };
-                var brotherTab = new TabItem
-                {
-                    Header = (string)Application.Current.Resources["Tab_Brother"],
-                    Content = brotherFrame
-                };
-                if (ComboGameTitle.SelectedItem is ComboItem itemTitle)
-                {
-                    MainTabs.Items.Clear();
-                    MainTabs.Items.Add(coverTab);
-                    switch (itemTitle.Value)
-                    {
-                        case 10:
-                        case 11:
-                        case 12:
-                            MainTabs.Items.Add(defaultBattleCardTab);
-                            MainTabs.Items.Add(brotherTab);
-                            break;
-                        case 20:
-                        case 21:
-                        case 22:
-                        case 23:
-                            MainTabs.Items.Add(defaultBattleCardTab);
-                            MainTabs.Items.Add(brotherTab);
-                            break;
-                        case 30:
-                        case 31:
-                        case 32:
-                        case 33:
-                            MainTabs.Items.Add(battleCardTab);
-                            MainTabs.Items.Add(brotherTab);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                ButtonDuplicate.IsEnabled = true;
-                ButtonRenameSave.IsEnabled = true;
-                ButtonDeleteSave.IsEnabled = SaveID > 0;
-                ButtonExportSave.IsEnabled = true;
-                ButtonReplaceSave.IsEnabled = SaveID > 0;
-                ButtonLoadSaveData.IsEnabled = SaveID > 0;
-                ButtonLoadAndRun.IsEnabled = SaveID > 0;
-            }
-            else
-            {
-                MainTabs.Items.Clear();
-            }
-        }
+        #endregion
+
+        #region Button Event Handlers — Save Management
 
         private void ButtonImportSave_Click(object sender, RoutedEventArgs e)
         {
@@ -227,7 +143,6 @@ namespace RyuuseiManager
             if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
             {
                 int gameGen = 0;
-                string loadedSaveFileName = Path.GetFileName(dlg.FileName);
                 byte[] saveBlob = ReadFile(dlg.FileName);
                 if (saveBlob.AsSpan().StartsWith(BinaryMagic.HeaderMagic.Switch))
                 {
@@ -235,19 +150,18 @@ namespace RyuuseiManager
                 }
                 if (!saveBlob.AsSpan().StartsWith(BinaryMagic.HeaderMagic.Raw))
                 {
-                    var infoDlg = new InfoDialog(title: (string)Application.Current.Resources["Msg_Info"], prompt: (string)Application.Current.Resources["Msg_InvalidSave"]);
-                    infoDlg.Owner = this;
-                    infoDlg.ShowDialog();
+                    ShowInfoDialog((string)Application.Current.Resources["Msg_InvalidSave"]);
                     return;
                 }
                 else if (!CheckSave(saveBlob, out gameGen))
                 {
-                    var infoDlg = new InfoDialog(title: (string)Application.Current.Resources["Msg_Info"], prompt: (string)Application.Current.Resources["Msg_InvalidSave"]);
-                    infoDlg.Owner = this;
-                    infoDlg.ShowDialog();
+                    ShowInfoDialog((string)Application.Current.Resources["Msg_InvalidSave"]);
                     return;
                 }
-                var namedlg = new NameDialog(title: (string)Application.Current.Resources["Dlg_ImportSaveData"], prompt: string.Format((string)Application.Current.Resources["Msg_SpecifyName"], AssembleGameName(gameGen)).Replace("\\n", Environment.NewLine + Environment.NewLine));
+                var namedlg = new NameDialog(
+                    title: (string)Application.Current.Resources["Dlg_ImportSaveData"],
+                    prompt: string.Format((string)Application.Current.Resources["Msg_SpecifyName"], AssembleGameName(gameGen))
+                        .Replace("\\n", Environment.NewLine + Environment.NewLine));
                 namedlg.Owner = this;
                 if (namedlg.ShowDialog() == true)
                 {
@@ -259,39 +173,11 @@ namespace RyuuseiManager
             }
         }
 
-        private void ButtonDuplicate_Click(object sender, RoutedEventArgs e)
-        {
-            if (ComboSaveName.SelectedItem is ComboItem nameItem)
-            {
-                var dlg = new NameDialog(title: (string)Application.Current.Resources["Dlg_Duplicate"], prompt: (string)Application.Current.Resources["Msg_SpecifyNewName"]);
-                dlg.Owner = this;
-                dlg.ResultText = nameItem.Text;
-                ulong resultSaveId;
-                if (dlg.ShowDialog() == true)
-                {
-                    string saveName = dlg.ResultText;
-                    if (saveName == nameItem.Text) return;
-                    if (SaveID == 0)
-                    {
-                        byte[] encSave = ReadFile(Path.Combine(API.SteamInterop.GetSaveDataPath(SteamID), $"data0{GameGen}Slot.bin"));
-                        byte[] decSave = key.DecryptBlob(encSave, API.SteamInterop.GetSteamID64(SteamID));
-                        DB.SaveDataBlob(decSave, saveName, GameGen, true, out resultSaveId);
-                        GetSaveDataFromDB(GameGen);
-                    }
-                    else
-                    {
-                        byte[] currentSave = DB.LoadDataBlob(SaveID);
-                        DB.SaveDataBlob(currentSave, saveName, GameGen, true, out resultSaveId);
-                    }
-                    GetSaveDataFromDB(GameGen);
-                    ComboSaveName.SelectedValue = resultSaveId;
-                }
-            }
-        }
-
         private void ButtonCreateSave_Click(object sender, RoutedEventArgs e)
         {
-            var dlg = new NameDialog(title: (string)Application.Current.Resources["Dlg_CreateSave"], prompt: (string)Application.Current.Resources["Msg_SpecifyNameCreate"]);
+            var dlg = new NameDialog(
+                title: (string)Application.Current.Resources["Dlg_CreateSave"],
+                prompt: (string)Application.Current.Resources["Msg_SpecifyNameCreate"]);
             dlg.Owner = this;
             if (dlg.ShowDialog() == true)
             {
@@ -306,42 +192,54 @@ namespace RyuuseiManager
             }
         }
 
-        private void ButtonReplaceSave_Click(object sender, RoutedEventArgs e)
+        private void ButtonDuplicate_Click(object sender, RoutedEventArgs e)
         {
-            var dlg = new ConfirmDialog(title: (string)Application.Current.Resources["Msg_Confirm"], prompt: ((string)Application.Current.Resources["Msg_ReplaceConfirm"]).Replace("\\n", Environment.NewLine + Environment.NewLine));
-            dlg.Owner = this;
-            if (dlg.ShowDialog() == true)
+            if (ComboSaveName.SelectedItem is ComboItem nameItem)
             {
-                byte[] encSave = ReadFile(Path.Combine(API.SteamInterop.GetSaveDataPath(SteamID), $"data0{GameGen}Slot.bin"));
-                byte[] decSave = key.DecryptBlob(encSave, API.SteamInterop.GetSteamID64(SteamID));
-                DB.ReplaceSaveBlob(decSave, SaveID);
-                RefreshSaveInfo();
-            }
-        }
+                var dlg = new NameDialog(
+                    title: (string)Application.Current.Resources["Dlg_Duplicate"],
+                    prompt: (string)Application.Current.Resources["Msg_SpecifyNewName"]);
+                dlg.Owner = this;
+                dlg.ResultText = nameItem.Text;
+                if (dlg.ShowDialog() == true)
+                {
+                    string saveName = dlg.ResultText;
+                    if (saveName == nameItem.Text) return;
 
-        private void ButtonSettings_Click(object sender, RoutedEventArgs e)
-        {
-            var dlg = new SettingsWindow();
-            dlg.Owner = this;
-            dlg._mainWindow = this;
-            dlg.ShowDialog();
+                    ulong resultSaveId;
+                    if (SaveID == 0)
+                    {
+                        byte[] decSave = GetDecryptedSteamSave();
+                        DB.SaveDataBlob(decSave, saveName, GameGen, true, out resultSaveId);
+                    }
+                    else
+                    {
+                        byte[] currentSave = DB.LoadDataBlob(SaveID);
+                        DB.SaveDataBlob(currentSave, saveName, GameGen, true, out resultSaveId);
+                    }
+                    GetSaveDataFromDB(GameGen);
+                    ComboSaveName.SelectedValue = resultSaveId;
+                }
+            }
         }
 
         private void ButtonRenameSave_Click(object sender, RoutedEventArgs e)
         {
             if (ComboSaveName.SelectedItem is ComboItem nameItem)
             {
-                var dlg = new NameDialog(title: (string)Application.Current.Resources["Dlg_Rename"], prompt: (string)Application.Current.Resources["Msg_SpecifyNewName"]);
+                var dlg = new NameDialog(
+                    title: (string)Application.Current.Resources["Dlg_Rename"],
+                    prompt: (string)Application.Current.Resources["Msg_SpecifyNewName"]);
                 dlg.Owner = this;
                 dlg.ResultText = DB.GetSaveName(GameGen, (ulong)nameItem.Value);
                 if (dlg.ShowDialog() == true)
                 {
                     string saveName = dlg.ResultText;
                     if (saveName == nameItem.Text) return;
+
                     if (SaveID == 0)
                     {
-                        byte[] encSave = ReadFile(Path.Combine(API.SteamInterop.GetSaveDataPath(SteamID), $"data0{GameGen}Slot.bin"));
-                        byte[] decSave = key.DecryptBlob(encSave, API.SteamInterop.GetSteamID64(SteamID));
+                        byte[] decSave = GetDecryptedSteamSave();
                         DB.SaveDataBlob(decSave, saveName, GameGen, true, out ulong newSaveId);
                         GetSaveDataFromDB(GameGen);
                         ComboSaveName.SelectedValue = newSaveId;
@@ -357,9 +255,26 @@ namespace RyuuseiManager
             }
         }
 
+        private void ButtonReplaceSave_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = new ConfirmDialog(
+                title: (string)Application.Current.Resources["Msg_Confirm"],
+                prompt: ((string)Application.Current.Resources["Msg_ReplaceConfirm"])
+                    .Replace("\\n", Environment.NewLine + Environment.NewLine));
+            dlg.Owner = this;
+            if (dlg.ShowDialog() == true)
+            {
+                byte[] decSave = GetDecryptedSteamSave();
+                DB.ReplaceSaveBlob(decSave, SaveID);
+                RefreshSaveInfo();
+            }
+        }
+
         private void ButtonDeleteSave_Click(object sender, RoutedEventArgs e)
         {
-            var dlg = new ConfirmDialog(title: (string)Application.Current.Resources["Msg_Confirm"], prompt: (string)Application.Current.Resources["Msg_DeleteConfirm"]);
+            var dlg = new ConfirmDialog(
+                title: (string)Application.Current.Resources["Msg_Confirm"],
+                prompt: (string)Application.Current.Resources["Msg_DeleteConfirm"]);
             if (dlg.ShowDialog() == true)
             {
                 DB.DeleteSaveById(SaveID);
@@ -369,16 +284,7 @@ namespace RyuuseiManager
 
         private void ButtonExportSave_Click(object sender, RoutedEventArgs e)
         {
-            byte[]? rawSaveData;
-            if (SaveID == 0)
-            {
-                byte[] encSave = ReadFile(Path.Combine(API.SteamInterop.GetSaveDataPath(SteamID), $"data0{GameGen}Slot.bin"));
-                rawSaveData = key.DecryptBlob(encSave, API.SteamInterop.GetSteamID64(SteamID));
-            }
-            else
-            {
-                rawSaveData = DB.LoadDataBlob(SaveID);
-            }
+            byte[]? rawSaveData = (SaveID == 0) ? GetDecryptedSteamSave() : DB.LoadDataBlob(SaveID);
             if (rawSaveData != null)
             {
                 var dlg = new CommonSaveFileDialog
@@ -393,11 +299,9 @@ namespace RyuuseiManager
                 if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
                 {
                     rawSaveData = BinaryMagic.Processor.RepopulateFooter(rawSaveData, GameGen);
-                    if (!TrySaveFile(Path.Combine(dlg.FileName), BinaryMagic.Processor.PopulateToSwitchSave(rawSaveData, GameGen / 10)))
+                    if (!TrySaveFile(dlg.FileName, BinaryMagic.Processor.PopulateToSwitchSave(rawSaveData, GameGen / 10)))
                     {
-                        var infoDlg = new InfoDialog(title: (string)Application.Current.Resources["Msg_Info"], prompt: (string)Application.Current.Resources["Msg_UnableToSave"]);
-                        infoDlg.Owner = this;
-                        infoDlg.ShowDialog();
+                        ShowInfoDialog((string)Application.Current.Resources["Msg_UnableToSave"]);
                     }
                 }
             }
@@ -405,7 +309,24 @@ namespace RyuuseiManager
 
         private void ButtonLoadSaveData_Click(object sender, RoutedEventArgs e)
         {
-            LoadSave(true);
+            LoadSave(prompts: true);
+        }
+
+        private void ButtonLoadAndRun_Click(object sender, RoutedEventArgs e)
+        {
+            if (LoadSave(prompts: false)) RunGame();
+        }
+
+        #endregion
+
+        #region Button Event Handlers — Settings & Game
+
+        private void ButtonSettings_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = new SettingsWindow();
+            dlg.Owner = this;
+            dlg._mainWindow = this;
+            dlg.ShowDialog();
         }
 
         private void ButtonRunGame_Click(object sender, RoutedEventArgs e)
@@ -413,110 +334,9 @@ namespace RyuuseiManager
             RunGame();
         }
 
-        private void ButtonLoadAndRun_Click(object sender, RoutedEventArgs e)
-        {
-            if (LoadSave(false)) RunGame();
-        }
+        #endregion
 
-        private bool LoadSave(bool prompts)
-        {
-            byte[]? rawSaveData = DB.LoadDataBlob(SaveID);
-            if (rawSaveData != null)
-            {
-                string? savePath = API.SteamInterop.GetSaveDataPath(SteamID);
-                if (CanWriteToPath(savePath))
-                {
-                    rawSaveData = BinaryMagic.Processor.RepopulateFooter(rawSaveData, GameGen);
-                    byte[] signedSave = key.EncryptBlob(rawSaveData, API.SteamInterop.GetSteamID64(SteamID));
-                    if (!TrySaveFile(Path.Combine(savePath, $"data0{GameGen}Slot.bin"), signedSave))
-                    {
-                        var infoDlg = new InfoDialog(title: (string)Application.Current.Resources["Msg_Info"], prompt: (string)Application.Current.Resources["Msg_UnableToSave"]);
-                        infoDlg.Owner = this;
-                        infoDlg.ShowDialog();
-                        return false;
-                    }
-                    if (prompts)
-                    {
-                        var infoDlg = new InfoDialog(title: (string)Application.Current.Resources["Msg_Info"], prompt: (string)Application.Current.Resources["Msg_ImportComplete"]);
-                        infoDlg.Owner = this;
-                        infoDlg.ShowDialog();
-                        return true;
-                    }
-                }
-                else
-                {
-                    var infoDlg = new InfoDialog(title: (string)Application.Current.Resources["Msg_Info"], prompt: (string)Application.Current.Resources["Msg_RunElevate"]);
-                    infoDlg.Owner = this;
-                    infoDlg.ShowDialog();
-                    return false;
-                }
-            }
-            return false;
-        }
-
-        private byte[] GetCurrentSave()
-        {
-            if (SaveID == 0)
-            {
-                string? savePath = API.SteamInterop.GetSaveDataPath(SteamID);
-                byte[] steamRawSave = ReadFile(Path.Combine(savePath, $"data0{GameGen}Slot.bin"));
-                return key.DecryptBlob(steamRawSave, API.SteamInterop.GetSteamID64(SteamID));
-            }
-            else
-            {
-                return DB.LoadDataBlob(SaveID);
-            }
-        }
-
-        private bool CheckSave(byte[] blob, out int gameGen)
-        {
-            gameGen = BinaryMagic.Processor.GetGameGen(blob);
-            byte expectedNextByte;
-            switch (gameGen)
-            {
-                case 10:
-                case 11:
-                case 12:
-                    expectedNextByte = 0x43; break;
-                case 20:
-                case 21:
-                case 22:
-                case 23:
-                    expectedNextByte = 0x45; break;
-                case 30:
-                case 31:
-                case 32:
-                case 33:
-                    expectedNextByte = 0x53; break;
-                default:
-                    return false;
-            }
-            if (BinaryMagic.Processor.TryGetNextByte(blob, BinaryMagic.HeaderMagic.Raw, out byte nextByte))
-            {
-                return (expectedNextByte == nextByte);
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-
-        private void RunGame()
-        {
-            if (API.WineCheck.IsRunningUnderWine())
-            {
-                MessageBox.Show((string)Application.Current.Resources["Msg_WineCheck"]);
-            }
-            else
-            {
-                Process.Start(new ProcessStartInfo
-                {
-                    UseShellExecute = true,
-                    FileName = "steam://rungameid/3500390",
-                });
-            }
-        }
+        #region Public Methods
 
         public void CheckSteamAccount()
         {
@@ -551,132 +371,399 @@ namespace RyuuseiManager
             }
         }
 
-        private void GetAvailableSteamSaveData(ulong steamID3)
+        #endregion
+
+        #region Save Info Display
+
+        private void RefreshSaveInfo()
         {
-            string? saveDataDir = API.SteamInterop.GetSaveDataPath(steamID3);
-            if (!string.IsNullOrEmpty(saveDataDir))
+            if (ComboSaveName.SelectedItem is not ComboItem) // itemSave unused — checked for null only
             {
-                List<string> saveDataFiles = Directory.GetFiles(saveDataDir).ToList();
-                foreach (var i in saveDataFiles)
+                MainTabs.Items.Clear();
+                return;
+            }
+
+            var coverTabFrame = CreateHiddenFrame();
+            var battleCardFrame = CreateHiddenFrame();
+            var brotherFrame = CreateHiddenFrame();
+
+            byte[] saveBlob = GetCurrentSave();
+            bool showOtherLanguage = DB.GetToggleSwitch("CheckShowLanguage") == 1;
+            List<Folder> folders = GetFolder(saveBlob);
+
+            if (ComboGameTitle.SelectedItem is ComboItem item)
+            {
+                int gameGen = (int)item.Value;
+                if (IsSF3Game(gameGen))
                 {
-                    string fileName = Path.GetFileName(i);
-                    switch (fileName)
-                    {
-                        case "data010Slot.bin":
-                            ComboGameTitle.Items.Add(new ComboItem { Text = (string)Application.Current.Resources["Pegasus"], Value = 10 });
-                            break;
-                        case "data011Slot.bin":
-                            ComboGameTitle.Items.Add(new ComboItem { Text = (string)Application.Current.Resources["Leo"], Value = 11 });
-                            break;
-                        case "data012Slot.bin":
-                            ComboGameTitle.Items.Add(new ComboItem { Text = (string)Application.Current.Resources["Dragon"], Value = 12 });
-                            break;
-                        case "data020Slot.bin":
-                            ComboGameTitle.Items.Add(new ComboItem { Text = (string)Application.Current.Resources["Ninja"], Value = 20 });
-                            break;
-                        case "data021Slot.bin":
-                            ComboGameTitle.Items.Add(new ComboItem { Text = (string)Application.Current.Resources["Saurian"], Value = 21 });
-                            break;
-                        case "data022Slot.bin":
-                            ComboGameTitle.Items.Add(new ComboItem { Text = (string)Application.Current.Resources["ZerkerN"], Value = 22 });
-                            break;
-                        case "data023Slot.bin":
-                            ComboGameTitle.Items.Add(new ComboItem { Text = (string)Application.Current.Resources["ZerkerS"], Value = 23 });
-                            break;
-                        case "data030Slot.bin":
-                            ComboGameTitle.Items.Add(new ComboItem { Text = (string)Application.Current.Resources["BlackAceSlot1"], Value = 30 });
-                            break;
-                        case "data031Slot.bin":
-                            ComboGameTitle.Items.Add(new ComboItem { Text = (string)Application.Current.Resources["BlackAceSlot2"], Value = 31 });
-                            break;
-                        case "data032Slot.bin":
-                            ComboGameTitle.Items.Add(new ComboItem { Text = (string)Application.Current.Resources["RedJokerSlot1"], Value = 32 });
-                            break;
-                        case "data033Slot.bin":
-                            ComboGameTitle.Items.Add(new ComboItem { Text = (string)Application.Current.Resources["RedJokerSlot2"], Value = 33 });
-                            break;
-                    }
+                    BuildSF3CoverAndBattleTabs(saveBlob, coverTabFrame, battleCardFrame, showOtherLanguage, folders, gameGen);
+                    BuildBrotherTab(saveBlob, brotherFrame);
                 }
+                else
+                {
+                    BuildDefaultCoverTab(saveBlob, coverTabFrame);
+                }
+            }
+
+            PopulateMainTabs(coverTabFrame, battleCardFrame, brotherFrame);
+            UpdateButtonStates();
+        }
+
+        private static Frame CreateHiddenFrame()
+        {
+            return new Frame
+            {
+                NavigationUIVisibility = System.Windows.Navigation.NavigationUIVisibility.Hidden
+            };
+        }
+
+        private void BuildDefaultCoverTab(byte[] saveBlob, Frame coverFrame)
+        {
+            var page = new CoverTabPage();
+            page.ImageSource = GetMugshot(saveBlob);
+            page.SetMessage(GetMessage(saveBlob));
+            page.SetSecret(GetSecret(saveBlob));
+            coverFrame.Navigate(page);
+        }
+
+        private void BuildSF3CoverAndBattleTabs(byte[] saveBlob, Frame coverFrame, Frame battleCardFrame,
+            bool showOtherLanguage, List<Folder> folders, int gameGen)
+        {
+            // Cover tab
+            var coverPage = new CoverTabPageSF3();
+            coverPage.ImageSourceMugshot = GetMugshot(saveBlob);
+            coverPage.ImageSourceTeamIcon = GameResourceRetriver.GetTeamIcon(Processor.GetSF3TeamIconID(saveBlob));
+            coverPage.SetMessage(GetMessage(saveBlob));
+            coverPage.SetSecret(GetSecret(saveBlob));
+            coverPage.SetNoiseForm("Noise Form"); // TBA
+            coverPage.SetPurpose(Processor.GetSF3TeamPurpose(saveBlob)); // TBA
+            coverPage.GameVersion = (gameGen - 30) / 2;
+            coverPage.ProfileLanguage = GetLanguageID();
+            coverPage.UpdateWarRockWeapon(Library.SF3.Weapons.weapons[5]);
+            List<int> abilityList = Processor.GetAbilities(saveBlob, 3);
+            coverPage.SetAbilities(abilityList);
+            coverPage.SetProfileColor();
+            coverFrame.Navigate(coverPage);
+
+            // Battle card tab
+            int whiteCardIndex = Processor.GetSF3SelfWhiteCard(saveBlob);
+            int equippedFolder = Processor.GetSF3EquippedFolder(saveBlob);
+            var whiteCardCombo = Library.SF3.WhiteCardCombo.GetWhiteCard(whiteCardIndex);
+
+            var battleCardPage = new BattleCardPageSF3();
+            battleCardPage._mainWindow = this;
+            battleCardPage.WCard = whiteCardCombo;
+            battleCardPage.EquippedFolderIndex = equippedFolder;
+            battleCardPage.ProfileLanguage = GetLanguageID();
+            battleCardPage.ShowOtherLanguage = showOtherLanguage;
+            if (folders.Count > 0) battleCardPage.Folders = folders;
+            battleCardPage.SetFolderNames();
+            battleCardFrame.Navigate(battleCardPage);
+        }
+
+        private void BuildBrotherTab(byte[] saveBlob, Frame brotherFrame)
+        {
+            var brotherPage = new BrotherPageSF3();
+            brotherPage.ImageSourceMugshot = GetMugshot(saveBlob);
+            brotherFrame.Navigate(brotherPage);
+        }
+
+        private void PopulateMainTabs(Frame coverFrame, Frame battleCardFrame, Frame brotherFrame)
+        {
+            var coverTab = new TabItem
+            {
+                Header = (string)Application.Current.Resources["Tab_Cover"],
+                Content = coverFrame
+            };
+
+            var defaultBattleCardTab = new TabItem
+            {
+                Header = (string)Application.Current.Resources["Tab_BattleCard"],
+                Content = new TextBlock
+                {
+                    Text = (string)Application.Current.Resources["Msg_TBA"],
+                    Margin = new Thickness(10)
+                }
+            };
+
+            var battleCardTab = new TabItem
+            {
+                Header = (string)Application.Current.Resources["Tab_BattleCard"],
+                Content = battleCardFrame
+            };
+
+            var brotherTab = new TabItem
+            {
+                Header = (string)Application.Current.Resources["Tab_Brother"],
+                Content = brotherFrame
+            };
+
+            MainTabs.Items.Clear();
+            MainTabs.Items.Add(coverTab);
+
+            if (ComboGameTitle.SelectedItem is ComboItem itemTitle)
+            {
+                if (IsSF3Game((int)itemTitle.Value))
+                {
+                    MainTabs.Items.Add(battleCardTab);
+                    MainTabs.Items.Add(brotherTab);
+                }
+                else
+                {
+                    MainTabs.Items.Add(defaultBattleCardTab);
+                    MainTabs.Items.Add(brotherTab);
+                }
+            }
+        }
+
+        private void UpdateButtonStates()
+        {
+            ButtonDuplicate.IsEnabled = true;
+            ButtonRenameSave.IsEnabled = true;
+            ButtonDeleteSave.IsEnabled = SaveID > 0;
+            ButtonExportSave.IsEnabled = true;
+            ButtonReplaceSave.IsEnabled = SaveID > 0;
+            ButtonLoadSaveData.IsEnabled = SaveID > 0;
+            ButtonLoadAndRun.IsEnabled = SaveID > 0;
+        }
+
+        #endregion
+
+        #region Save Data Helpers
+
+        private byte[] GetCurrentSave()
+        {
+            if (SaveID == 0)
+            {
+                return GetDecryptedSteamSave();
             }
             else
             {
-                MessageBox.Show((string)Application.Current.Resources["Msg_NoSaveDataFound"]);
+                return DB.LoadDataBlob(SaveID);
             }
+        }
+
+        /// <summary>
+        /// Reads the current Steam save file from disk and decrypts it.
+        /// </summary>
+        private byte[] GetDecryptedSteamSave()
+        {
+            string? savePath = API.SteamInterop.GetSaveDataPath(SteamID);
+            byte[] steamRawSave = ReadFile(Path.Combine(savePath, $"data0{GameGen}Slot.bin"));
+            return key.DecryptBlob(steamRawSave, API.SteamInterop.GetSteamID64(SteamID));
+        }
+
+        private bool LoadSave(bool prompts)
+        {
+            byte[]? rawSaveData = DB.LoadDataBlob(SaveID);
+            if (rawSaveData == null)
+                return false;
+
+            string? savePath = API.SteamInterop.GetSaveDataPath(SteamID);
+            if (!CanWriteToPath(savePath))
+            {
+                ShowInfoDialog((string)Application.Current.Resources["Msg_RunElevate"]);
+                return false;
+            }
+
+            rawSaveData = BinaryMagic.Processor.RepopulateFooter(rawSaveData, GameGen);
+            byte[] signedSave = key.EncryptBlob(rawSaveData, API.SteamInterop.GetSteamID64(SteamID));
+            if (!TrySaveFile(Path.Combine(savePath, $"data0{GameGen}Slot.bin"), signedSave))
+            {
+                ShowInfoDialog((string)Application.Current.Resources["Msg_UnableToSave"]);
+                return false;
+            }
+
+            if (prompts)
+            {
+                ShowInfoDialog((string)Application.Current.Resources["Msg_ImportComplete"]);
+            }
+            return true;
         }
 
         private void GetSaveDataFromDB(int generation)
         {
             ComboSaveName.Items.Clear();
-            ComboSaveName.Items.Add(new ComboItem { Text = (string)Application.Current.Resources["Cmb_CurrentSteamSave"], Value = 0 });
-            var saveDataDict = DB.GetCurrentGenerationSaves(generation);
-            int extraGeneration = 0;
-            switch (generation)
+            ComboSaveName.Items.Add(new ComboItem
             {
-                case 22: extraGeneration = 23; break;
-                case 23: extraGeneration = 22; break;
-                case 30: extraGeneration = 31; break;
-                case 31: extraGeneration = 30; break;
-                case 32: extraGeneration = 33; break;
-                case 33: extraGeneration = 32; break;
-            }
-            var extraSaveDataDict = DB.GetCurrentGenerationSaves(extraGeneration);
+                Text = (string)Application.Current.Resources["Cmb_CurrentSteamSave"],
+                Value = 0
+            });
+
+            var saveDataDict = DB.GetCurrentGenerationSaves(generation);
             foreach (var i in saveDataDict.Keys)
             {
-                ComboSaveName.Items.Add(new ComboItem { Text = saveDataDict[i] + $" ({generation}-{i})", Value = (ulong)i });
+                ComboSaveName.Items.Add(new ComboItem
+                {
+                    Text = saveDataDict[i] + $" ({generation}-{i})",
+                    Value = (ulong)i
+                });
             }
-            foreach (var i in extraSaveDataDict.Keys)
+
+            int extraGeneration = GetExtraGeneration(generation);
+            if (extraGeneration != 0)
             {
-                ComboSaveName.Items.Add(new ComboItem { Text = extraSaveDataDict[i] + $" ({extraGeneration}-{i})", Value = (ulong)i });
+                var extraSaveDataDict = DB.GetCurrentGenerationSaves(extraGeneration);
+                foreach (var i in extraSaveDataDict.Keys)
+                {
+                    ComboSaveName.Items.Add(new ComboItem
+                    {
+                        Text = extraSaveDataDict[i] + $" ({extraGeneration}-{i})",
+                        Value = (ulong)i
+                    });
+                }
             }
         }
 
+        /// <summary>
+        /// Returns the paired save-slot generation for games that share
+        /// save data across two slots (SF2 Zerker ×2, SF3 ×2).
+        /// Returns 0 if the generation has no paired slot.
+        /// </summary>
+        private static int GetExtraGeneration(int generation)
+        {
+            switch (generation)
+            {
+                case 22: return 23;
+                case 23: return 22;
+                case 30: return 31;
+                case 31: return 30;
+                case 32: return 33;
+                case 33: return 32;
+                default: return 0;
+            }
+        }
+
+        #endregion
+
+        #region Save Data Extraction
+
         private BitmapImage GetMugshot(byte[] saveBlob)
         {
-            int gameID = (int)(GameGen / 10);
+            int gameID = GameGen / 10;
             int mugshotID = BinaryMagic.Processor.GetMugshotID(saveBlob, gameID);
-            BitmapImage image = GameResourceRetriver.GetMugshot(mugshotID);
-            return image;
+            return GameResourceRetriver.GetMugshot(mugshotID);
         }
 
         private string GetMessage(byte[] saveBlob)
         {
-            int gameID = (int)(GameGen / 10);
+            int gameID = GameGen / 10;
             return BinaryMagic.Processor.GetMessage(saveBlob, gameID);
         }
 
         private string GetSecret(byte[] saveBlob)
         {
-            int gameID = (int)(GameGen / 10);
+            int gameID = GameGen / 10;
             return BinaryMagic.Processor.GetSecret(saveBlob, gameID);
         }
 
         private List<Folder> GetFolder(byte[] saveBlob)
         {
-            int gameID = (int)(GameGen / 10);
+            int gameID = GameGen / 10;
             return BinaryMagic.Processor.GetFolders(saveBlob, gameID);
         }
 
-        private void LoadLanguage()
+        #endregion
+
+        #region Steam & Game Helpers
+
+        private void GetAvailableSteamSaveData(ulong steamID3)
         {
-            if (string.IsNullOrEmpty(DB.GetCurrentLanguage()))
+            string? saveDataDir = API.SteamInterop.GetSaveDataPath(steamID3);
+            if (string.IsNullOrEmpty(saveDataDir))
             {
-                DB.SetLanguage(DB.ChooseSuitableLangCode());
+                MessageBox.Show((string)Application.Current.Resources["Msg_NoSaveDataFound"]);
+                return;
             }
-            else
+
+            List<string> saveDataFiles = Directory.GetFiles(saveDataDir).ToList();
+            foreach (var i in saveDataFiles)
             {
-                DB.SetLanguage(DB.GetCurrentLanguage());
+                string fileName = Path.GetFileName(i);
+                switch (fileName)
+                {
+                    case "data010Slot.bin":
+                        ComboGameTitle.Items.Add(new ComboItem { Text = (string)Application.Current.Resources["Pegasus"], Value = 10 });
+                        break;
+                    case "data011Slot.bin":
+                        ComboGameTitle.Items.Add(new ComboItem { Text = (string)Application.Current.Resources["Leo"], Value = 11 });
+                        break;
+                    case "data012Slot.bin":
+                        ComboGameTitle.Items.Add(new ComboItem { Text = (string)Application.Current.Resources["Dragon"], Value = 12 });
+                        break;
+                    case "data020Slot.bin":
+                        ComboGameTitle.Items.Add(new ComboItem { Text = (string)Application.Current.Resources["Ninja"], Value = 20 });
+                        break;
+                    case "data021Slot.bin":
+                        ComboGameTitle.Items.Add(new ComboItem { Text = (string)Application.Current.Resources["Saurian"], Value = 21 });
+                        break;
+                    case "data022Slot.bin":
+                        ComboGameTitle.Items.Add(new ComboItem { Text = (string)Application.Current.Resources["ZerkerN"], Value = 22 });
+                        break;
+                    case "data023Slot.bin":
+                        ComboGameTitle.Items.Add(new ComboItem { Text = (string)Application.Current.Resources["ZerkerS"], Value = 23 });
+                        break;
+                    case "data030Slot.bin":
+                        ComboGameTitle.Items.Add(new ComboItem { Text = (string)Application.Current.Resources["BlackAceSlot1"], Value = 30 });
+                        break;
+                    case "data031Slot.bin":
+                        ComboGameTitle.Items.Add(new ComboItem { Text = (string)Application.Current.Resources["BlackAceSlot2"], Value = 31 });
+                        break;
+                    case "data032Slot.bin":
+                        ComboGameTitle.Items.Add(new ComboItem { Text = (string)Application.Current.Resources["RedJokerSlot1"], Value = 32 });
+                        break;
+                    case "data033Slot.bin":
+                        ComboGameTitle.Items.Add(new ComboItem { Text = (string)Application.Current.Resources["RedJokerSlot2"], Value = 33 });
+                        break;
+                }
             }
         }
 
-        private int GetLanguageID()
+        private void RunGame()
         {
-            switch (DB.GetCurrentLanguage())
+            if (API.WineCheck.IsRunningUnderWine())
             {
-                default: return 0;
-                case "ja-JP": return 1;
-                case "zh-CN": return 2;
-                case "zh-TW": return 3;
+                MessageBox.Show((string)Application.Current.Resources["Msg_WineCheck"]);
             }
+            else
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    UseShellExecute = true,
+                    FileName = "steam://rungameid/3500390",
+                });
+            }
+        }
+
+        #endregion
+
+        #region Validation Helpers
+
+        private bool CheckSave(byte[] blob, out int gameGen)
+        {
+            gameGen = BinaryMagic.Processor.GetGameGen(blob);
+            byte expectedNextByte;
+            switch (gameGen)
+            {
+                case 10: case 11: case 12:
+                    expectedNextByte = 0x43; break;
+                case 20: case 21: case 22: case 23:
+                    expectedNextByte = 0x45; break;
+                case 30: case 31: case 32: case 33:
+                    expectedNextByte = 0x53; break;
+                default:
+                    return false;
+            }
+            if (BinaryMagic.Processor.TryGetNextByte(blob, BinaryMagic.HeaderMagic.Raw, out byte nextByte))
+            {
+                return expectedNextByte == nextByte;
+            }
+            return false;
+        }
+
+        private static bool IsSF3Game(int gameGen)
+        {
+            return gameGen >= 30 && gameGen <= 33;
         }
 
         private bool CanWriteToPath(string path)
@@ -695,7 +782,11 @@ namespace RyuuseiManager
             }
         }
 
-        private byte[] ReadFile(string path)
+        #endregion
+
+        #region File I/O Helpers
+
+        private static byte[] ReadFile(string path)
         {
             using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
@@ -707,7 +798,7 @@ namespace RyuuseiManager
             }
         }
 
-        private bool TrySaveFile(string path, byte[] blob)
+        private static bool TrySaveFile(string path, byte[] blob)
         {
             try
             {
@@ -718,6 +809,19 @@ namespace RyuuseiManager
             {
                 return false;
             }
+        }
+
+        #endregion
+
+        #region UI Helpers
+
+        private void ShowInfoDialog(string prompt)
+        {
+            var infoDlg = new InfoDialog(
+                title: (string)Application.Current.Resources["Msg_Info"],
+                prompt: prompt);
+            infoDlg.Owner = this;
+            infoDlg.ShowDialog();
         }
 
         private string AssembleGameName(int gameGen)
@@ -757,11 +861,6 @@ namespace RyuuseiManager
             return sb.ToString();
         }
 
-
-        public class ComboItem
-        {
-            public string Text { get; set; }
-            public ulong Value { get; set; }
-        }
+        #endregion
     }
 }
