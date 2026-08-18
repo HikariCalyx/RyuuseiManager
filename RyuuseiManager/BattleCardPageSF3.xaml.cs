@@ -20,6 +20,7 @@ namespace RyuuseiManager
             Folders = new List<Folder>();
             ProfileLanguage = 0;
             WCard = new WhiteCard();
+            WCardIndex = 0;
             ShowOtherLanguage = false;
             EquippedFolderIndex = 1;
         }
@@ -28,6 +29,7 @@ namespace RyuuseiManager
         public int ProfileLanguage { get; set; }
         public int EquippedFolderIndex { get; set; }
         public WhiteCard WCard { get; set; }
+        public int WCardIndex { get; set; }
         public MainWindow _mainWindow { get; set; }
         public bool ShowOtherLanguage { get; set; }
         private string GetDpiScaling()
@@ -166,13 +168,15 @@ namespace RyuuseiManager
             }
         }
 
-        private void BtnBattleCardEditor_Click(object sender, EventArgs e)
+        private void BtnChangeWhiteCard_Click(object sender, EventArgs e)
         {
-            BattleCardEditorSF3 dlg = new BattleCardEditorSF3();
+            WhiteCardEditorSF3 dlg = new WhiteCardEditorSF3();
+            dlg._mainWindow = _mainWindow;
             dlg.ProfileLanguage = ProfileLanguage;
-            dlg.ShowOtherLanguage = ShowOtherLanguage;
-            dlg.GameVersion = 1;
-            dlg.SetBattleCardList(Folders[CardFolders.SelectedIndex]);
+            dlg.SetComboList(WCardIndex);
+            // dlg.ShowOtherLanguage = ShowOtherLanguage;
+            // dlg.GameVersion = 1;
+            // dlg.SetBattleCardList(Folders[CardFolders.SelectedIndex]);
             dlg.Owner = _mainWindow;
             dlg.ShowDialog();
         }

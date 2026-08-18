@@ -453,6 +453,7 @@ namespace RyuuseiManager
             var battleCardPage = new BattleCardPageSF3();
             battleCardPage._mainWindow = this;
             battleCardPage.WCard = whiteCardCombo;
+            battleCardPage.WCardIndex = whiteCardIndex;
             battleCardPage.EquippedFolderIndex = equippedFolder;
             battleCardPage.ProfileLanguage = GetLanguageID();
             battleCardPage.ShowOtherLanguage = showOtherLanguage;
@@ -559,8 +560,20 @@ namespace RyuuseiManager
             if (rawSaveData == null)
                 return false;
 
+            if (!WriteSaveToSteam(rawSaveData))
+                return false;
+
+            if (prompts)
+            {
+                ShowInfoDialog((string)Application.Current.Resources["Msg_ImportComplete"]);
+            }
+            return true;
+        }
+
+        private bool WriteSaveToSteam(byte[] rawSaveData)
+        {
             string? savePath = API.SteamInterop.GetSaveDataPath(SteamID);
-            if (!CanWriteToPath(savePath))
+            if (string.IsNullOrEmpty(savePath) || !CanWriteToPath(savePath))
             {
                 ShowInfoDialog((string)Application.Current.Resources["Msg_RunElevate"]);
                 return false;
@@ -573,12 +586,71 @@ namespace RyuuseiManager
                 ShowInfoDialog((string)Application.Current.Resources["Msg_UnableToSave"]);
                 return false;
             }
-
-            if (prompts)
-            {
-                ShowInfoDialog((string)Application.Current.Resources["Msg_ImportComplete"]);
-            }
             return true;
+        }
+
+        public bool ApplyWhiteCardCombo(int newCombo)
+        {
+            byte[] existingSave = GetCurrentSave();
+            BackupExistingSave(existingSave);
+
+            byte[] modifiedSave = (byte[])existingSave.Clone();
+            if (!BinaryMagic.Processor.SetSF3SelfWhiteCard(modifiedSave, newCombo))
+            {
+                ShowInfoDialog((string)Application.Current.Resources["Msg_UnableToSave"]);
+                return false;
+            }
+
+            if (SaveID == 0)
+            {
+                if (!WriteSaveToSteam(modifiedSave))
+                    return false;
+            }
+            else
+            {
+                DB.ReplaceSaveBlob(modifiedSave, SaveID);
+            }
+
+            ToggleVisibility();
+            return true;
+        }
+
+        private void BackupExistingSave(byte[] existingSave)
+        {
+            string backupDir = Path.Combine(AppContext.BaseDirectory, "backups");
+            Directory.CreateDirectory(backupDir);
+
+            string stamp = DateTime.Now.ToString("yyMMdd_HHmm");
+            string plainName;
+            string archivedName;
+            if (SaveID == 0)
+            {
+                plainName = "steam_backup.bin";
+                archivedName = $"steam_backup_{stamp}.bin";
+            }
+            else
+            {
+                string oldPresetName = SanitizeFileName(DB.GetSaveName(GameGen, SaveID) ?? "preset");
+                plainName = $"{oldPresetName}_backup.bin";
+                archivedName = $"{oldPresetName}_backup_{stamp}.bin";
+            }
+
+            string plainPath = Path.Combine(backupDir, plainName);
+            string archivedPath = Path.Combine(backupDir, archivedName);
+            if (File.Exists(plainPath))
+            {
+                File.Move(plainPath, archivedPath, true);
+            }
+            File.WriteAllBytes(plainPath, existingSave);
+        }
+
+        private static string SanitizeFileName(string name)
+        {
+            foreach (char c in Path.GetInvalidFileNameChars())
+            {
+                name = name.Replace(c, '_');
+            }
+            return name;
         }
 
         private void GetSaveDataFromDB(int generation)

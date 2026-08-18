@@ -402,6 +402,17 @@ namespace RyuuseiManager.BinaryMagic
             return result;
         }
 
+        public static bool SetSF3SelfWhiteCard(byte[] blob, int whiteCardIndex)
+        {
+            int index = blob.AsSpan().IndexOf(HeaderMagic.SF3.WhiteCardHeaderMagic);
+            if (index < 0)
+            {
+                return false;
+            }
+            blob[index + HeaderMagic.SF3.WhiteCardHeaderMagic.Length] = (byte)whiteCardIndex;
+            return true;
+        }
+
         public static int GetSF3EquippedFolder(ReadOnlySpan<byte> blob)
         {
             int result = 0;

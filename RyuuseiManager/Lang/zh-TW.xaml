@@ -60,6 +60,7 @@
     <system:String x:Key="Msg_Confirm">確認</system:String>
     <system:String x:Key="Msg_DeleteConfirm">是否要刪除本存檔？此操作無法撤銷。</system:String>
     <system:String x:Key="Msg_ReplaceConfirm">是否要將此存檔替換為目前的Steam存檔？\n此操作無法撤銷。</system:String>
+    <system:String x:Key="Msg_WhiteCardConfirm">是否要更改白色卡？\n此操作無法復原。</system:String>
     <system:String x:Key="Msg_ImportComplete">存檔匯入完成。</system:String>
     <system:String x:Key="Dlg_Settings">設定</system:String>
     <system:String x:Key="Msg_Language">語言</system:String>
@@ -102,4 +103,5 @@
     <system:String x:Key="Btn_Remove">移除 ❌</system:String>
     <system:String x:Key="Btn_Add">➕ 添加</system:String>
     <system:String x:Key="Btn_NpcBrother">NPC 盟友</system:String>
+    <system:String x:Key="Btn_ChangeWhiteCard">白色卡</system:String>
 </ResourceDictionary>

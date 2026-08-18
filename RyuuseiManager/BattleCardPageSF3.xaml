@@ -33,12 +33,11 @@
                       SelectionChanged="CardFolders_SelectionChanged"/>
                 </Grid>
                 <Grid Grid.Column="1" HorizontalAlignment="Right" Margin="0,0,3,0">
-                    <Button x:Name="BtnBattleCardEditor"
-                            Visibility="Hidden"
+                    <Button x:Name="BtnChangeWhiteCard"
                             Height="24"
                             Padding="4,0,4,0"
-                            Content="{DynamicResource Btn_EditFolder}"
-                            Click="BtnBattleCardEditor_Click"/>
+                            Content="{DynamicResource Btn_ChangeWhiteCard}"
+                            Click="BtnChangeWhiteCard_Click"/>
                 </Grid>
             </Grid>
 
@@ -316,7 +315,7 @@
                     </ListBox>
                 </Grid>
                 <Grid Grid.Row="1" HorizontalAlignment="Left">
-                    <Label Content="伙伴随机白色卡" FontSize="15"/>
+                    <Label Content="Brother Random White Card" FontSize="15" Visibility="Hidden"/>
                 </Grid>
             </Grid>
         </Grid>

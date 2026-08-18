@@ -60,6 +60,7 @@
     <system:String x:Key="Msg_Confirm">確認</system:String>
     <system:String x:Key="Msg_DeleteConfirm">このセーブデータをデリートしますか？この操作は元に戻せません。</system:String>
     <system:String x:Key="Msg_ReplaceConfirm">このセーブファイルを現在のSteamセーブファイルで置き換えますか？\nこの操作は元に戻せません。</system:String>
+    <system:String x:Key="Msg_WhiteCardConfirm">ホワイトカードを変更しますか？\nこの操作は元に戻せません。</system:String>
     <system:String x:Key="Msg_ImportComplete">保存データのインポートが完了しました。</system:String>
     <system:String x:Key="Dlg_Settings">設定</system:String>
     <system:String x:Key="Msg_Language">言語</system:String>
@@ -102,4 +103,5 @@
     <system:String x:Key="Btn_Remove">もどす ❌</system:String>
     <system:String x:Key="Btn_Add">➕ ついか</system:String>
     <system:String x:Key="Btn_NpcBrother">NPC ブラザー</system:String>
+    <system:String x:Key="Btn_ChangeWhiteCard">ホワイトカード</system:String>
 </ResourceDictionary>

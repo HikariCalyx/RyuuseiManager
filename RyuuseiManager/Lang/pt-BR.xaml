@@ -60,6 +60,7 @@
     <system:String x:Key="Msg_Confirm">Confirmar</system:String>
     <system:String x:Key="Msg_DeleteConfirm">Você irá apagar esse Save? Essa ação não poderá ser desfeita!</system:String>
     <system:String x:Key="Msg_ReplaceConfirm">Deseja substituir este arquivo de salvamento pelo arquivo de salvamento atual do Steam?\nEssa ação não poderá ser desfeita!</system:String>
+    <system:String x:Key="Msg_WhiteCardConfirm">Deseja alterar o White Card?\nEssa ação não poderá ser desfeita!</system:String>
     <system:String x:Key="Msg_ImportComplete">Importação de dados do Save concluída.</system:String>
     <system:String x:Key="Dlg_Settings">Ajustes</system:String>
     <system:String x:Key="Msg_Language">Idioma</system:String>
@@ -101,4 +102,5 @@
     <system:String x:Key="Btn_Remove">Remover ❌</system:String>
     <system:String x:Key="Btn_Add">➕ Adicionar</system:String>
     <system:String x:Key="Btn_NpcBrother">NPC Brother</system:String>
+    <system:String x:Key="Btn_ChangeWhiteCard">White Card</system:String>
 </ResourceDictionary>
